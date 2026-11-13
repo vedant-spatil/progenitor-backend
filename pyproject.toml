@@ -1,0 +1,72 @@
+[project]
+name = "progenitor-backend"
+version = "0.1.0"
+description = "Progenitor backend: Django API, Celery worker, LangGraph agents, MCP servers"
+requires-python = ">=3.12"
+dependencies = [
+    "celery[redis]>=5.4",
+    "dj-database-url>=3.1.2",
+    "django>=5.2,<6",
+    "djangorestframework>=3.18.3",
+    "djangorestframework-simplejwt>=5.5.1",
+    "psycopg[binary]>=3.2",
+    "python-dotenv>=1.2.4",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[dependency-groups]
+dev = [
+    "bandit>=1.9.4",
+    "celery-types>=0.26.0",
+    "django-stubs>=6.1.2",
+    "djangorestframework-stubs>=3.18.2",
+    "mypy>=2.4.1",
+    "pre-commit>=4.7.0",
+    "pytest>=9.2.0",
+    "pytest-django>=4.14.0",
+    "pytest-env>=1.8.5",
+    "ruff>=0.17.5",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+extend-exclude = ["**/migrations/**", "docs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "BLE", "DJ", "PT", "RUF"]
+ignore = ["RUF012"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106"]
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
+ignore_missing_imports = true
+warn_unused_ignores = true
+exclude = ["migrations/", "\\.venv/"]
+
+[[tool.mypy.overrides]]
+module = ["agents.*", "mcp_servers.*"]
+strict = true
+
+[tool.django-stubs]
+django_settings_module = "progenitor.settings"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "progenitor.settings"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+# Unit tests never need real secrets or external services. "D:" keeps a value already set.
+env = ["D:DJANGO_DEBUG=1", "D:DATABASE_URL=sqlite:///:memory:"]
+markers = [
+    "smoke: fast checks that the app boots and core wiring works",
+    "integration: needs the docker compose stack running (make up)",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]

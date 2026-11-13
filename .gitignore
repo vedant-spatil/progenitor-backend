@@ -1,0 +1,30 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+db.sqlite3
+staticfiles/
+
+# Restricted / large datasets: never commit (TREC if licensed, n2c2, any DUA data)
+data/external/
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
+
+# Project docs stay local (not published)
+docs/
+
+# Claude Code instructions stay local
+CLAUDE.md

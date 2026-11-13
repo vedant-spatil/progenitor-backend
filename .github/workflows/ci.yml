@@ -1,0 +1,76 @@
+name: ci
+
+# Backend repo CI. The full-stack job also checks out the frontend repo,
+# because docker-compose.yml builds it from ../frontend.
+#
+# Settings (repo -> Settings -> Secrets and variables -> Actions):
+#   vars.FRONTEND_REPO           owner/name of the frontend repo
+#                                (default: <this owner>/progenitor-frontend)
+#   vars.FRONTEND_REF            branch/tag to test against (default: main)
+#   secrets.FRONTEND_REPO_TOKEN  read-only token; needed only if the frontend repo is private
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      frontend_ref:
+        description: Frontend branch, tag, or SHA to test against
+        required: false
+  # Fired by the frontend repo's CI so frontend changes also run the stack gate.
+  repository_dispatch:
+    types: [frontend-updated]
+
+concurrency:
+  group: ci-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+env:
+  FRONTEND_REPO: ${{ vars.FRONTEND_REPO || format('{0}/progenitor-frontend', github.repository_owner) }}
+  FRONTEND_REF: ${{ github.event.inputs.frontend_ref || github.event.client_payload.ref || vars.FRONTEND_REF || 'main' }}
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.25"
+      - run: make gate-0-backend
+
+  stack:
+    runs-on: ubuntu-latest
+    needs: [backend]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: backend
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.FRONTEND_REPO }}
+          ref: ${{ env.FRONTEND_REF }}
+          token: ${{ secrets.FRONTEND_REPO_TOKEN || github.token }}
+          path: frontend
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.25"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Frontend checks (lint, typecheck, build)
+        working-directory: backend
+        run: make gate-0-frontend
+      - name: Full stack gate
+        working-directory: backend
+        run: uv sync --frozen && make gate-0-stack
+        timeout-minutes: 20
+      - if: failure()
+        working-directory: backend
+        run: docker compose logs --tail=200
+      - if: always()
+        working-directory: backend
+        run: docker compose down --volumes

@@ -1,0 +1,221 @@
+# Local development stack. Dev-only credentials; see .env.example.
+# Infra ports bind to 127.0.0.1 only.
+# Lives in the backend repo; builds the frontend repo from a sibling checkout
+# (FRONTEND_DIR, default ../frontend).
+
+name: progenitor
+
+x-backend-env: &backend-env
+  DJANGO_DEBUG: ${DJANGO_DEBUG:-1}
+  DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-}
+  DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
+  DATABASE_URL: postgresql://${POSTGRES_USER:-progenitor}:${POSTGRES_PASSWORD:-progenitor}@postgres:5432/${POSTGRES_DB:-progenitor}
+  REDIS_URL: redis://redis:6379/0
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.7-pg16-trixie
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-progenitor}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-progenitor}
+      POSTGRES_DB: ${POSTGRES_DB:-progenitor}
+      TZ: UTC
+      PGTZ: UTC
+    ports:
+      - 127.0.0.1:5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-progenitor} -d ${POSTGRES_DB:-progenitor}"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    # Langfuse (BullMQ) requires noeviction. Celery uses db 0, Langfuse db 1.
+    command: ["redis-server", "--maxmemory-policy", "noeviction"]
+    ports:
+      - 127.0.0.1:6379:6379
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  hapi-fhir:
+    image: hapiproject/hapi:v8.12.0-2
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hapi
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-progenitor}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-progenitor}
+      SPRING_DATASOURCE_DRIVERCLASSNAME: org.postgresql.Driver
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
+      HAPI_FHIR_FHIR_VERSION: R4
+    ports:
+      - 127.0.0.1:${HAPI_HOST_PORT:-8080}:8080
+    # The image is distroless (no shell or curl), so readiness is polled from the
+    # host: `make wait` and tests/integration/test_compose_health.py.
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:26.3.62.3
+    restart: unless-stopped
+    user: "101:101"
+    environment:
+      CLICKHOUSE_DB: default
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-clickhouse}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-clickhouse}
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - clickhouse_logs:/var/log/clickhouse-server
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  minio:
+    image: cgr.dev/chainguard/minio
+    restart: unless-stopped
+    entrypoint: sh
+    command: -c 'mkdir -p /data/langfuse && minio server --address ":9000" --console-address ":9001" /data'
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-miniosecret}
+    ports:
+      # Browser-facing media uploads from the Langfuse UI.
+      - 127.0.0.1:9090:9000
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 2s
+      timeout: 5s
+      retries: 20
+
+  langfuse-worker:
+    image: langfuse/langfuse-worker:${LANGFUSE_IMAGE_TAG:-4.78.0}
+    restart: unless-stopped
+    depends_on: &langfuse-depends-on
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment: &langfuse-env
+      NEXTAUTH_URL: ${LANGFUSE_URL:-http://localhost:3001}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-progenitor}:${POSTGRES_PASSWORD:-progenitor}@postgres:5432/langfuse
+      SALT: ${LANGFUSE_SALT:-dev-only-salt}
+      ENCRYPTION_KEY: ${LANGFUSE_ENCRYPTION_KEY:-0000000000000000000000000000000000000000000000000000000000000000}
+      TELEMETRY_ENABLED: "false"
+      CLICKHOUSE_MIGRATION_URL: clickhouse://clickhouse:9000
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-clickhouse}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-clickhouse}
+      CLICKHOUSE_CLUSTER_ENABLED: "false"
+      REDIS_CONNECTION_STRING: redis://redis:6379/1
+      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: langfuse
+      LANGFUSE_S3_EVENT_UPLOAD_REGION: auto
+      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-minio}
+      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-miniosecret}
+      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: http://minio:9000
+      LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE: "true"
+      LANGFUSE_S3_EVENT_UPLOAD_PREFIX: events/
+      LANGFUSE_S3_MEDIA_UPLOAD_BUCKET: langfuse
+      LANGFUSE_S3_MEDIA_UPLOAD_REGION: auto
+      LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-minio}
+      LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-miniosecret}
+      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: http://minio:9000
+      LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE: "true"
+      LANGFUSE_S3_MEDIA_UPLOAD_PREFIX: media/
+
+  langfuse-web:
+    image: langfuse/langfuse:${LANGFUSE_IMAGE_TAG:-4.78.0}
+    restart: unless-stopped
+    depends_on: *langfuse-depends-on
+    ports:
+      - 127.0.0.1:3001:3000
+    environment:
+      <<: *langfuse-env
+      NEXTAUTH_SECRET: ${LANGFUSE_NEXTAUTH_SECRET:-dev-only-nextauth-secret}
+      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: http://localhost:9090
+      LANGFUSE_S3_MEDIA_UPLOAD_INTERNAL_ENDPOINT: http://minio:9000
+      # Headless init: a dev org, project, API keys, and admin user on first start.
+      LANGFUSE_INIT_ORG_ID: progenitor
+      LANGFUSE_INIT_ORG_NAME: Progenitor
+      LANGFUSE_INIT_PROJECT_ID: progenitor-dev
+      LANGFUSE_INIT_PROJECT_NAME: progenitor-dev
+      LANGFUSE_INIT_PROJECT_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-pk-lf-progenitor-dev}
+      LANGFUSE_INIT_PROJECT_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-sk-lf-progenitor-dev}
+      LANGFUSE_INIT_USER_EMAIL: ${LANGFUSE_INIT_USER_EMAIL:-admin@progenitor.local}
+      LANGFUSE_INIT_USER_NAME: admin
+      LANGFUSE_INIT_USER_PASSWORD: ${LANGFUSE_INIT_USER_PASSWORD:-progenitor-dev-password}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO /dev/null http://$$HOSTNAME:3000/api/public/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  backend:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment: *backend-env
+    ports:
+      - 127.0.0.1:${BACKEND_HOST_PORT:-8000}:8000
+
+  worker:
+    build: .
+    restart: unless-stopped
+    command: ["celery", "-A", "progenitor", "worker", "--loglevel=INFO", "--concurrency=2"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    environment: *backend-env
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A progenitor inspect ping -d celery@$$HOSTNAME --timeout 5 || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 15s
+
+  frontend:
+    build:
+      context: ${FRONTEND_DIR:-../frontend}
+      args:
+        BACKEND_INTERNAL_URL: http://backend:8000
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - 127.0.0.1:${FRONTEND_HOST_PORT:-3000}:3000
+
+volumes:
+  postgres_data:
+  redis_data:
+  clickhouse_data:
+  clickhouse_logs:
+  minio_data:

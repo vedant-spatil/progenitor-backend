@@ -1,0 +1,25 @@
+# Secrets: never bake into the image
+.env
+.env.*
+!.env.example
+
+# Local tooling and caches
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.git
+.github
+.pre-commit-config.yaml
+
+# Not needed at runtime
+docs
+tests/cassettes
+docker-compose.yml
+Makefile
+CLAUDE.md
+db.sqlite3
+data/external
+staticfiles
