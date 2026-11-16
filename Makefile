@@ -11,10 +11,14 @@ PHASE ?=
 HAPI_HOST_PORT ?= $(shell grep -s '^HAPI_HOST_PORT=' .env | tail -1 | cut -d= -f2)
 HAPI_HOST_PORT := $(or $(HAPI_HOST_PORT),8080)
 
+# Integration tests run Django against the compose Postgres (needed for the audit trigger).
+GATE_DATABASE_URL ?= postgresql://progenitor:progenitor@localhost:5432/progenitor
+INTEGRATION := DATABASE_URL=$(GATE_DATABASE_URL) uv run pytest tests/integration
+
 export FRONTEND_DIR
 
 .PHONY: help env up down logs ps wait test test-backend test-frontend lint gate eval check-frontend-dir \
-        gate-0 gate-0-backend gate-0-frontend gate-0-stack
+        migrate data gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1
 
 help: ## List targets
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-16s %s\n", $$1, $$2}'
@@ -52,10 +56,20 @@ test: test-backend test-frontend ## Backend unit + integration, frontend unit
 
 test-backend:
 	uv run pytest tests/unit
-	uv run pytest tests/integration -m integration
+	$(INTEGRATION) -m "integration or data"
 
 test-frontend: check-frontend-dir
 	@if grep -q '"test"' $(FRONTEND_DIR)/package.json; then $(FRONTEND) npm test; else echo "frontend: no unit tests yet (Vitest arrives in Phase 7a)"; fi
+
+migrate: ## Apply migrations to the dev database
+	uv run python manage.py migrate --noinput
+
+data: migrate ## Generate + load dev data (idempotent): Synthea, MIMIC demo, eval sets, inventory
+	uv run python manage.py generate_synthea
+	uv run python manage.py load_synthea
+	uv run python manage.py load_mimic
+	uv run python manage.py fetch_eval_data
+	uv run python manage.py data_inventory
 
 eval: ## Run the eval harness (live LLM; Phase 6)
 	@echo "eval harness arrives in Phase 6"; exit 1
@@ -87,4 +101,13 @@ gate-0-frontend: check-frontend-dir
 gate-0-stack: env check-frontend-dir
 	$(COMPOSE) up -d --build --wait
 	@$(MAKE) --no-print-directory wait
-	uv run pytest tests/integration -m integration
+	$(INTEGRATION) -m integration
+
+# ---------------- Gate 1: Data foundation ----------------
+# Precondition: `make data` has run. The gate does not reload first: its idempotency
+# test already re-runs both loaders in full and asserts 0 resources created.
+gate-1: gate-0
+	uv run python manage.py migrate --noinput
+	uv run python manage.py data_inventory
+	$(INTEGRATION) -m data
+	@echo "GATE 1 PASSED"

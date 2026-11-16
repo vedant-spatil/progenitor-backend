@@ -1,0 +1,39 @@
+{
+  "comment": "Pinned eval inputs. Checksums computed 2026-11-13 from the sources below. Files download to data/external/eval/ (gitignored). Licenses: TrialGPT repo declares none (NOASSERTION) - keep local, do not redistribute; Chia is CC BY 4.0.",
+  "trialgpt": {
+    "repo": "ncbi-nlp/TrialGPT",
+    "commit": "1b3242cd50c153a9c324661d4a0bd94fc68a4226",
+    "cohorts": {
+      "sigir": {
+        "expected_patients": 59,
+        "files": {
+          "queries.jsonl": "97ce3172bf6f80f3a5ac81371b83c9f031eccb243004b12cb5fd0015d372aa9b",
+          "qrels/test.tsv": "5298efb4859cfcdfe2cae5748eb1df1d4970c383c35a87e20145d1b3c25ea8ab"
+        }
+      },
+      "trec_2021": {
+        "expected_patients": 75,
+        "files": {
+          "queries.jsonl": "292ef5c4bb3393a800320386a7415e5919c3eaa95b9ae1d1b8ac43a65e51e00c",
+          "qrels/test.tsv": "7d22a83550ec02d1fe506a311b3bcb6d8d438cc491be0000d6a9711e1c05b5f4"
+        }
+      },
+      "trec_2022": {
+        "expected_patients": 50,
+        "files": {
+          "queries.jsonl": "329a8e55d56b55c81335119d3c26177a6ac9cddf10ed85ea4ab676d8d1d96964",
+          "qrels/test.tsv": "ca11e9777c2a8d902da2cc5d4cf5df5436894e379a358b58532b1ee24dc13826"
+        }
+      }
+    }
+  },
+  "chia": {
+    "doi": "10.6084/m9.figshare.11855817.v2",
+    "license": "CC BY 4.0",
+    "url": "https://ndownloader.figshare.com/files/21728850",
+    "file": "chia_with_scope.zip",
+    "md5": "54b33164da88da88e47b2a009e150a82",
+    "sha256": "b51ec05ba42a3805daf9581dd22a305986f7c5ae3ca4dad36b70d37970fb69b2",
+    "expected_trials": 1000
+  }
+}

@@ -39,7 +39,11 @@ jobs:
         with:
           version: "0.11.25"
       - run: make gate-0-backend
+      - name: All unit tests
+        run: uv run pytest tests/unit
 
+  # Gate 1 data tests (Synthea generation, MIMIC load, eval downloads) run locally
+  # with `make gate PHASE=1`; they need ~30 min and external downloads.
   stack:
     runs-on: ubuntu-latest
     needs: [backend]

@@ -9,8 +9,12 @@ from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
+import django_stubs_ext
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
+
+# Lets generic admin/queryset annotations (ModelAdmin[Model]) work at runtime.
+django_stubs_ext.monkeypatch()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

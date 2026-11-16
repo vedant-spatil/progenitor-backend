@@ -62,6 +62,8 @@ services:
       SPRING_DATASOURCE_DRIVERCLASSNAME: org.postgresql.Driver
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect
       HAPI_FHIR_FHIR_VERSION: R4
+      # Default heap (25% of RAM) runs out on large Synthea transaction bundles (HAPI-0389 OutOfMemoryError).
+      JAVA_TOOL_OPTIONS: ${HAPI_JAVA_OPTS:--Xmx4g}
     ports:
       - 127.0.0.1:${HAPI_HOST_PORT:-8080}:8080
     # The image is distroless (no shell or curl), so readiness is polled from the
