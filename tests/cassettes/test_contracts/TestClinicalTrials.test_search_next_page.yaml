@@ -1,0 +1,142 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate, zstd
+      connection:
+      - keep-alive
+      host:
+      - clinicaltrials.gov
+      user-agent:
+      - progenitor-mcp/0.1
+    method: GET
+    uri: https://clinicaltrials.gov/api/v2/studies?countTotal=true&fields=NCTId%2CBriefTitle%2COverallStatus%2CPhase%2CCondition%2CMinimumAge%2CMaximumAge%2CSex%2CLastUpdatePostDate&filter.overallStatus=RECRUITING&format=json&pageSize=3&query.cond=asthma
+  response:
+    body:
+      string: '{"totalCount":376,"studies":[
+
+        {"protocolSection":{"identificationModule":{"nctId":"NCT07456033","briefTitle":"A
+        Study of Efficacy and Safety of Depemokimab Compared With Placebo in Adults
+        and Adolescents With at Risk Type 2 Asthma"},"statusModule":{"overallStatus":"RECRUITING","lastUpdatePostDateStruct":{"date":"2026-08-17"}},"conditionsModule":{"conditions":["Asthma"]},"designModule":{"phases":["PHASE3"]},"eligibilityModule":{"sex":"ALL","minimumAge":"12
+        Years"}}},
+
+        {"protocolSection":{"identificationModule":{"nctId":"NCT07309614","briefTitle":"A
+        Study Assessing the Effect of Dupilumab on Inducing Clinical Remission in
+        Asthma"},"statusModule":{"overallStatus":"RECRUITING","lastUpdatePostDateStruct":{"date":"2026-11-06"}},"conditionsModule":{"conditions":["Asthma
+        Control"]},"designModule":{"phases":["PHASE3"]},"eligibilityModule":{"sex":"ALL","minimumAge":"18
+        Years","maximumAge":"79 Years"}}},
+
+        {"protocolSection":{"identificationModule":{"nctId":"NCT07232550","briefTitle":"Biomarkers
+        and Respiratory Omics as New CHildren Opportunities - Study of Clinical Outcomes
+        and Predictivity Evaluation"},"statusModule":{"overallStatus":"RECRUITING","lastUpdatePostDateStruct":{"date":"2026-07-30"}},"conditionsModule":{"conditions":["Asthma
+        in Children","Protracted Bacterial Bronchitis","Chronic Cough"]},"designModule":{},"eligibilityModule":{"sex":"ALL","maximumAge":"17
+        Years"}}}
+
+        ],"nextPageToken":"ZVNj7o2Elu8o3lpyVoqu677umpOQJJxtY_Gk2vg"}'
+    headers:
+      alt-svc:
+      - clear
+      content-length:
+      - '1448'
+      content-type:
+      - application/json
+      date:
+      - Mon, 16 Nov 2026 19:49:42 GMT
+      etag:
+      - '"0/0.34.1/mwj3e8aw-gzip"'
+      server:
+      - istio-envoy
+      set-cookie:
+      - ncbi_sid=61799EB540AB4EA4_4944SID; Max-Age=31536000; Domain=clinicaltrials.gov;
+        Path=/; $x-enc=URI_ENCODING
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      vary:
+      - Accept-Encoding
+      via:
+      - 1.1 google
+      x-envoy-upstream-service-time:
+      - '13'
+      x-frame-options:
+      - SAMEORIGIN
+      x-ua-compatible:
+      - IE=Edge
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate, zstd
+      connection:
+      - keep-alive
+      host:
+      - clinicaltrials.gov
+      user-agent:
+      - progenitor-mcp/0.1
+    method: GET
+    uri: https://clinicaltrials.gov/api/v2/studies?countTotal=true&fields=NCTId%2CBriefTitle%2COverallStatus%2CPhase%2CCondition%2CMinimumAge%2CMaximumAge%2CSex%2CLastUpdatePostDate&filter.overallStatus=RECRUITING&format=json&pageSize=3&pageToken=ZVNj7o2Elu8o3lpyVoqu677umpOQJJxtY_Gk2vg&query.cond=asthma
+  response:
+    body:
+      string: '{"studies":[
+
+        {"protocolSection":{"identificationModule":{"nctId":"NCT07160868","briefTitle":"Obstructive
+        Sleep Apnoea and Difficult Asthma (OSADA)"},"statusModule":{"overallStatus":"RECRUITING","lastUpdatePostDateStruct":{"date":"2026-05-26"}},"conditionsModule":{"conditions":["Asthma
+        (Diagnosis)","OSA - Obstructive Sleep Apnea","CPAP Treatment"]},"designModule":{"phases":["NA"]},"eligibilityModule":{"sex":"ALL","minimumAge":"18
+        Years","maximumAge":"90 Years"}}},
+
+        {"protocolSection":{"identificationModule":{"nctId":"NCT03889743","briefTitle":"Innovative
+        Steroid Treatment to Reduce Asthma Development in Children After First-time
+        Rhinovirus Induced Wheezing"},"statusModule":{"overallStatus":"RECRUITING","lastUpdatePostDateStruct":{"date":"2026-07-20"}},"conditionsModule":{"conditions":["Asthma","Inflammation"]},"designModule":{"phases":["PHASE4"]},"eligibilityModule":{"sex":"ALL","minimumAge":"3
+        Months","maximumAge":"23 Months"}}},
+
+        {"protocolSection":{"identificationModule":{"nctId":"NCT05991115","briefTitle":"Hospital
+        to Home Study: Trial to Optimize Transitions and Address Disparities in Asthma
+        Care"},"statusModule":{"overallStatus":"RECRUITING","lastUpdatePostDateStruct":{"date":"2026-03-17"}},"conditionsModule":{"conditions":["Asthma","Asthma
+        in Children"]},"designModule":{"phases":["NA"]},"eligibilityModule":{"sex":"ALL","minimumAge":"4
+        Years","maximumAge":"12 Years"}}}
+
+        ],"nextPageToken":"ZVNj7o2Elu8o3lpyVoqu677umpOQJJxpZfWk3fg"}'
+    headers:
+      alt-svc:
+      - clear
+      content-length:
+      - '1455'
+      content-type:
+      - application/json
+      date:
+      - Mon, 16 Nov 2026 19:49:42 GMT
+      etag:
+      - '"0/0.34.1/mwj3e8aw-gzip"'
+      server:
+      - istio-envoy
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      vary:
+      - Accept-Encoding
+      via:
+      - 1.1 google
+      x-envoy-upstream-service-time:
+      - '11'
+      x-frame-options:
+      - SAMEORIGIN
+      x-ua-compatible:
+      - IE=Edge
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

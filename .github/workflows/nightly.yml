@@ -1,0 +1,23 @@
+name: nightly-live
+
+# Live smoke tests against ClinicalTrials.gov, RxNav, NLM Clinical Tables, PubMed.
+# Separate from the gate: upstream outages must not block merges.
+on:
+  schedule:
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  live-smoke:
+    runs-on: ubuntu-latest
+    env:
+      MCP_CACHE_DISABLED: "1"
+      PUBMED_EMAIL: ${{ vars.PUBMED_EMAIL }}
+      PUBMED_API_KEY: ${{ secrets.PUBMED_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.25"
+      - run: uv sync --frozen
+      - run: uv run pytest tests/live -m live -v

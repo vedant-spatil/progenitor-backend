@@ -1,0 +1,86 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate, zstd
+      connection:
+      - keep-alive
+      host:
+      - clinicaltrials.gov
+      user-agent:
+      - progenitor-mcp/0.1
+    method: GET
+    uri: https://clinicaltrials.gov/api/v2/studies?countTotal=true&fields=NCTId%2CBriefTitle%2COverallStatus%2CPhase%2CCondition%2CMinimumAge%2CMaximumAge%2CSex%2CLastUpdatePostDate&filter.advanced=AREA%5BPhase%5D%28PHASE3%29&filter.overallStatus=RECRUITING&format=json&pageSize=5&query.cond=type+2+diabetes
+  response:
+    body:
+      string: '{"totalCount":78,"studies":[
+
+        {"protocolSection":{"identificationModule":{"nctId":"NCT07595549","briefTitle":"A
+        Study to Learn About the Study Medicine Called Berobenatide (PF-08653944)
+        in People With Overweight or Obesity"},"statusModule":{"overallStatus":"RECRUITING","lastUpdatePostDateStruct":{"date":"2026-11-05"}},"conditionsModule":{"conditions":["Obesity","Overweight
+        and/or Obesity","Overweight"]},"designModule":{"phases":["PHASE3"]},"eligibilityModule":{"sex":"ALL","minimumAge":"18
+        Years"}}},
+
+        {"protocolSection":{"identificationModule":{"nctId":"NCT06361238","briefTitle":"Liraglutide
+        in Preventing Delirium in Diabetic Elderly After Cardiac Surgery"},"statusModule":{"overallStatus":"RECRUITING","lastUpdatePostDateStruct":{"date":"2024-12-20"}},"conditionsModule":{"conditions":["Delirium,
+        Postoperative"]},"designModule":{"phases":["PHASE3"]},"eligibilityModule":{"sex":"ALL","minimumAge":"60
+        Years"}}},
+
+        {"protocolSection":{"identificationModule":{"nctId":"NCT07564414","briefTitle":"A
+        Research Study to Look at How Two Different Doses of CagriSema and One Dose
+        of Semaglutide Help People Living With Obesity With or Without Type 2 Diabetes
+        Lose Weight"},"statusModule":{"overallStatus":"RECRUITING","lastUpdatePostDateStruct":{"date":"2026-09-30"}},"conditionsModule":{"conditions":["Obesity","Type
+        2 Diabetes"]},"designModule":{"phases":["PHASE3"]},"eligibilityModule":{"sex":"ALL","minimumAge":"18
+        Years"}}},
+
+        {"protocolSection":{"identificationModule":{"nctId":"NCT05569772","briefTitle":"Semaglutide
+        for the Treatment of Glucose Intolerance in Women With Prior Gestational Diabetes"},"statusModule":{"overallStatus":"RECRUITING","lastUpdatePostDateStruct":{"date":"2026-09-15"}},"conditionsModule":{"conditions":["Glucose
+        Intolerance After a Recent History of Gestational Diabetes"]},"designModule":{"phases":["PHASE3"]},"eligibilityModule":{"sex":"FEMALE","minimumAge":"18
+        Years"}}},
+
+        {"protocolSection":{"identificationModule":{"nctId":"NCT07654374","briefTitle":"A
+        Study of Aleniglipron in Adults With Obesity or Overweight and Type 2 Diabetes
+        Mellitus (ACCOMPLISH-2)"},"statusModule":{"overallStatus":"RECRUITING","lastUpdatePostDateStruct":{"date":"2026-10-20"}},"conditionsModule":{"conditions":["Obesity","Overweight","Chronic
+        Weight Management","Type2 Diabetes Mellitus"]},"designModule":{"phases":["PHASE3"]},"eligibilityModule":{"sex":"ALL","minimumAge":"18
+        Years","maximumAge":"79 Years"}}}
+
+        ],"nextPageToken":"ZVNj7o2Elu8o3lpyVoqu677umpOQJJxrZfCh2_QW"}'
+    headers:
+      alt-svc:
+      - clear
+      content-length:
+      - '2480'
+      content-type:
+      - application/json
+      date:
+      - Mon, 16 Nov 2026 19:49:42 GMT
+      etag:
+      - '"0/0.34.1/mwj3e8aw-gzip"'
+      server:
+      - istio-envoy
+      set-cookie:
+      - ncbi_sid=1DCE61B071C4D86D_3F51SID; Max-Age=31536000; Domain=clinicaltrials.gov;
+        Path=/; $x-enc=URI_ENCODING
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      vary:
+      - Accept-Encoding
+      via:
+      - 1.1 google
+      x-envoy-upstream-service-time:
+      - '20'
+      x-frame-options:
+      - SAMEORIGIN
+      x-ua-compatible:
+      - IE=Edge
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

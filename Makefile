@@ -18,7 +18,7 @@ INTEGRATION := DATABASE_URL=$(GATE_DATABASE_URL) uv run pytest tests/integration
 export FRONTEND_DIR
 
 .PHONY: help env up down logs ps wait test test-backend test-frontend lint gate eval check-frontend-dir \
-        migrate data gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1
+        migrate data live gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2
 
 help: ## List targets
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-16s %s\n", $$1, $$2}'
@@ -71,6 +71,9 @@ data: migrate ## Generate + load dev data (idempotent): Synthea, MIMIC demo, eva
 	uv run python manage.py fetch_eval_data
 	uv run python manage.py data_inventory
 
+live: ## Live smoke tests against real external APIs (not part of any gate)
+	MCP_CACHE_DISABLED=1 uv run pytest tests/live -m live -v
+
 eval: ## Run the eval harness (live LLM; Phase 6)
 	@echo "eval harness arrives in Phase 6"; exit 1
 
@@ -111,3 +114,10 @@ gate-1: gate-0
 	uv run python manage.py data_inventory
 	$(INTEGRATION) -m data
 	@echo "GATE 1 PASSED"
+
+# ---------------- Gate 2: MCP tool layer ----------------
+# Gate 0 (incl. MCP stack integration tests, which need the MCP containers),
+# then every unit test with cassettes replayed only: no live calls.
+gate-2: gate-0
+	uv run pytest tests/unit --record-mode=none
+	@echo "GATE 2 PASSED"

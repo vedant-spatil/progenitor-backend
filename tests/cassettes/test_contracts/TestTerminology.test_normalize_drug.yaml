@@ -1,0 +1,65 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate, zstd
+      connection:
+      - keep-alive
+      host:
+      - rxnav.nlm.nih.gov
+      user-agent:
+      - progenitor-mcp/0.1
+    method: GET
+    uri: https://rxnav.nlm.nih.gov/REST/approximateTerm.json?maxEntries=5&term=metformin
+  response:
+    body:
+      string: '{"approximateGroup":{"inputTerm":null,"candidate":[{"rxcui":"6809","rxaui":"10328664","score":"11.205785751342773","rank":"1","source":"GS"},{"rxcui":"6809","rxaui":"12251601","score":"11.205785751342773","rank":"1","name":"metformin","source":"RXNORM"},{"rxcui":"6809","rxaui":"2628685","score":"11.205785751342773","rank":"1","name":"METFORMIN","source":"VANDF"},{"rxcui":"6809","rxaui":"3605328","score":"11.205785751342773","rank":"1","source":"NDDF"},{"rxcui":"6809","rxaui":"5481094","score":"11.205785751342773","rank":"1","name":"metformin","source":"ATC"},{"rxcui":"6809","rxaui":"8381393","score":"11.205785751342773","rank":"1","name":"Metformin","source":"DRUGBANK"}]}}'
+    headers:
+      access-control-allow-headers:
+      - '*'
+      access-control-allow-origin:
+      - '*'
+      cache-control:
+      - no-store, no-cache
+      connection:
+      - keep-alive
+      content-length:
+      - '681'
+      content-security-policy:
+      - 'object-src ''none''; script-src ''unsafe-inline'' ''unsafe-eval'' ''strict-dynamic''
+        https: http:;'
+      content-type:
+      - application/json;charset=utf-8
+      date:
+      - Mon, 16 Nov 2026 19:50:24 GMT
+      etag:
+      - W/"20AA_261102F;1793130400;3.1.357"
+      expires:
+      - '0'
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      vary:
+      - Authorization,Accept
+      x-cache-status:
+      - MISS
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - DENY
+      x-permitted-cross-domain-policies:
+      - none
+      x-rate-tier:
+      - std
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

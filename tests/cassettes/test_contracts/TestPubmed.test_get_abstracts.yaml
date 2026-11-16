@@ -1,0 +1,1820 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate, zstd
+      connection:
+      - keep-alive
+      host:
+      - eutils.ncbi.nlm.nih.gov
+      user-agent:
+      - progenitor-mcp/0.1
+    method: GET
+    uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=32445440&retmode=xml&rettype=abstract&tool=progenitor
+  response:
+    body:
+      string: '<?xml version="1.0" ?>
+
+        <!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January
+        2025//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_250101.dtd">
+
+        <PubmedArticleSet>
+
+        <PubmedArticle><MedlineCitation Status="MEDLINE" Owner="NLM" IndexingMethod="Manual"><PMID
+        Version="1">32445440</PMID><DateCompleted><Year>2020</Year><Month>12</Month><Day>01</Day></DateCompleted><DateRevised><Year>2026</Year><Month>05</Month><Day>18</Day></DateRevised><Article
+        PubModel="Print-Electronic"><Journal><ISSN IssnType="Electronic">1533-4406</ISSN><JournalIssue
+        CitedMedium="Internet"><Volume>383</Volume><Issue>19</Issue><PubDate><Year>2020</Year><Month>Nov</Month><Day>05</Day></PubDate></JournalIssue><Title>The
+        New England journal of medicine</Title><ISOAbbreviation>N Engl J Med</ISOAbbreviation></Journal><ArticleTitle>Remdesivir
+        for the Treatment of Covid-19 - Final Report.</ArticleTitle><Pagination><StartPage>1813</StartPage><EndPage>1826</EndPage><MedlinePgn>1813-1826</MedlinePgn></Pagination><ELocationID
+        EIdType="pii" ValidYN="Y">NEJMoa2007764</ELocationID><ELocationID EIdType="doi"
+        ValidYN="Y">10.1056/NEJMoa2007764</ELocationID><Abstract><AbstractText Label="BACKGROUND">Although
+        several therapeutic agents have been evaluated for the treatment of coronavirus
+        disease 2019 (Covid-19), no antiviral agents have yet been shown to be efficacious.</AbstractText><AbstractText
+        Label="METHODS">We conducted a double-blind, randomized, placebo-controlled
+        trial of intravenous remdesivir in adults who were hospitalized with Covid-19
+        and had evidence of lower respiratory tract infection. Patients were randomly
+        assigned to receive either remdesivir (200 mg loading dose on day 1, followed
+        by 100 mg daily for up to 9 additional days) or placebo for up to 10 days.
+        The primary outcome was the time to recovery, defined by either discharge
+        from the hospital or hospitalization for infection-control purposes only.</AbstractText><AbstractText
+        Label="RESULTS">A total of 1062 patients underwent randomization (with 541
+        assigned to remdesivir and 521 to placebo). Those who received remdesivir
+        had a median recovery time of 10 days (95% confidence interval [CI], 9 to
+        11), as compared with 15 days (95% CI, 13 to 18) among those who received
+        placebo (rate ratio for recovery, 1.29; 95% CI, 1.12 to 1.49; P&lt;0.001,
+        by a log-rank test). In an analysis that used a proportional-odds model with
+        an eight-category ordinal scale, the patients who received remdesivir were
+        found to be more likely than those who received placebo to have clinical improvement
+        at day 15 (odds ratio, 1.5; 95% CI, 1.2 to 1.9, after adjustment for actual
+        disease severity). The Kaplan-Meier estimates of mortality were 6.7% with
+        remdesivir and 11.9% with placebo by day 15 and 11.4% with remdesivir and
+        15.2% with placebo by day 29 (hazard ratio, 0.73; 95% CI, 0.52 to 1.03). Serious
+        adverse events were reported in 131 of the 532 patients who received remdesivir
+        (24.6%) and in 163 of the 516 patients who received placebo (31.6%).</AbstractText><AbstractText
+        Label="CONCLUSIONS">Our data show that remdesivir was superior to placebo
+        in shortening the time to recovery in adults who were hospitalized with Covid-19
+        and had evidence of lower respiratory tract infection. (Funded by the National
+        Institute of Allergy and Infectious Diseases and others; ACTT-1 ClinicalTrials.gov
+        number, NCT04280705.).</AbstractText><CopyrightInformation>Copyright &#xa9;
+        2020 Massachusetts Medical Society.</CopyrightInformation></Abstract><AuthorList
+        CompleteYN="Y"><Author ValidYN="Y"><LastName>Beigel</LastName><ForeName>John
+        H</ForeName><Initials>JH</Initials><Identifier Source="ORCID">0000-0002-4879-4941</Identifier><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Tomashek</LastName><ForeName>Kay M</ForeName><Initials>KM</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Dodd</LastName><ForeName>Lori E</ForeName><Initials>LE</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Mehta</LastName><ForeName>Aneesh K</ForeName><Initials>AK</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Zingman</LastName><ForeName>Barry S</ForeName><Initials>BS</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Kalil</LastName><ForeName>Andre C</ForeName><Initials>AC</Initials><Identifier
+        Source="ORCID">0000-0002-6489-6294</Identifier><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Hohmann</LastName><ForeName>Elizabeth</ForeName><Initials>E</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Chu</LastName><ForeName>Helen Y</ForeName><Initials>HY</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Luetkemeyer</LastName><ForeName>Annie</ForeName><Initials>A</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Kline</LastName><ForeName>Susan</ForeName><Initials>S</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Lopez de Castilla</LastName><ForeName>Diego</ForeName><Initials>D</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Finberg</LastName><ForeName>Robert W</ForeName><Initials>RW</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Dierberg</LastName><ForeName>Kerry</ForeName><Initials>K</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Tapson</LastName><ForeName>Victor</ForeName><Initials>V</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Hsieh</LastName><ForeName>Lanny</ForeName><Initials>L</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Patterson</LastName><ForeName>Thomas F</ForeName><Initials>TF</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Paredes</LastName><ForeName>Roger</ForeName><Initials>R</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Sweeney</LastName><ForeName>Daniel A</ForeName><Initials>DA</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Short</LastName><ForeName>William R</ForeName><Initials>WR</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Touloumi</LastName><ForeName>Giota</ForeName><Initials>G</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Lye</LastName><ForeName>David Chien</ForeName><Initials>DC</Initials><Identifier
+        Source="ORCID">0000-0003-0324-0205</Identifier><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Ohmagari</LastName><ForeName>Norio</ForeName><Initials>N</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Oh</LastName><ForeName>Myoung-Don</ForeName><Initials>MD</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Ruiz-Palacios</LastName><ForeName>Guillermo M</ForeName><Initials>GM</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Benfield</LastName><ForeName>Thomas</ForeName><Initials>T</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>F&#xe4;tkenheuer</LastName><ForeName>Gerd</ForeName><Initials>G</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Kortepeter</LastName><ForeName>Mark G</ForeName><Initials>MG</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Atmar</LastName><ForeName>Robert L</ForeName><Initials>RL</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Creech</LastName><ForeName>C Buddy</ForeName><Initials>CB</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Lundgren</LastName><ForeName>Jens</ForeName><Initials>J</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Babiker</LastName><ForeName>Abdel G</ForeName><Initials>AG</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Pett</LastName><ForeName>Sarah</ForeName><Initials>S</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Neaton</LastName><ForeName>James D</ForeName><Initials>JD</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Burgess</LastName><ForeName>Timothy H</ForeName><Initials>TH</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Bonnett</LastName><ForeName>Tyler</ForeName><Initials>T</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Green</LastName><ForeName>Michelle</ForeName><Initials>M</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Makowski</LastName><ForeName>Mat</ForeName><Initials>M</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Osinusi</LastName><ForeName>Anu</ForeName><Initials>A</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Nayak</LastName><ForeName>Seema</ForeName><Initials>S</Initials><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><LastName>Lane</LastName><ForeName>H Clifford</ForeName><Initials>HC</Initials><Identifier
+        Source="ORCID">0000-0001-9509-1045</Identifier><AffiliationInfo><Affiliation>From
+        the National Institute of Allergy and Infectious Diseases, National Institutes
+        of Health (J.H.B., K.M.T., L.E.D., S.N., H.C.L.), and the Infectious Disease
+        Clinical Research Program, Uniformed Services University of the Health Sciences
+        (T.H.B.), Bethesda, the Clinical Monitoring Research Program Directorate,
+        Frederick National Laboratory for Cancer Research, Frederick (T. Bonnett),
+        and Emmes, Rockville (M.G., M.M.) - all in Maryland; Emory University, Atlanta
+        (A.K.M.); Montefiore Medical Center-Albert Einstein College of Medicine (B.S.Z.)
+        and NYU Langone Health and NYC Health and Hospitals-Bellevue (K.D.), New York;
+        University of Nebraska Medical Center, Omaha (A.C.K., M.G.K.); Massachusetts
+        General Hospital, Boston (E.H.), and University of Massachusetts Medical School,
+        Worcester (R.W.F.); University of Washington, Seattle (H.Y.C.), and Evergreen
+        Health Medical Center, Kirkland (D.L.C.) - both in Washington; University
+        of California, San Francisco, San Francisco (A.L.), Cedars-Sinai Medical Center,
+        Los Angeles (V.T.), University of California, Irvine, Irvine (L.H.), University
+        of California, San Diego, La Jolla (D.A.S.), and Gilead Sciences, Foster City
+        (A.O.) - all in California; University of Minnesota (S.K.) and University
+        of Minnesota School of Public Health and INSIGHT (J.D.N.), Minneapolis; University
+        of Texas Health San Antonio, University Health System, and the South Texas
+        Veterans Health Care System, San Antonio (T.F.P.), and Baylor College of Medicine,
+        Houston (R.L.A.); Hospital Germans Trias i Pujol and irsiCaixa AIDS Research
+        Institute, Badalona, Spain (R.P.); University of Pennsylvania, Philadelphia
+        (W.R.S.); Medical School, National and Kapodistrian University of Athens,
+        Athens (G.T.); National Center for Infectious Diseases-Tan Tock Seng Hospital-Lee
+        Kong Chian School of Medicine-Yong Loo Lin School of Medicine, Singapore,
+        Singapore (D.C.L.); the National Center for Global Health and Medicine Hospital,
+        Tokyo (N.O.); Seoul National University Hospital, Seoul, South Korea (M.O.);
+        Instituto Nacional de Ciencias M&#xe9;dicas y Nutrici&#xf3;n Salvador Zubir&#xe1;n,
+        Mexico City (G.M.R.-P.); the Department of Infectious Diseases, Amager Hvidovre
+        Hospital-University of Copenhagen, Hvidovre (T. Benfield), and Rigshospitalet,
+        Department of Infectious Diseases (CHIP) and INSIGHT, Copenhagen (J.L.) -
+        both in Denmark; University Hospital of Cologne, Cologne, Germany (G.F.);
+        Vanderbilt University Medical Center, Nashville (C.B.C.); and University College
+        London, MRC Clinical Trials Unit at UCL and INSIGHT, London (A.G.B., S.P.).</Affiliation></AffiliationInfo></Author><Author
+        ValidYN="Y"><CollectiveName>ACTT-1 Study Group Members</CollectiveName></Author></AuthorList><Language>eng</Language><DataBankList
+        CompleteYN="Y"><DataBank><DataBankName>ClinicalTrials.gov</DataBankName><AccessionNumberList><AccessionNumber>NCT04280705</AccessionNumber></AccessionNumberList></DataBank></DataBankList><GrantList
+        CompleteYN="Y"><Grant><GrantID>UM1AI148576</GrantID><Acronym>US</Acronym><Agency>United
+        States</Agency><Country>United States</Country></Grant><Grant><GrantID>I01
+        BX003714</GrantID><Acronym>BX</Acronym><Agency>BLRD VA</Agency><Country>United
+        States</Country></Grant><Grant><GrantID>UM1AI148685</GrantID><Acronym>US</Acronym><Agency>United
+        States</Agency><Country>United States</Country></Grant><Grant><GrantID>UM1AI148452</GrantID><Acronym>US</Acronym><Agency>United
+        States</Agency><Country>United States</Country></Grant><Grant><GrantID>UM1
+        AI148685</GrantID><Acronym>AI</Acronym><Agency>NIAID NIH HHS</Agency><Country>United
+        States</Country></Grant><Grant><GrantID>UM1AI148684</GrantID><Acronym>US</Acronym><Agency>United
+        States</Agency><Country>United States</Country></Grant><Grant><GrantID>UM1
+        AI148573</GrantID><Acronym>AI</Acronym><Agency>NIAID NIH HHS</Agency><Country>United
+        States</Country></Grant><Grant><GrantID>UM1 AI148684</GrantID><Acronym>AI</Acronym><Agency>NIAID
+        NIH HHS</Agency><Country>United States</Country></Grant><Grant><GrantID>211153/Z/18/Z</GrantID><Acronym>WT_</Acronym><Agency>Wellcome
+        Trust</Agency><Country>United Kingdom</Country></Grant><Grant><GrantID>HHSN261201500003I</GrantID><Acronym>CA</Acronym><Agency>NCI
+        NIH HHS</Agency><Country>United States</Country></Grant><Grant><GrantID>MC_UU_12023/22</GrantID><Acronym>MRC_</Acronym><Agency>Medical
+        Research Council</Agency><Country>United Kingdom</Country></Grant><Grant><GrantID>HHSN261200800001E</GrantID><Acronym>US</Acronym><Agency>United
+        States</Agency><Country>United States</Country></Grant><Grant><GrantID>R38
+        AI140299</GrantID><Acronym>AI</Acronym><Agency>NIAID NIH HHS</Agency><Country>United
+        States</Country></Grant><Grant><GrantID>UM1 AI148689</GrantID><Acronym>AI</Acronym><Agency>NIAID
+        NIH HHS</Agency><Country>United States</Country></Grant><Grant><GrantID>UM1
+        AI148450</GrantID><Acronym>AI</Acronym><Agency>NIAID NIH HHS</Agency><Country>United
+        States</Country></Grant><Grant><GrantID>U54 AG062334</GrantID><Acronym>AG</Acronym><Agency>NIA
+        NIH HHS</Agency><Country>United States</Country></Grant><Grant><GrantID>UM1AI148573</GrantID><Acronym>US</Acronym><Agency>United
+        States</Agency><Country>United States</Country></Grant><Grant><GrantID>UM1
+        AI148575</GrantID><Acronym>AI</Acronym><Agency>NIAID NIH HHS</Agency><Country>United
+        States</Country></Grant><Grant><GrantID>UM1 AI148576</GrantID><Acronym>AI</Acronym><Agency>NIAID
+        NIH HHS</Agency><Country>United States</Country></Grant><Grant><GrantID>UM1AI148575</GrantID><Acronym>US</Acronym><Agency>United
+        States</Agency><Country>United States</Country></Grant><Grant><GrantID>HHSN261201500003C</GrantID><Acronym>CA</Acronym><Agency>NCI
+        NIH HHS</Agency><Country>United States</Country></Grant><Grant><GrantID>UM1AI148689</GrantID><Acronym>US</Acronym><Agency>United
+        States</Agency><Country>United States</Country></Grant><Grant><GrantID>UM1
+        AI148452</GrantID><Acronym>AI</Acronym><Agency>NIAID NIH HHS</Agency><Country>United
+        States</Country></Grant><Grant><GrantID>HHSN261201500003I</GrantID><Acronym>US</Acronym><Agency>United
+        States</Agency><Country>United States</Country></Grant><Grant><GrantID>UM1AI148450</GrantID><Acronym>US</Acronym><Agency>United
+        States</Agency><Country>United States</Country></Grant></GrantList><PublicationTypeList><PublicationType
+        UI="D017428">Clinical Trial, Phase III</PublicationType><PublicationType UI="D016428">Journal
+        Article</PublicationType><PublicationType UI="D016449">Randomized Controlled
+        Trial</PublicationType><PublicationType UI="D052061">Research Support, N.I.H.,
+        Extramural</PublicationType><PublicationType UI="D013485">Research Support,
+        Non-U.S. Gov''t</PublicationType></PublicationTypeList><ArticleDate DateType="Electronic"><Year>2020</Year><Month>10</Month><Day>08</Day></ArticleDate></Article><MedlineJournalInfo><Country>United
+        States</Country><MedlineTA>N Engl J Med</MedlineTA><NlmUniqueID>0255562</NlmUniqueID><ISSNLinking>0028-4793</ISSNLinking></MedlineJournalInfo><ChemicalList><Chemical><RegistryNumber>0</RegistryNumber><NameOfSubstance
+        UI="D000998">Antiviral Agents</NameOfSubstance></Chemical><Chemical><RegistryNumber>3QKI37EEHE</RegistryNumber><NameOfSubstance
+        UI="C000606551">remdesivir</NameOfSubstance></Chemical><Chemical><RegistryNumber>415SHH325A</RegistryNumber><NameOfSubstance
+        UI="D000249">Adenosine Monophosphate</NameOfSubstance></Chemical><Chemical><RegistryNumber>OF5P57N2ZX</RegistryNumber><NameOfSubstance
+        UI="D000409">Alanine</NameOfSubstance></Chemical></ChemicalList><CitationSubset>IM</CitationSubset><CommentsCorrectionsList><CommentsCorrections
+        RefType="CommentIn"><RefSource>N Engl J Med. 2020 Nov 5;383(19):1886-1887.
+        doi: 10.1056/NEJMe2018715.</RefSource><PMID Version="1">32459913</PMID></CommentsCorrections><CommentsCorrections
+        RefType="CommentIn"><RefSource>Ugeskr Laeger. 2020 Jun 8;182(24):V205031.</RefSource><PMID
+        Version="1">32515337</PMID></CommentsCorrections><CommentsCorrections RefType="CommentIn"><RefSource>N
+        Engl J Med. 2020 Sep 3;383(10):992. doi: 10.1056/NEJMc2022236.</RefSource><PMID
+        Version="1">32649074</PMID></CommentsCorrections><CommentsCorrections RefType="CommentIn"><RefSource>N
+        Engl J Med. 2020 Sep 3;383(10):992-993. doi: 10.1056/NEJMc2022236.</RefSource><PMID
+        Version="1">32649075</PMID></CommentsCorrections><CommentsCorrections RefType="CommentIn"><RefSource>N
+        Engl J Med. 2020 Sep 3;383(10):993. doi: 10.1056/NEJMc2022236.</RefSource><PMID
+        Version="1">32649076</PMID></CommentsCorrections><CommentsCorrections RefType="CommentIn"><RefSource>N
+        Engl J Med. 2020 Sep 3;383(10):993-994. doi: 10.1056/NEJMc2022236.</RefSource><PMID
+        Version="1">32649077</PMID></CommentsCorrections></CommentsCorrectionsList><MeshHeadingList><MeshHeading><DescriptorName
+        UI="D000249" MajorTopicYN="N">Adenosine Monophosphate</DescriptorName><QualifierName
+        UI="Q000008" MajorTopicYN="N">administration &amp; dosage</QualifierName><QualifierName
+        UI="Q000009" MajorTopicYN="N">adverse effects</QualifierName><QualifierName
+        UI="Q000031" MajorTopicYN="Y">analogs &amp; derivatives</QualifierName><QualifierName
+        UI="Q000627" MajorTopicYN="N">therapeutic use</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D061605" MajorTopicYN="N">Administration, Intravenous</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D000328" MajorTopicYN="N">Adult</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D000368" MajorTopicYN="N">Aged</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D000409" MajorTopicYN="N">Alanine</DescriptorName><QualifierName UI="Q000008"
+        MajorTopicYN="N">administration &amp; dosage</QualifierName><QualifierName
+        UI="Q000009" MajorTopicYN="N">adverse effects</QualifierName><QualifierName
+        UI="Q000031" MajorTopicYN="Y">analogs &amp; derivatives</QualifierName><QualifierName
+        UI="Q000627" MajorTopicYN="N">therapeutic use</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D000998" MajorTopicYN="N">Antiviral Agents</DescriptorName><QualifierName
+        UI="Q000008" MajorTopicYN="N">administration &amp; dosage</QualifierName><QualifierName
+        UI="Q000009" MajorTopicYN="N">adverse effects</QualifierName><QualifierName
+        UI="Q000627" MajorTopicYN="Y">therapeutic use</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D000073640" MajorTopicYN="N">Betacoronavirus</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D000086382" MajorTopicYN="N">COVID-19</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D018352" MajorTopicYN="N">Coronavirus Infections</DescriptorName><QualifierName
+        UI="Q000188" MajorTopicYN="Y">drug therapy</QualifierName><QualifierName UI="Q000401"
+        MajorTopicYN="N">mortality</QualifierName><QualifierName UI="Q000628" MajorTopicYN="N">therapy</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D004311" MajorTopicYN="N">Double-Blind Method</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D015199" MajorTopicYN="N">Extracorporeal Membrane Oxygenation</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D005260" MajorTopicYN="N">Female</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D006801" MajorTopicYN="N">Humans</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D053208" MajorTopicYN="N">Kaplan-Meier Estimate</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D008297" MajorTopicYN="N">Male</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D008875" MajorTopicYN="N">Middle Aged</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D010102" MajorTopicYN="N">Oxygen Inhalation Therapy</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D058873" MajorTopicYN="N">Pandemics</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D011024" MajorTopicYN="N">Pneumonia, Viral</DescriptorName><QualifierName
+        UI="Q000188" MajorTopicYN="Y">drug therapy</QualifierName><QualifierName UI="Q000401"
+        MajorTopicYN="N">mortality</QualifierName><QualifierName UI="Q000628" MajorTopicYN="N">therapy</QualifierName></MeshHeading><MeshHeading><DescriptorName
+        UI="D012121" MajorTopicYN="N">Respiration, Artificial</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D000086402" MajorTopicYN="N">SARS-CoV-2</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D013997" MajorTopicYN="N">Time Factors</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D055815" MajorTopicYN="N">Young Adult</DescriptorName></MeshHeading><MeshHeading><DescriptorName
+        UI="D000093485" MajorTopicYN="N">COVID-19 Drug Treatment</DescriptorName></MeshHeading></MeshHeadingList><InvestigatorList><Investigator
+        ValidYN="Y"><LastName>Mehta</LastName><ForeName>Aneesh K</ForeName><Initials>AK</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Rouphael</LastName><ForeName>Nadine G</ForeName><Initials>NG</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Traenkner</LastName><ForeName>Jessica J</ForeName><Initials>JJ</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Cantos</LastName><ForeName>Valeria D</ForeName><Initials>VD</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Alaaeddine</LastName><ForeName>Ghina</ForeName><Initials>G</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Zingman</LastName><ForeName>Barry S</ForeName><Initials>BS</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Grossberg</LastName><ForeName>Robert</ForeName><Initials>R</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Riska</LastName><ForeName>Paul F</ForeName><Initials>PF</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Hohmann</LastName><ForeName>Elizabeth</ForeName><Initials>E</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Torres-Soto</LastName><ForeName>Mariam</ForeName><Initials>M</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Jilg</LastName><ForeName>Nikolaus</ForeName><Initials>N</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Chu</LastName><ForeName>Helen Y</ForeName><Initials>HY</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Wald</LastName><ForeName>Anna</ForeName><Initials>A</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Green</LastName><ForeName>Margaret</ForeName><Initials>M</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Luetkemeyer</LastName><ForeName>Annie</ForeName><Initials>A</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Crouch</LastName><ForeName>Pierre-Cedric B</ForeName><Initials>PB</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Jang</LastName><ForeName>Hannah</ForeName><Initials>H</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Kline</LastName><ForeName>Susan</ForeName><Initials>S</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Billings</LastName><ForeName>Joanne</ForeName><Initials>J</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Noren</LastName><ForeName>Brooke</ForeName><Initials>B</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Lopez de Castilla</LastName><ForeName>Diego</ForeName><Initials>D</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Van Winkle</LastName><ForeName>Jason W</ForeName><Initials>JW</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Riedo</LastName><ForeName>Francis X</ForeName><Initials>FX</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Finberg</LastName><ForeName>Robert W</ForeName><Initials>RW</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Wang</LastName><ForeName>Jennifer P</ForeName><Initials>JP</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Wessolossky</LastName><ForeName>Mireya</ForeName><Initials>M</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Dierberg</LastName><ForeName>Kerry</ForeName><Initials>K</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Eckhardt</LastName><ForeName>Benjamin</ForeName><Initials>B</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Neumann</LastName><ForeName>Henry J</ForeName><Initials>HJ</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Tapson</LastName><ForeName>Victor</ForeName><Initials>V</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Grein</LastName><ForeName>Jonathan</ForeName><Initials>J</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Sutterwala</LastName><ForeName>Fayyaz</ForeName><Initials>F</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Hsieh</LastName><ForeName>Lanny</ForeName><Initials>L</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Amin</LastName><ForeName>Alpesh N</ForeName><Initials>AN</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Patterson</LastName><ForeName>Thomas F</ForeName><Initials>TF</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Javeri</LastName><ForeName>Heta</ForeName><Initials>H</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Vu</LastName><ForeName>Trung</ForeName><Initials>T</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Paredes</LastName><ForeName>Roger</ForeName><Initials>R</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Mateu</LastName><ForeName>Lourdes</ForeName><Initials>L</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Sweeney</LastName><ForeName>Daniel A</ForeName><Initials>DA</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Benson</LastName><ForeName>Constance A</ForeName><Initials>CA</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Ali</LastName><ForeName>Farhana</ForeName><Initials>F</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Short</LastName><ForeName>William R</ForeName><Initials>WR</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Tebas</LastName><ForeName>Pablo</ForeName><Initials>P</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Torgersen</LastName><ForeName>Jessie</ForeName><Initials>J</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Touloumi</LastName><ForeName>Giota</ForeName><Initials>G</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Gioukari</LastName><ForeName>Vicky</ForeName><Initials>V</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Lye</LastName><ForeName>David Chien</ForeName><Initials>DC</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Ong</LastName><ForeName>Sean W X</ForeName><Initials>SWX</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Ohmagari</LastName><ForeName>Norio</ForeName><Initials>N</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Mikami</LastName><ForeName>Ayako</ForeName><Initials>A</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>F&#xe4;tkenheuer</LastName><ForeName>Gerd</ForeName><Initials>G</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Malin</LastName><ForeName>Jakob J</ForeName><Initials>JJ</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Koehler</LastName><ForeName>Philipp</ForeName><Initials>P</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Kalil</LastName><ForeName>Andre C</ForeName><Initials>AC</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Larson</LastName><ForeName>LuAnn</ForeName><Initials>L</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Hewlett</LastName><ForeName>Angela</ForeName><Initials>A</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Kortepeter</LastName><ForeName>Mark G</ForeName><Initials>MG</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Creech</LastName><ForeName>C Buddy</ForeName><Initials>CB</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Thomsen</LastName><ForeName>Isaac</ForeName><Initials>I</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Rice</LastName><ForeName>Todd W</ForeName><Initials>TW</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Taiwo</LastName><ForeName>Babafemi</ForeName><Initials>B</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Krueger</LastName><ForeName>Karen</ForeName><Initials>K</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Cohen</LastName><ForeName>Stuart H</ForeName><Initials>SH</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Thompson</LastName><ForeName>George R</ForeName><Initials>GR</Initials><Suffix>3rd</Suffix></Investigator><Investigator
+        ValidYN="Y"><LastName>Wolfe</LastName><ForeName>Cameron</ForeName><Initials>C</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Walter</LastName><ForeName>Emmanuel B</ForeName><Initials>EB</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Frank</LastName><ForeName>Maria</ForeName><Initials>M</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Young</LastName><ForeName>Heather</ForeName><Initials>H</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Falsey</LastName><ForeName>Ann R</ForeName><Initials>AR</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Branche</LastName><ForeName>Angela R</ForeName><Initials>AR</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Goepfert</LastName><ForeName>Paul</ForeName><Initials>P</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Erdmann</LastName><ForeName>Nathaniel</ForeName><Initials>N</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Yang</LastName><ForeName>Otto O</ForeName><Initials>OO</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Ahn</LastName><ForeName>Jenny</ForeName><Initials>J</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Goodman</LastName><ForeName>Anna</ForeName><Initials>A</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Merrick</LastName><ForeName>Blair</ForeName><Initials>B</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Novak</LastName><ForeName>Richard M</ForeName><Initials>RM</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Wendrow</LastName><ForeName>Andrea</ForeName><Initials>A</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Arguinchona</LastName><ForeName>Henry</ForeName><Initials>H</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Arguinchona</LastName><ForeName>Christa</ForeName><Initials>C</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>George</LastName><ForeName>Sarah L</ForeName><Initials>SL</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Tennant</LastName><ForeName>Janice</ForeName><Initials>J</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Atmar</LastName><ForeName>Robert L</ForeName><Initials>RL</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>El Sahly</LastName><ForeName>Hana M</ForeName><Initials>HM</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Whitaker</LastName><ForeName>Jennifer</ForeName><Initials>J</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Price</LastName><ForeName>D Ashley</ForeName><Initials>DA</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Duncan</LastName><ForeName>Christopher J A</ForeName><Initials>CJA</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Metallidis</LastName><ForeName>Simeon</ForeName><Initials>S</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Chrysanthidis</LastName><ForeName>Theofilos</ForeName><Initials>T</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>McLellan</LastName><ForeName>Susan L F</ForeName><Initials>SLF</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Oh</LastName><ForeName>Myoung-Don</ForeName><Initials>MD</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Park</LastName><ForeName>Wan Beom</ForeName><Initials>WB</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Kim</LastName><ForeName>Eu Suk</ForeName><Initials>ES</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Jung</LastName><ForeName>Jongtak</ForeName><Initials>J</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Ortiz</LastName><ForeName>Justin R</ForeName><Initials>JR</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Kotloff</LastName><ForeName>Karen L</ForeName><Initials>KL</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Angus</LastName><ForeName>Brian</ForeName><Initials>B</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Germain Seymour</LastName><ForeName>Jack David</ForeName><Initials>JD</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Hynes</LastName><ForeName>Noreen A</ForeName><Initials>NA</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Sauer</LastName><ForeName>Lauren M</ForeName><Initials>LM</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Ahuja</LastName><ForeName>Neera</ForeName><Initials>N</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Nadeau</LastName><ForeName>Kari</ForeName><Initials>K</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Jackson</LastName><ForeName>Patrick E H</ForeName><Initials>PEH</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Bell</LastName><ForeName>Taison D</ForeName><Initials>TD</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Antoniadou</LastName><ForeName>Anastasia</ForeName><Initials>A</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Protopapas</LastName><ForeName>Konstantinos</ForeName><Initials>K</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Davey</LastName><ForeName>Richard T</ForeName><Initials>RT</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Voell</LastName><ForeName>Jocelyn D</ForeName><Initials>JD</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Mu&#xf1;oz</LastName><ForeName>Jose</ForeName><Initials>J</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Roldan</LastName><ForeName>Montserrat</ForeName><Initials>M</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Kalomenidis</LastName><ForeName>Ioannis</ForeName><Initials>I</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Zakynthinos</LastName><ForeName>Spyros G</ForeName><Initials>SG</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Paules</LastName><ForeName>Catharine I</ForeName><Initials>CI</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>McGill</LastName><ForeName>Fiona</ForeName><Initials>F</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Minton</LastName><ForeName>Jane</ForeName><Initials>J</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Koulouris</LastName><ForeName>Nikolaos</ForeName><Initials>N</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Barmparessou</LastName><ForeName>Zafeiria</ForeName><Initials>Z</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Swiatlo</LastName><ForeName>Edwin</ForeName><Initials>E</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Widmer</LastName><ForeName>Kyle</ForeName><Initials>K</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Huprikar</LastName><ForeName>Nikhil</ForeName><Initials>N</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Ganesan</LastName><ForeName>Anuradha</ForeName><Initials>A</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Ruiz-Palacios</LastName><ForeName>Guillermo M</ForeName><Initials>GM</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Ponce de Le&#xf3;n</LastName><ForeName>Alfredo</ForeName><Initials>A</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Rajme</LastName><ForeName>Sandra</ForeName><Initials>S</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Regalado Pineda</LastName><ForeName>Justino</ForeName><Initials>J</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Martinez-Orozco</LastName><ForeName>Jos&#xe9; Arturo</ForeName><Initials>JA</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Holodniy</LastName><ForeName>Mark</ForeName><Initials>M</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Chary</LastName><ForeName>Aarthi</ForeName><Initials>A</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Wolf</LastName><ForeName>Timo</ForeName><Initials>T</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Stephan</LastName><ForeName>Christoph</ForeName><Initials>C</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Wasmuth</LastName><ForeName>Jan-Christian</ForeName><Initials>JC</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Boesecke</LastName><ForeName>Christoph</ForeName><Initials>C</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Llewelyn</LastName><ForeName>Martin</ForeName><Initials>M</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Philips</LastName><ForeName>Barbara</ForeName><Initials>B</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Colombo</LastName><ForeName>Christopher J</ForeName><Initials>CJ</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Colombo</LastName><ForeName>Rhonda E</ForeName><Initials>RE</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Lindholm</LastName><ForeName>David A</ForeName><Initials>DA</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Mende</LastName><ForeName>Katrin</ForeName><Initials>K</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Lee</LastName><ForeName>Tida</ForeName><Initials>T</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Lalani</LastName><ForeName>Tahaniyat</ForeName><Initials>T</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Maves</LastName><ForeName>Ryan C</ForeName><Initials>RC</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Utz</LastName><ForeName>Gregory C</ForeName><Initials>GC</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Lundgren</LastName><ForeName>Jens</ForeName><Initials>J</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Helleberg</LastName><ForeName>Marie</ForeName><Initials>M</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Gerstoft</LastName><ForeName>Jan</ForeName><Initials>J</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Benfield</LastName><ForeName>Thomas</ForeName><Initials>T</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Jensen</LastName><ForeName>Tomas</ForeName><Initials>T</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Lindegaard</LastName><ForeName>Birgitte</ForeName><Initials>B</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Weise</LastName><ForeName>Lothar</ForeName><Initials>L</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Knudsen</LastName><ForeName>Lene</ForeName><Initials>L</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Johansen</LastName><ForeName>Isik</ForeName><Initials>I</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Madsen</LastName><ForeName>Lone W</ForeName><Initials>LW</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>&#xd8;stergaard</LastName><ForeName>Lars</ForeName><Initials>L</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>St&#xe6;rke</LastName><ForeName>Nina</ForeName><Initials>N</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Nielsen</LastName><ForeName>Henrik</ForeName><Initials>H</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Babiker</LastName><ForeName>Abdel G</ForeName><Initials>AG</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Pett</LastName><ForeName>Sarah</ForeName><Initials>S</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Neaton</LastName><ForeName>James D</ForeName><Initials>JD</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Stephens</LastName><ForeName>David S</ForeName><Initials>DS</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Burgess</LastName><ForeName>Timothy H</ForeName><Initials>TH</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Uyeki</LastName><ForeName>Timothy M</ForeName><Initials>TM</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Walker</LastName><ForeName>Robert</ForeName><Initials>R</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Marks</LastName><ForeName>G Lynn</ForeName><Initials>GL</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Osinusi</LastName><ForeName>Anu</ForeName><Initials>A</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Cao</LastName><ForeName>Huyen</ForeName><Initials>H</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Chung</LastName><ForeName>Kevin K</ForeName><Initials>KK</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Chambers</LastName><ForeName>Susan E</ForeName><Initials>SE</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Green</LastName><ForeName>Michelle</ForeName><Initials>M</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Makowski</LastName><ForeName>Mat</ForeName><Initials>M</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Ferreira</LastName><ForeName>Jennifer L</ForeName><Initials>JL</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Wierzbicki</LastName><ForeName>Michael R</ForeName><Initials>MR</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Bonnett</LastName><ForeName>Tyler</ForeName><Initials>T</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Gettinger</LastName><ForeName>Nikki</ForeName><Initials>N</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Engel</LastName><ForeName>Theresa</ForeName><Initials>T</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Wang</LastName><ForeName>Jing</ForeName><Initials>J</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Beigel</LastName><ForeName>John H</ForeName><Initials>JH</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Tomashek</LastName><ForeName>Kay M</ForeName><Initials>KM</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Nayak</LastName><ForeName>Seema</ForeName><Initials>S</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Dodd</LastName><ForeName>Lori E</ForeName><Initials>LE</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Dempsey</LastName><ForeName>Walla</ForeName><Initials>W</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Nomicos</LastName><ForeName>Effie</ForeName><Initials>E</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Lee</LastName><ForeName>Marina</ForeName><Initials>M</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Wolff</LastName><ForeName>Peter</ForeName><Initials>P</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Pikaart-Tautges</LastName><ForeName>Rhonda</ForeName><Initials>R</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Elsafy</LastName><ForeName>Mohamed</ForeName><Initials>M</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Jurao</LastName><ForeName>Robert</ForeName><Initials>R</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Koo</LastName><ForeName>Hyung</ForeName><Initials>H</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Proschan</LastName><ForeName>Michael</ForeName><Initials>M</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Follmann</LastName><ForeName>Dean</ForeName><Initials>D</Initials></Investigator><Investigator
+        ValidYN="Y"><LastName>Lane</LastName><ForeName>H Clifford</ForeName><Initials>HC</Initials></Investigator></InvestigatorList></MedlineCitation><PubmedData><History><PubMedPubDate
+        PubStatus="pubmed"><Year>2020</Year><Month>5</Month><Day>24</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="medline"><Year>2020</Year><Month>12</Month><Day>2</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="entrez"><Year>2020</Year><Month>5</Month><Day>24</Day><Hour>6</Hour><Minute>0</Minute></PubMedPubDate><PubMedPubDate
+        PubStatus="pmc-release"><Year>2020</Year><Month>6</Month><Day>1</Day></PubMedPubDate></History><PublicationStatus>ppublish</PublicationStatus><ArticleIdList><ArticleId
+        IdType="pubmed">32445440</ArticleId><ArticleId IdType="pmc">PMC7262788</ArticleId><ArticleId
+        IdType="doi">10.1056/NEJMoa2007764</ArticleId></ArticleIdList><ReferenceList><Reference><Citation>Helmy
+        YA, Fawzy M, Elaswad A, Sobieh A, Kenney SP, Shehata AA. The COVID-19 pandemic:
+        a comprehensive review of taxonomy, genetics, epidemiology, diagnosis, treatment,
+        and control. J Clin Med 2020;9(4):E1225-E1225.</Citation><ArticleIdList><ArticleId
+        IdType="pmc">PMC7230578</ArticleId><ArticleId IdType="pubmed">32344679</ArticleId></ArticleIdList></Reference><Reference><Citation>Cao
+        B, Wang Y, Wen D, et al. A trial of lopinavir&#x2013;ritonavir in adults hospitalized
+        with severe Covid-19. N Engl J Med 2020;382:1787-1799.</Citation><ArticleIdList><ArticleId
+        IdType="pmc">PMC7121492</ArticleId><ArticleId IdType="pubmed">32187464</ArticleId></ArticleIdList></Reference><Reference><Citation>Borba
+        MGS, Val FFA, Sampaio VS, et al. Effect of high vs low doses of chloroquine
+        diphosphate as adjunctive therapy for patients hospitalized with severe acute
+        respiratory syndrome coronavirus 2 (SARS-CoV-2) infection: a randomized clinical
+        trial. JAMA Netw Open 2020;3(4):e208857-e208857.</Citation><ArticleIdList><ArticleId
+        IdType="pmc">PMC12124691</ArticleId><ArticleId IdType="pubmed">32330277</ArticleId></ArticleIdList></Reference><Reference><Citation>The
+        RECOVERY Collaborative Group. Dexamethasone in hospitalized patients with
+        Covid-19 &#x2014; preliminary report. N Engl J Med. DOI: 10.1056/NEJMoa2021436.</Citation><ArticleIdList><ArticleId
+        IdType="doi">10.1056/NEJMoa2021436</ArticleId><ArticleId IdType="pmc">PMC7383595</ArticleId><ArticleId
+        IdType="pubmed">32678530</ArticleId></ArticleIdList></Reference><Reference><Citation>Sheahan
+        TP, Sims AC, Leist SR, et al. Comparative therapeutic efficacy of remdesivir
+        and combination lopinavir, ritonavir, and interferon beta against MERS-CoV.
+        Nat Commun 2020;11:222-222.</Citation><ArticleIdList><ArticleId IdType="pmc">PMC6954302</ArticleId><ArticleId
+        IdType="pubmed">31924756</ArticleId></ArticleIdList></Reference><Reference><Citation>Agostini
+        ML, Andres EL, Sims AC, et al. Coronavirus susceptibility to the antiviral
+        remdesivir (GS-5734) is mediated by the viral polymerase and the proofreading
+        exoribonuclease. mBio 2018;9(2):e00221-18-e00221-18.</Citation><ArticleIdList><ArticleId
+        IdType="pmc">PMC5844999</ArticleId><ArticleId IdType="pubmed">29511076</ArticleId></ArticleIdList></Reference><Reference><Citation>Brown
+        AJ, Won JJ, Graham RL, et al. Broad spectrum antiviral remdesivir inhibits
+        human endemic and zoonotic deltacoronaviruses with a highly divergent RNA
+        dependent RNA polymerase. Antiviral Res 2019;169:104541-104541.</Citation><ArticleIdList><ArticleId
+        IdType="pmc">PMC6699884</ArticleId><ArticleId IdType="pubmed">31233808</ArticleId></ArticleIdList></Reference><Reference><Citation>Sheahan
+        TP, Sims AC, Graham RL, et al. Broad-spectrum antiviral GS-5734 inhibits both
+        epidemic and zoonotic coronaviruses. Sci Transl Med 2017;9:eaal3653-eaal3653.</Citation><ArticleIdList><ArticleId
+        IdType="pmc">PMC5567817</ArticleId><ArticleId IdType="pubmed">28659436</ArticleId></ArticleIdList></Reference><Reference><Citation>Wang
+        M, Cao R, Zhang L, et al. Remdesivir and chloroquine effectively inhibit the
+        recently emerged novel coronavirus (2019-nCoV) in vitro. Cell Res 2020;30:269-271.</Citation><ArticleIdList><ArticleId
+        IdType="pmc">PMC7054408</ArticleId><ArticleId IdType="pubmed">32020029</ArticleId></ArticleIdList></Reference><Reference><Citation>de
+        Wit E, Rasmussen AL, Falzarano D, et al. Middle East respiratory syndrome
+        coronavirus (MERS-CoV) causes transient lower respiratory tract infection
+        in rhesus macaques. Proc Natl Acad Sci U S A 2013;110:16598-16603.</Citation><ArticleIdList><ArticleId
+        IdType="pmc">PMC3799368</ArticleId><ArticleId IdType="pubmed">24062443</ArticleId></ArticleIdList></Reference><Reference><Citation>de
+        Wit E, Feldmann F, Cronin J, et al. Prophylactic and therapeutic remdesivir
+        (GS-5734) treatment in the rhesus macaque model of MERS-CoV infection. Proc
+        Natl Acad Sci U S A 2020;117:6771-6776.</Citation><ArticleIdList><ArticleId
+        IdType="pmc">PMC7104368</ArticleId><ArticleId IdType="pubmed">32054787</ArticleId></ArticleIdList></Reference><Reference><Citation>Royal
+        College of Physicians. National Early Warning Score (NEWS) 2. 2017.  (https://www.rcplondon.ac.uk/projects/outputs/national-early-warning-score-news-2).</Citation></Reference><Reference><Citation>King
+        JC, Beigel JH, Ison MG, et al. Clinical development of therapeutic agents
+        for hospitalized patients with influenza: challenges and innovations. Open
+        Forum Infect Dis 2019;6:ofz137-ofz137.</Citation><ArticleIdList><ArticleId
+        IdType="pmc">PMC6479095</ArticleId><ArticleId IdType="pubmed">31037242</ArticleId></ArticleIdList></Reference><Reference><Citation>Wang
+        Y, Zhang D, Du G, et al. Remdesivir in adults with severe COVID-19: a randomised,
+        double-blind, placebo-controlled, multicentre trial. Lancet 2020;395:1569-1578.</Citation><ArticleIdList><ArticleId
+        IdType="pmc">PMC7190303</ArticleId><ArticleId IdType="pubmed">32423584</ArticleId></ArticleIdList></Reference><Reference><Citation>Spinner
+        CD, Gottlieb RL, Criner GJ, et al. Effect of remdesivir vs standard care on
+        clinical status at 11 days in patients with moderate COVID-19: a randomized
+        clinical trial. JAMA 2020;324:1048-1057.</Citation><ArticleIdList><ArticleId
+        IdType="pmc">PMC7442954</ArticleId><ArticleId IdType="pubmed">32821939</ArticleId></ArticleIdList></Reference><Reference><Citation>The
+        CONSORT Group. 3b. Changes to trial design (http://www.consort-statement.org/consort-2010).</Citation></Reference></ReferenceList></PubmedData></PubmedArticle></PubmedArticleSet>'
+    headers:
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - X-RateLimit-Limit,X-RateLimit-Remaining
+      alt-svc:
+      - clear
+      cache-control:
+      - private
+      content-length:
+      - '152794'
+      content-security-policy:
+      - upgrade-insecure-requests
+      content-type:
+      - text/xml; charset=UTF-8
+      date:
+      - Mon, 16 Nov 2026 19:49:52 GMT
+      ncbi-phid:
+      - 1D327994A5FF0BC500005E3CD9EE59FC.1.1.m_6
+      ncbi-sid:
+      - 8F343DA46C4B22E6_B2F1SID
+      referrer-policy:
+      - origin-when-cross-origin
+      server:
+      - Finatra
+      set-cookie:
+      - ncbi_sid=8F343DA46C4B22E6_B2F1SID; domain=.nih.gov; path=/; expires=Tue, 16
+        Nov 2027 19:49:53 GMT
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      via:
+      - 1.1 google
+      x-ratelimit-limit:
+      - '3'
+      x-ratelimit-remaining:
+      - '2'
+      x-ua-compatible:
+      - IE=Edge
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

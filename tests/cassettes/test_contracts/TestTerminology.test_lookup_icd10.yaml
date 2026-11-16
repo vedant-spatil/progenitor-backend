@@ -1,0 +1,56 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate, zstd
+      connection:
+      - keep-alive
+      host:
+      - clinicaltables.nlm.nih.gov
+      user-agent:
+      - progenitor-mcp/0.1
+    method: GET
+    uri: https://clinicaltables.nlm.nih.gov/api/icd10cm/v3/search?maxList=5&sf=code%2Cname&terms=type+2+diabetes
+  response:
+    body:
+      string: '[94,["E11.65","E11.9","E10.A2","E11.21","E11.36"],null,[["E11.65","Type
+        2 diabetes mellitus with hyperglycemia"],["E11.9","Type 2 diabetes mellitus
+        without complications"],["E10.A2","Type 1 diabetes mellitus, presymptomatic,
+        Stage 2"],["E11.21","Type 2 diabetes mellitus with diabetic nephropathy"],["E11.36","Type
+        2 diabetes mellitus with diabetic cataract"]]]'
+    headers:
+      accept-ranges:
+      - bytes
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - X-JSON
+      cache-control:
+      - public, max-age=43200
+      connection:
+      - keep-alive
+      content-length:
+      - '361'
+      content-security-policy:
+      - frame-ancestors 'self'; script-src 'self' 'unsafe-inline' https://lforms-service.lhcaws-stage.nlm.nih.gov
+        https://lforms-service.lhcaws.nlm.nih.gov https://clinicaltables.nlm.nih.gov
+        https://lforms-service.nlm.nih.gov https://clin-table-search.lhc.nlm.nih.gov
+        https://ajax.googleapis.com  https://www.googletagmanager.com https://cdn.rawgit.com
+        https://dap.digitalgov.gov
+      content-type:
+      - application/json; charset=utf-8
+      ctss-info:
+      - h=06; vt=0
+      date:
+      - Fri, 13 Nov 2026 22:12:11 GMT
+      etag:
+      - W/"169-Nn5kQQU/H8cnb2VOwIuEmhyKG1g"
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+    status:
+      code: 200
+      message: OK
+version: 1

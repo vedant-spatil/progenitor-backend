@@ -203,6 +203,70 @@ services:
       retries: 10
       start_period: 15s
 
+  # ---------------- MCP tool servers (Phase 2) ----------------
+  # Our servers reuse the backend image. Outbound ones (clinicaltrials, terminology,
+  # pubmed) apply the PHI egress filter; fhir-mcp only talks to local HAPI.
+  mcp-clinicaltrials: &mcp-server
+    build: .
+    restart: unless-stopped
+    command: ["python", "-m", "mcp_servers.clinicaltrials.server"]
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment: &mcp-env
+      MCP_PORT: "8101"
+      REDIS_URL: redis://redis:6379/2
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      AACT_DATABASE_URL: ${AACT_DATABASE_URL:-}
+    ports:
+      - 127.0.0.1:${CT_MCP_HOST_PORT:-8101}:8101
+    healthcheck: &mcp-health
+      test: ["CMD-SHELL", "python -c \"import os,urllib.request; urllib.request.urlopen('http://127.0.0.1:'+os.environ['MCP_PORT']+'/health', timeout=4)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  mcp-terminology:
+    <<: *mcp-server
+    command: ["python", "-m", "mcp_servers.terminology.server"]
+    environment:
+      <<: *mcp-env
+      MCP_PORT: "8102"
+    ports:
+      - 127.0.0.1:${TERM_MCP_HOST_PORT:-8102}:8102
+
+  mcp-pubmed:
+    <<: *mcp-server
+    command: ["python", "-m", "mcp_servers.pubmed.server"]
+    environment:
+      <<: *mcp-env
+      MCP_PORT: "8103"
+      PUBMED_EMAIL: ${PUBMED_EMAIL:-}
+      PUBMED_API_KEY: ${PUBMED_API_KEY:-}
+    ports:
+      - 127.0.0.1:${PUBMED_MCP_HOST_PORT:-8103}:8103
+
+  mcp-fhir:
+    build: ./docker/fhir-mcp
+    restart: unless-stopped
+    depends_on:
+      - hapi-fhir
+    environment:
+      FHIR_SERVER_BASE_URL: http://hapi-fhir:8080/fhir
+      # Local dev HAPI has no auth. Phase 8 puts FHIR behind AgentCore Identity.
+      FHIR_SERVER_DISABLE_AUTHORIZATION: "True"
+      FHIR_MCP_HOST: 0.0.0.0
+      FHIR_MCP_PORT: "8000"
+    ports:
+      - 127.0.0.1:${FHIR_MCP_HOST_PORT:-8104}:8000
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import socket; socket.create_connection(('127.0.0.1', 8000), 3)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
   frontend:
     build:
       context: ${FRONTEND_DIR:-../frontend}

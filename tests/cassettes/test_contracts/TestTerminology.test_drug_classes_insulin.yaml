@@ -1,0 +1,67 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate, zstd
+      connection:
+      - keep-alive
+      host:
+      - rxnav.nlm.nih.gov
+      user-agent:
+      - progenitor-mcp/0.1
+    method: GET
+    uri: https://rxnav.nlm.nih.gov/REST/rxclass/class/byRxcui.json?relaSource=ATC&rxcui=274783
+  response:
+    body:
+      string: '{"rxclassDrugInfoList":{"rxclassDrugInfo":[{"minConcept":{"rxcui":"1858994","name":"insulin
+        glargine / lixisenatide","tty":"MIN"},"rxclassMinConceptItem":{"classId":"A10AE","className":"Insulins
+        and analogues for injection, long-acting","classType":"ATC1-4"},"rela":"","relaSource":"ATC"},{"minConcept":{"rxcui":"274783","name":"insulin
+        glargine","tty":"IN"},"rxclassMinConceptItem":{"classId":"A10AE","className":"Insulins
+        and analogues for injection, long-acting","classType":"ATC1-4"},"rela":"","relaSource":"ATC"}]}}'
+    headers:
+      access-control-allow-headers:
+      - '*'
+      access-control-allow-origin:
+      - '*'
+      cache-control:
+      - public, max-age=300, must-revalidate
+      connection:
+      - keep-alive
+      content-length:
+      - '520'
+      content-security-policy:
+      - 'object-src ''none''; script-src ''unsafe-inline'' ''unsafe-eval'' ''strict-dynamic''
+        https: http:;'
+      content-type:
+      - application/json;charset=utf-8
+      date:
+      - Mon, 16 Nov 2026 19:50:27 GMT
+      etag:
+      - W/"20AA_261102F;1793130400;3.1.357"
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      vary:
+      - Accept
+      x-cache-status:
+      - MISS
+      x-content-type-options:
+      - nosniff
+      x-download-options:
+      - noopen
+      x-frame-options:
+      - DENY
+      x-permitted-cross-domain-policies:
+      - none
+      x-rate-tier:
+      - std
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

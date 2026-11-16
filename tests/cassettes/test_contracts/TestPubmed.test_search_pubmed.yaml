@@ -1,0 +1,196 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate, zstd
+      connection:
+      - keep-alive
+      host:
+      - eutils.ncbi.nlm.nih.gov
+      user-agent:
+      - progenitor-mcp/0.1
+    method: GET
+    uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmax=3&retmode=json&sort=pub_date&term=metformin+type+2+diabetes&tool=progenitor
+  response:
+    body:
+      string: '{"header":{"type":"esearch","version":"0.3"},"esearchresult":{"count":"16841","retmax":"3","retstart":"0","idlist":["42503322","42927270","42854397"],"translationset":[{"from":"metformin","to":"\"metformin\"[Supplementary
+        Concept] OR \"metformin\"[All Fields] OR \"metformin\"[MeSH Terms] OR \"metformine\"[All
+        Fields] OR \"metformin''s\"[All Fields] OR \"metformins\"[All Fields]"},{"from":"type
+        2 diabetes","to":"\"diabetes mellitus, type 2\"[MeSH Terms] OR \"type 2 diabetes
+        mellitus\"[All Fields] OR \"type 2 diabetes\"[All Fields]"}],"querytranslation":"(\"metformin\"[Supplementary
+        Concept] OR \"metformin\"[All Fields] OR \"metformin\"[MeSH Terms] OR \"metformine\"[All
+        Fields] OR \"metformin s\"[All Fields] OR \"metformins\"[All Fields]) AND
+        (\"diabetes mellitus, type 2\"[MeSH Terms] OR \"type 2 diabetes mellitus\"[All
+        Fields] OR \"type 2 diabetes\"[All Fields])"}}
+
+        '
+    headers:
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - X-RateLimit-Limit,X-RateLimit-Remaining
+      alt-svc:
+      - clear
+      cache-control:
+      - private
+      content-length:
+      - '876'
+      content-security-policy:
+      - upgrade-insecure-requests
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Mon, 16 Nov 2026 19:49:49 GMT
+      ncbi-phid:
+      - 1D34F795A2F2096500002F4E70663EB6.1.1.m_1
+      ncbi-sid:
+      - FAD458B658E7A6B2_ABB2SID
+      referrer-policy:
+      - origin-when-cross-origin
+      server:
+      - Finatra
+      set-cookie:
+      - ncbi_sid=FAD458B658E7A6B2_ABB2SID; domain=.nih.gov; path=/; expires=Tue, 16
+        Nov 2027 19:49:50 GMT
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      via:
+      - 1.1 google
+      x-ratelimit-limit:
+      - '3'
+      x-ratelimit-remaining:
+      - '2'
+      x-ua-compatible:
+      - IE=Edge
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate, zstd
+      connection:
+      - keep-alive
+      host:
+      - eutils.ncbi.nlm.nih.gov
+      user-agent:
+      - progenitor-mcp/0.1
+    method: GET
+    uri: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=42503322%2C42927270%2C42854397&retmode=json&tool=progenitor
+  response:
+    body:
+      string: '{"header":{"type":"esummary","version":"0.3"},"result":{"uids":["42503322","42927270","42854397"],"42503322":{"uid":"42503322","pubdate":"2027
+        Jan 10","epubdate":"2026 Jul 26","source":"J Ethnopharmacol","authors":[{"name":"Shi
+        L","authtype":"Author","clusterid":""},{"name":"Zhao Y","authtype":"Author","clusterid":""},{"name":"Yang
+        Y","authtype":"Author","clusterid":""},{"name":"Liu G","authtype":"Author","clusterid":""},{"name":"Bu
+        S","authtype":"Author","clusterid":""},{"name":"Wang G","authtype":"Author","clusterid":""},{"name":"Liu
+        S","authtype":"Author","clusterid":""},{"name":"Du Y","authtype":"Author","clusterid":""},{"name":"Xie
+        J","authtype":"Author","clusterid":""},{"name":"He C","authtype":"Author","clusterid":""},{"name":"Huang
+        Y","authtype":"Author","clusterid":""},{"name":"An Y","authtype":"Author","clusterid":""},{"name":"Zhang
+        H","authtype":"Author","clusterid":""},{"name":"Fu W","authtype":"Author","clusterid":""},{"name":"Dong
+        Y","authtype":"Author","clusterid":""},{"name":"Zhao B","authtype":"Author","clusterid":""}],"lastauthor":"Zhao
+        B","title":"Mulberry leaf flavonoids alleviate type 2 diabetes by remodeling
+        the gut microbiota-bile acid axis and activating FXR signaling.","sorttitle":"mulberry
+        leaf flavonoids alleviate type 2 diabetes by remodeling the gut microbiota
+        bile acid axis and activating fxr signaling","volume":"372","issue":"","pages":"122237","lang":["eng"],"nlmuniqueid":"7903310","issn":"0378-8741","essn":"1872-7573","pubtype":["Journal
+        Article"],"recordstatus":"PubMed - indexed for MEDLINE","pubstatus":"256","articleids":[{"idtype":"pubmed","idtypen":1,"value":"42503322"},{"idtype":"doi","idtypen":3,"value":"10.1016/j.jep.2026.122237"},{"idtype":"pii","idtypen":4,"value":"S0378-8741(26)01092-5"}],"history":[{"pubstatus":"received","date":"2026/04/20
+        00:00"},{"pubstatus":"revised","date":"2026/07/09 00:00"},{"pubstatus":"accepted","date":"2026/07/23
+        00:00"},{"pubstatus":"medline","date":"2026/08/11 00:35"},{"pubstatus":"pubmed","date":"2026/07/27
+        00:34"},{"pubstatus":"entrez","date":"2026/07/26 19:11"}],"references":[],"attributes":["Has
+        Abstract"],"pmcrefcount":"","fulljournalname":"Journal of ethnopharmacology","elocationid":"doi:
+        10.1016/j.jep.2026.122237","doctype":"citation","srccontriblist":[],"booktitle":"","medium":"","edition":"","publisherlocation":"","publishername":"","srcdate":"","reportnumber":"","availablefromurl":"","locationlabel":"","doccontriblist":[],"docdate":"","bookname":"","chapter":"","sortpubdate":"2027/01/10
+        00:00","sortfirstauthor":"Shi L","vernaculartitle":""},"42927270":{"uid":"42927270","pubdate":"2027
+        Jan","epubdate":"2026 Oct 19","source":"J Hand Surg Glob Online","authors":[{"name":"Abbas
+        Y","authtype":"Author","clusterid":""},{"name":"Kucharski A","authtype":"Author","clusterid":""},{"name":"Boukind
+        A","authtype":"Author","clusterid":""},{"name":"Wright D","authtype":"Author","clusterid":""},{"name":"Dy
+        CJ","authtype":"Author","clusterid":""},{"name":"Brogan DM","authtype":"Author","clusterid":""}],"lastauthor":"Brogan
+        DM","title":"Metformin Use Is Associated With Reduced Rates of Primary Nerve
+        Decompression Surgery and Revision in Type 2 Diabetes: A Retrospective Cohort
+        Study.","sorttitle":"metformin use is associated with reduced rates of primary
+        nerve decompression surgery and revision in type 2 diabetes a retrospective
+        cohort study","volume":"9","issue":"1","pages":"101148","lang":["eng"],"nlmuniqueid":"101759126","issn":"","essn":"2589-5141","pubtype":["Journal
+        Article"],"recordstatus":"PubMed","pubstatus":"258","articleids":[{"idtype":"pubmed","idtypen":1,"value":"42927270"},{"idtype":"pmc","idtypen":8,"value":"PMC13695114"},{"idtype":"pmcid","idtypen":5,"value":"pmc-id:
+        PMC13695114;"},{"idtype":"doi","idtypen":3,"value":"10.1016/j.jhsg.2026.101148"},{"idtype":"pii","idtypen":4,"value":"S2589-5141(26)00203-3"}],"history":[{"pubstatus":"received","date":"2026/07/06
+        00:00"},{"pubstatus":"accepted","date":"2026/08/01 00:00"},{"pubstatus":"medline","date":"2026/10/25
+        11:33"},{"pubstatus":"pubmed","date":"2026/10/25 11:32"},{"pubstatus":"entrez","date":"2026/10/25
+        05:09"},{"pubstatus":"pmc-release","date":"2026/10/19 00:00"}],"references":[],"attributes":["Has
+        Abstract"],"pmcrefcount":31,"fulljournalname":"Journal of hand surgery global
+        online","elocationid":"doi: 10.1016/j.jhsg.2026.101148","doctype":"citation","srccontriblist":[],"booktitle":"","medium":"","edition":"","publisherlocation":"","publishername":"","srcdate":"","reportnumber":"","availablefromurl":"","locationlabel":"","doccontriblist":[],"docdate":"","bookname":"","chapter":"","sortpubdate":"2026/10/19
+        00:00","sortfirstauthor":"Abbas Y","vernaculartitle":""},"42854397":{"uid":"42854397","pubdate":"2027
+        Jan","epubdate":"2026 Oct 2","source":"Biophys Chem","authors":[{"name":"Nama
+        P","authtype":"Author","clusterid":""},{"name":"Roy D","authtype":"Author","clusterid":""},{"name":"Bhunia
+        PK","authtype":"Author","clusterid":""},{"name":"Biswas K","authtype":"Author","clusterid":""},{"name":"Suladze
+        S","authtype":"Author","clusterid":""},{"name":"Reif B","authtype":"Author","clusterid":""},{"name":"Biswas
+        R","authtype":"Author","clusterid":""},{"name":"Mroue K","authtype":"Author","clusterid":""},{"name":"Ghosh
+        D","authtype":"Author","clusterid":""},{"name":"Harikishore A","authtype":"Author","clusterid":""},{"name":"Taraphdar
+        AK","authtype":"Author","clusterid":""},{"name":"Bhunia A","authtype":"Author","clusterid":""}],"lastauthor":"Bhunia
+        A","title":"Inhibition of hIAPP amyloid aggregation by the polyherbal formulation
+        NAMIG-5: a bench-to-bedside translational study.","sorttitle":"inhibition
+        of hiapp amyloid aggregation by the polyherbal formulation namig 5 a bench
+        to bedside translational study","volume":"340","issue":"","pages":"107720","lang":["eng"],"nlmuniqueid":"0403171","issn":"0301-4622","essn":"1873-4200","pubtype":["Journal
+        Article","Randomized Controlled Trial"],"recordstatus":"PubMed - indexed for
+        MEDLINE","pubstatus":"256","articleids":[{"idtype":"pubmed","idtypen":1,"value":"42854397"},{"idtype":"doi","idtypen":3,"value":"10.1016/j.bpc.2026.107720"},{"idtype":"pii","idtypen":4,"value":"S0301-4622(26)00153-5"}],"history":[{"pubstatus":"received","date":"2026/05/15
+        00:00"},{"pubstatus":"revised","date":"2026/09/30 00:00"},{"pubstatus":"accepted","date":"2026/10/01
+        00:00"},{"pubstatus":"medline","date":"2026/11/09 23:27"},{"pubstatus":"pubmed","date":"2026/10/09
+        23:31"},{"pubstatus":"entrez","date":"2026/10/09 18:11"}],"references":[],"attributes":["Has
+        Abstract"],"pmcrefcount":"","fulljournalname":"Biophysical chemistry","elocationid":"doi:
+        10.1016/j.bpc.2026.107720","doctype":"citation","srccontriblist":[],"booktitle":"","medium":"","edition":"","publisherlocation":"","publishername":"","srcdate":"","reportnumber":"","availablefromurl":"","locationlabel":"","doccontriblist":[],"docdate":"","bookname":"","chapter":"","sortpubdate":"2027/01/01
+        00:00","sortfirstauthor":"Nama P","vernaculartitle":""}}}
+
+        '
+    headers:
+      access-control-allow-origin:
+      - '*'
+      access-control-expose-headers:
+      - X-RateLimit-Limit,X-RateLimit-Remaining
+      alt-svc:
+      - clear
+      cache-control:
+      - private
+      content-length:
+      - '6974'
+      content-security-policy:
+      - upgrade-insecure-requests
+      content-type:
+      - application/json; charset=UTF-8
+      date:
+      - Mon, 16 Nov 2026 19:49:51 GMT
+      ncbi-phid:
+      - 1D3344C1BB7AA7950000544AEA8A0834.1.1.m_1
+      ncbi-sid:
+      - FAD458B658E7A6B2_ABB2SID
+      referrer-policy:
+      - origin-when-cross-origin
+      server:
+      - Finatra
+      set-cookie:
+      - ncbi_sid=FAD458B658E7A6B2_ABB2SID; domain=.nih.gov; path=/; expires=Tue, 16
+        Nov 2027 19:49:51 GMT
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      via:
+      - 1.1 google
+      x-ratelimit-limit:
+      - '3'
+      x-ratelimit-remaining:
+      - '2'
+      x-ua-compatible:
+      - IE=Edge
+      x-xss-protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1
