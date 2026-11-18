@@ -30,6 +30,7 @@ class AuditKind(models.TextChoices):
     ANSWER = "answer", "Clinician answer"
     EGRESS_BLOCKED = "egress_blocked", "Outbound call blocked by PHI filter"
     DATA_LOAD = "data_load", "Data loader run"
+    RUN_CREATED = "run_created", "Run started by a user"
 
 
 class AuditEvent(models.Model):

@@ -52,6 +52,48 @@ async def resume_run(deps: Deps, saver: Any, run_id: str, resume: Any = None) ->
     return out
 
 
+async def advance(
+    deps: Deps,
+    saver: Any,
+    run_id: str,
+    patient_id: str,
+    *,
+    as_of: Any = None,
+    answer: Any = None,
+    approved_trial_ids: list[str] | None = None,
+) -> dict[str, Any]:
+    """Move a run forward from whatever its checkpoint says. Safe to call again after a crash.
+
+    - no checkpoint: start the run.
+    - paused at ask_clinician and an answer given: resume with it.
+    - unfinished (worker died mid-run, or a redelivered task): continue from the last checkpoint.
+    - finished and approvals given: record the approved trials and hand control back to the supervisor,
+      which decides whether to draft referrals (the approval guard still checks every draft).
+    - otherwise: return the final state unchanged.
+    """
+    graph = build_graph(deps, checkpointer=saver)
+    config = run_config(run_id)
+    snap = await graph.aget_state(config)
+    if not snap.values:
+        out: dict[str, Any] = await graph.ainvoke(initial_state(run_id, patient_id, as_of), config)
+        return out
+    waiting = any(task.interrupts for task in snap.tasks)
+    if waiting:
+        if answer is None:
+            return {**snap.values, "__interrupt__": [i for t in snap.tasks for i in t.interrupts]}
+        out = await graph.ainvoke(Command(resume=answer), config)
+        return out
+    if snap.next:
+        out = await graph.ainvoke(None, config)
+        return out
+    if approved_trial_ids and not snap.values.get("approved_trial_ids"):
+        update = {"approved_trial_ids": list(approved_trial_ids), "status": "running"}
+        await graph.aupdate_state(config, update, as_node="ranker")  # ranker -> supervisor edge
+        out = await graph.ainvoke(None, config)
+        return out
+    return dict(snap.values)
+
+
 def paused_question(out: dict[str, Any]) -> dict[str, Any] | None:
     """The pending ask_clinician payload if the run is waiting for a clinician, else None."""
     interrupts = out.get("__interrupt__") or []

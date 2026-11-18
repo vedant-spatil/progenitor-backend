@@ -23,6 +23,7 @@ class Run(models.Model):
     status = models.CharField(max_length=24, choices=RunStatus.choices, default=RunStatus.QUEUED, db_index=True)
     config = models.JSONField(default=dict, blank=True, help_text="Budgets, provider, model, search defaults.")
     summary = models.TextField(blank=True)
+    pending_question = models.TextField(blank=True, help_text="Open ask_clinician question while waiting.")
     error = models.CharField(max_length=255, blank=True, help_text="Error class and short code only.")
     steps_used = models.PositiveIntegerField(default=0)
     tokens_in = models.PositiveBigIntegerField(default=0)
@@ -98,6 +99,7 @@ class VerdictStatus(models.TextChoices):
     MET = "met", "Met"
     NOT_MET = "not_met", "Not met"
     UNKNOWN = "unknown", "Unknown"
+    NOT_APPLICABLE = "not_applicable", "Not applicable"
 
 
 class Verdict(models.Model):
@@ -110,7 +112,7 @@ class Verdict(models.Model):
     run = models.ForeignKey(Run, on_delete=models.CASCADE, related_name="verdicts")
     trial = models.ForeignKey("trials.Trial", on_delete=models.PROTECT, related_name="verdicts")
     criterion = models.ForeignKey("trials.Criterion", on_delete=models.PROTECT, related_name="verdicts")
-    status = models.CharField(max_length=8, choices=VerdictStatus.choices)
+    status = models.CharField(max_length=16, choices=VerdictStatus.choices)
     evidence_refs = models.JSONField(default=list, blank=True, help_text="FHIR resource ids, e.g. 'Observation/123'.")
     reason = models.TextField(blank=True)
     downgraded = models.BooleanField(default=False, help_text="Set when the citation guard forced 'unknown'.")
