@@ -4,7 +4,7 @@
 # After it: log out and back in (docker group), create backend/.env, restore the data dump, run the gate.
 set -euo pipefail
 
-SWAP_GB="${SWAP_GB:-4}"
+SWAP_GB="${SWAP_GB:-2}"  # 25 GB root volume: keep disk for HAPI data + images
 NODE_MAJOR="${NODE_MAJOR:-20}"
 
 echo "== packages"
