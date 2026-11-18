@@ -1,7 +1,7 @@
 """Gate runner with visible progress: `make gate PHASE=<n>` -> `python scripts/gate.py <n>`.
 
 Gate n runs its own steps after its parent gate's (same chain as the Makefile: 1 and 2 build on 0,
-3 on 2, 4 on 3, 5 on 2). For each step it prints
+3 on 2, 4 on 3, 5 on 2, 6 on 5). For each step it prints
 `[ 5/14 ] unit tests ............ PASS  31s`, keeps full output in a log file, and updates a
 status JSON after every step (read by `make gate-status`). Stops at the first failure and
 shows the tail of that step's output. `make gate-report` prints the last summary as markdown.
@@ -72,12 +72,20 @@ GATES: dict[int, list[Step]] = {
         ),
         Step("phase 5 runs on Postgres + Redis (integration)", "make -s phase5-integration-tests"),
     ],
+    6: [
+        Step("phase 6 metrics, cache, reproducibility (unit)", "uv run pytest tests/unit/test_phase6_eval.py -q"),
+        Step(
+            "phase 6 eval replay vs thresholds ($0)",
+            "uv run python manage.py eval_phase6 --replay --require-thresholds",
+        ),
+    ],
 }
 
 
 # Gate 5 builds on gate 2, not 4: the live LLM evals (gates 3-4, ~1 h of Bedrock calls) gate the agent
 # changes; Phase 5 adds no prompt or agent logic, and its tests use the scripted LLM.
-PARENT: dict[int, int | None] = {0: None, 1: 0, 2: 0, 3: 2, 4: 3, 5: 2}
+# Gate 6 replays the frozen baseline from the cache (no LLM spend), on top of gate 5.
+PARENT: dict[int, int | None] = {0: None, 1: 0, 2: 0, 3: 2, 4: 3, 5: 2, 6: 5}
 
 
 @dataclass

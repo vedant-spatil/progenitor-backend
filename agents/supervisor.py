@@ -80,6 +80,8 @@ def summarize(state: dict[str, Any], *, max_trials: int = 40) -> str:
                 "truncated": profile.get("truncated", False),
             }
         )
+        if profile.get("notes"):  # free-text patients (Phase 6 eval); absent for FHIR profiles
+            patient["notes"] = [n["text"][:200] for n in profile["notes"][:15]]
     trials_out = []
     for nct, t in list((state.get("trials") or {}).items())[:max_trials]:
         verdicts = t.get("verdicts") or []

@@ -1,0 +1,40 @@
+{
+  "comment": "USD per 1M tokens, used for Phase 6 cost per patient. Keys are LLM_MODEL values; Bedrock region prefixes (global., us., apac., eu.) are ignored on lookup. null = not verified yet: the report shows cost as n/a until a price is filled in from the provider's pricing page. Record the source and date with each change.",
+  "models": {
+    "anthropic.claude-opus-5-5": {
+      "input": 4.0,
+      "output": 20.0,
+      "source": "Anthropic first-party list price (2026-10-06). Bedrock may differ: verify at aws.amazon.com/bedrock/pricing."
+    },
+    "anthropic.claude-sonnet-5-5": {
+      "input": 2.0,
+      "output": 10.0,
+      "source": "Anthropic first-party list price (2026-10-06). Bedrock may differ: verify at aws.amazon.com/bedrock/pricing."
+    },
+    "anthropic.claude-haiku-5-5": {
+      "input": 0.1,
+      "output": 0.5,
+      "source": "Anthropic first-party list price (2026-10-06), prompts up to 100K tokens. Verify the Bedrock price."
+    },
+    "moonshotai.kimi-k3.1": {
+      "input": null,
+      "output": null,
+      "source": "Fill in from aws.amazon.com/bedrock/pricing (ap-south-1)."
+    },
+    "openai.gpt-oss-120b-1:0": {
+      "input": null,
+      "output": null,
+      "source": "Fill in from aws.amazon.com/bedrock/pricing (ap-south-1)."
+    },
+    "qwen/qwen3.8-27b": {
+      "input": null,
+      "output": null,
+      "source": "Fill in from groq.com/pricing (paid tier); the free tier has no charge but daily token limits."
+    },
+    "scripted": {
+      "input": 0.0,
+      "output": 0.0,
+      "source": "Test double (tests/fakes/llm.py)."
+    }
+  }
+}

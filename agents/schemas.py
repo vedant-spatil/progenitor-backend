@@ -46,6 +46,13 @@ class LabFact(CodedFact):
     category: str = ""
 
 
+class NoteFact(Model):
+    """One sentence of a free-text patient description (eval topics). FHIR profiles have none."""
+
+    resource_id: str = Field(description="Citable id, e.g. 'Note/sigir-20141#3'.")
+    text: str
+
+
 class PatientProfile(Model):
     patient_ref: str = Field(description="'Patient/<id>'. Cite for age and sex.")
     age_years: int | None = Field(default=None, description="Whole years; 90 means 90 or older.")
@@ -54,10 +61,11 @@ class PatientProfile(Model):
     medications: list[MedicationFact] = Field(default_factory=list)
     labs: list[LabFact] = Field(default_factory=list, description="Latest value per code.")
     truncated: bool = Field(default=False, description="True if a resource type hit the page limit.")
+    notes: list[NoteFact] = Field(default_factory=list, description="Free-text patients only (Phase 6 eval).")
 
     def resource_ids(self) -> set[str]:
         ids = {self.patient_ref}
-        for group in (self.conditions, self.medications, self.labs):
+        for group in (self.conditions, self.medications, self.labs, self.notes):
             ids |= {f.resource_id for f in group}
         return ids
 

@@ -29,7 +29,7 @@ export FRONTEND_DIR
 
 .PHONY: phase5-integration-tests db-dump db-restore gate-status gate-report stack-up integration-tests data-tests profiler-exact-test
 .PHONY: help env up down logs ps wait test test-backend test-frontend lint gate eval check-frontend-dir \
-        up-tracing migrate data live eval-phase3 eval-phase4 gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2 gate-3 gate-4 gate-5
+        up-tracing migrate data live eval-phase3 eval-phase4 gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2 gate-3 gate-4 gate-5 gate-6 eval-phase6 eval-phase6-snapshot
 
 help: ## List targets
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-16s %s\n", $$1, $$2}'
@@ -93,6 +93,12 @@ eval: eval-phase3 ## Run the eval harness (live LLM; not in CI)
 
 eval-phase4: ## Phase 4 live scenarios: supervisor decisions, 3 runs each, majority counts
 	uv run python manage.py eval_phase4
+
+eval-phase6: ## Phase 6 eval (PER=20 POOL=10): live LLM for cache misses only; see apps/evals/.../eval_phase6.py
+	uv run python manage.py eval_phase6 --per-cohort $(or $(PER),20) --pool $(or $(POOL),10)
+
+eval-phase6-snapshot: ## Fetch the Phase 6 trial snapshot (ClinicalTrials.gov, no LLM)
+	uv run python manage.py eval_phase6 --build-snapshot --per-cohort $(or $(PER),20) --pool $(or $(POOL),10)
 
 eval-phase3: ## Phase 3 live eval: Parser F1 (Chia), Judge accuracy (hand labels), citation validity
 	uv run python manage.py eval_phase3
@@ -216,3 +222,11 @@ gate-5: gate-2
 	uv run pytest tests/unit/test_runs_api.py tests/unit/test_audit_wrappers.py -q
 	@$(MAKE) --no-print-directory phase5-integration-tests
 	@echo "GATE 5 PASSED"
+
+# ---------------- Gate 6: evaluation ----------------
+# Gate 5, then the Phase 6 unit tests and a cache-only replay of the baseline against the thresholds
+# in data/eval_thresholds.json ("phase6", set after baseline). Replay makes no LLM calls; a cache miss fails.
+gate-6: gate-5
+	uv run pytest tests/unit/test_phase6_eval.py -q
+	uv run python manage.py eval_phase6 --replay --require-thresholds
+	@echo "GATE 6 PASSED"
