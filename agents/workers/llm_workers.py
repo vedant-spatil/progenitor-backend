@@ -11,7 +11,7 @@ import json
 from datetime import date
 
 from agents import prompts
-from agents.guards import enforce_citations
+from agents.guards import enforce_citations, enforce_relevance
 from agents.llm import StructuredLLM
 from agents.schemas import (
     Criterion,
@@ -30,7 +30,7 @@ from agents.schemas import (
     VerdictStatus,
 )
 from agents.telemetry import timed
-from agents.workers.common import ToolCaller, ToolCallError, criteria_lines, profile_context
+from agents.workers.common import ToolCaller, ToolCallError, criteria_lines, focus_terms, profile_context
 
 MAX_CODED_ENTITIES = 25
 
@@ -94,7 +94,8 @@ def judge_trial(
 ) -> list[Verdict]:
     """One verdict per criterion, citations enforced. Missing verdicts become 'unknown'."""
     with timed("worker", worker="judge", n_criteria=len(criteria)):
-        text, aliases = profile_context(profile, as_of)
+        focus = focus_terms([c.source_text for c in criteria] + [c.entity for c in criteria])
+        text, aliases = profile_context(profile, as_of, focus=focus)
         user = f"PATIENT PROFILE\n{text}\n\nCRITERIA\n{criteria_lines(criteria)}"
         out = llm.complete(task="judge_trial", system=prompts.JUDGE, user=user, schema=JudgeOutput)
         # Map short ids back to FHIR refs; anything else is kept as-is for the citation guard to check.
@@ -109,7 +110,7 @@ def judge_trial(
             or Verdict(criterion_index=c.index, status=VerdictStatus.UNKNOWN, reason="no verdict returned")
             for c in criteria
         ]
-        return enforce_citations(verdicts, profile.resource_ids())
+        return enforce_relevance(enforce_citations(verdicts, profile.resource_ids()), criteria, profile)
 
 
 # ---------------- Evidence Agent ----------------

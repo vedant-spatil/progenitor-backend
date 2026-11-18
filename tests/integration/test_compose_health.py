@@ -42,6 +42,10 @@ def test_hapi_fhir_metadata(stack_urls: dict[str, str]) -> None:
     assert capability["fhirVersion"].startswith("4.")
 
 
+@pytest.mark.skipif(
+    os.environ.get("TRACING_MODE", "langfuse") != "langfuse",
+    reason="Langfuse runs only with TRACING_MODE=langfuse (the `tracing` compose profile)",
+)
 def test_langfuse_ui(stack_urls: dict[str, str]) -> None:
     status, _ = _get(f"{stack_urls['langfuse']}/api/public/health")
     assert status == 200

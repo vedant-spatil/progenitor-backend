@@ -57,11 +57,13 @@ async def test_interceptor_blocks_patient_name_on_outbound(server: str) -> None:
 async def test_interceptor_passes_clean_outbound() -> None:
     handler = Handler()
     req = MCPToolCallRequest(name="search_trials", args={"conditions": "breast cancer"}, server_name="clinicaltrials")
-    assert await EgressInterceptor(KNOWN)(req, handler) == "ok"
+    result: Any = await EgressInterceptor(KNOWN)(req, handler)
+    assert result == "ok"
 
 
 async def test_interceptor_does_not_filter_internal_fhir() -> None:
     """FHIR is our own server; reads legitimately use patient ids."""
     handler = Handler()
     req = MCPToolCallRequest(name="read", args={"type": "Patient", "id": "pat-9"}, server_name="fhir")
-    assert await EgressInterceptor(KNOWN)(req, handler) == "ok"
+    result: Any = await EgressInterceptor(KNOWN)(req, handler)
+    assert result == "ok"

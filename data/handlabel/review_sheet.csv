@@ -24,8 +24,8 @@ hl-022,a02af8a1-a948-d4c0-74a0-d4ffeaecc755,Most recent eGFR below 60 mL/min/1.7
 hl-023,847f64d4-b907-8f32-f7a5-9ee2fcc38857,Female participants only,not_met,Patient/847f64d4-b907-8f32-f7a5-9ee2fcc38857,sex male,ok,gender male
 hl-024,847f64d4-b907-8f32-f7a5-9ee2fcc38857,Active diagnosis of type 2 diabetes mellitus,unknown,,no matching condition on record,ok,no matching Condition among 37
 hl-025,9728ef86-72ab-fded-4895-0bd3288f4dd7,Currently prescribed insulin,met,MedicationRequest/9728ef86-72ab-fded-12ce-d9b7b3edfb39,active prescription,ok,"1 active / 10 total; insulin isophane, human 70 UNT/ML / insulin, regular, human "
-hl-026,9728ef86-72ab-fded-4895-0bd3288f4dd7,Negative serum pregnancy test within 14 days before enrollment,unknown,,not recorded in Synthea data,ok,criterion not representable in Synthea FHIR (no such resource type)
-hl-027,603b9282-ce88-1721-0f51-1bb6bf2919e2,Negative serum pregnancy test within 14 days before enrollment,unknown,,not recorded in Synthea data,ok,criterion not representable in Synthea FHIR (no such resource type)
+hl-026,9728ef86-72ab-fded-4895-0bd3288f4dd7,Negative serum pregnancy test within 14 days before enrollment,not_applicable,Patient/9728ef86-72ab-fded-4895-0bd3288f4dd7,pregnancy rule; patient is male,fix: unknown -> not_applicable (verdict added 2026-11-18),patient gender male
+hl-027,603b9282-ce88-1721-0f51-1bb6bf2919e2,Negative serum pregnancy test within 14 days before enrollment,not_applicable,Patient/603b9282-ce88-1721-0f51-1bb6bf2919e2,pregnancy rule; patient is male,fix: unknown -> not_applicable (verdict added 2026-11-18),patient gender male
 hl-028,603b9282-ce88-1721-0f51-1bb6bf2919e2,Active diagnosis of essential hypertension,unknown,,no matching condition on record,ok,no matching Condition among 44
 hl-029,6be78eb3-c975-b56a-02aa-ff1a13ce5339,HbA1c of 7.0% or higher on the most recent measurement,unknown,,no 4548-4 on record,ok,no 4548-4 records
 hl-030,6be78eb3-c975-b56a-02aa-ff1a13ce5339,Female participants only,not_met,Patient/6be78eb3-c975-b56a-02aa-ff1a13ce5339,sex male,ok,gender male

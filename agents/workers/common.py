@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from collections.abc import Awaitable, Callable, Mapping
 from datetime import date
 from typing import Any
@@ -38,8 +39,49 @@ def _short(text: str, limit: int = 70) -> str:
     return text if len(text) <= limit else text[: limit - 1] + "…"
 
 
+STOPWORDS = frozenset(
+    "with without within than that this from have has had history active diagnosis most recent latest "
+    "level levels value values least more less patient patients prior before after during last days weeks "
+    "months years year month week day current currently prescribed participants only test count".split()
+)
+# Lab and condition synonyms so relevance matching finds the record line for common criteria wording.
+SYNONYMS: dict[str, tuple[str, ...]] = {
+    "egfr": ("glomerular",),
+    "hba1c": ("a1c",),
+    "a1c": ("a1c",),
+    "bmi": ("body mass",),
+    "platelet": ("platelets",),
+    "ldl": ("ldl",),
+    "kidney": ("renal", "kidney"),
+    "renal": ("renal", "kidney"),
+    "blood pressure": ("systolic", "diastolic"),
+}
+
+
+def focus_terms(texts: list[str]) -> set[str]:
+    """Keywords from criteria text used to keep matching profile lines when trimming, and to check relevance."""
+    terms: set[str] = set()
+    for text in texts:
+        low = text.lower()
+        for word in re.findall(r"[a-z0-9]+", low):
+            if len(word) >= 4 and word not in STOPWORDS and not word.isdigit():
+                terms.add(word)
+        for key, syns in SYNONYMS.items():
+            if key in low:
+                terms.update(syns)
+    return terms
+
+
+def mentions(line: str, terms: set[str]) -> bool:
+    low = line.lower()
+    return any(t in low for t in terms)
+
+
 def profile_context(
-    profile: PatientProfile, as_of: date | None = None, max_chars: int | None = None
+    profile: PatientProfile,
+    as_of: date | None = None,
+    max_chars: int | None = None,
+    focus: set[str] | None = None,
 ) -> tuple[str, dict[str, str]]:
     """Compact, citable profile text for prompts plus {short id: FHIR ref}.
 
@@ -84,11 +126,14 @@ def profile_context(
         lines.append(
             f"{alias('L', lab.resource_id)} | {_short(lab.display)} [loinc {lab.code}] = {value} | {lab.effective}"
         )
-    return _fit(lines, max_chars), aliases
+    return _fit(lines, max_chars, focus or set()), aliases
 
 
-def _fit(lines: list[str], max_chars: int) -> str:
-    """Drop facts until the text fits: stopped meds, then resolved conditions, then oldest labs."""
+def _fit(lines: list[str], max_chars: int, focus: set[str] | None = None) -> str:
+    """Drop facts until the text fits: stopped meds, then resolved conditions, then oldest labs.
+
+    Lines that mention a focus term (from the criteria being judged) are kept.
+    """
     text = "\n".join(lines)
     if len(text) <= max_chars:
         return text
@@ -96,10 +141,15 @@ def _fit(lines: list[str], max_chars: int) -> str:
     def date_of(line: str) -> str:
         return line.rsplit("| ", 1)[-1].strip()
 
+    focus = focus or set()
+    droppable = [ln for ln in lines if not mentions(ln, focus)]
     order = (
-        sorted((ln for ln in lines if ln.startswith("M") and "| active |" not in ln), key=date_of)
-        + sorted((ln for ln in lines if ln.startswith("C") and "| active" not in ln), key=date_of)
-        + sorted((ln for ln in lines if ln.startswith("L")), key=date_of)
+        sorted((ln for ln in droppable if ln.startswith("M") and "| active |" not in ln), key=date_of)
+        + sorted((ln for ln in droppable if ln.startswith("C") and "| active" not in ln), key=date_of)
+        + sorted((ln for ln in droppable if ln.startswith("L")), key=date_of)
+        # Last resort: active conditions and meds unrelated to the criteria being judged.
+        + sorted((ln for ln in droppable if ln.startswith("M") and "| active |" in ln), key=date_of)
+        + sorted((ln for ln in droppable if ln.startswith("C") and "| active" in ln), key=date_of)
     )
     keep = list(lines)
     dropped = 0

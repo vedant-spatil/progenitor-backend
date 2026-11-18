@@ -221,7 +221,7 @@ async def eval_judge(llm: StructuredLLM, fhir_base: str, require_reviewed: bool 
                 res.correct += v.status == expected
                 res.by_status[expected][v.status] += 1
                 res.downgraded += v.downgraded
-                if v.status in (VerdictStatus.MET, VerdictStatus.NOT_MET):
+                if v.status in (VerdictStatus.MET, VerdictStatus.NOT_MET, VerdictStatus.NOT_APPLICABLE):
                     res.met_or_not_met += 1
                     res.valid_citations += bool(v.evidence_refs) and all(r in valid for r in v.evidence_refs)
                     res.evidence_hits += bool(set(v.evidence_refs) & set(pair["expected_evidence"]))
@@ -274,7 +274,7 @@ def write_report(report: dict[str, Any]) -> Path:
         "|---|---:|",
         f"| Parser entity F1 (Chia, n={p['n']}) | {p['f1']:.3f} (P {p['precision']:.3f}, R {p['recall']:.3f}) |",
         f"| Judge accuracy (hand-labelled, n={j['n']}) | {j['accuracy']:.3f} |",
-        f"| Citation validity (met/not_met = {j['met_or_not_met']}) | {j['citation_validity']:.3f} |",
+        f"| Citation validity (evidenced verdicts = {j['met_or_not_met']}) | {j['citation_validity']:.3f} |",
         f"| Verdicts downgraded by citation guard | {j['downgraded_by_guard']} |",
         "",
         f"Judge confusion (expected -> predicted): `{json.dumps(j['confusion'])}`",
