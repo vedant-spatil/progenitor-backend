@@ -27,9 +27,9 @@ INTEGRATION := DATABASE_URL=$(GATE_DATABASE_URL) uv run pytest tests/integration
 export FRONTEND_DIR
 
 
-.PHONY: db-dump db-restore gate-status gate-report stack-up integration-tests data-tests profiler-exact-test
+.PHONY: phase5-integration-tests db-dump db-restore gate-status gate-report stack-up integration-tests data-tests profiler-exact-test
 .PHONY: help env up down logs ps wait test test-backend test-frontend lint gate eval check-frontend-dir \
-        up-tracing migrate data live eval-phase3 eval-phase4 gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2 gate-3 gate-4
+        up-tracing migrate data live eval-phase3 eval-phase4 gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2 gate-3 gate-4 gate-5
 
 help: ## List targets
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-16s %s\n", $$1, $$2}'
@@ -147,6 +147,10 @@ data-tests:
 profiler-exact-test:
 	$(INTEGRATION)/test_profiler_exact.py -m data
 
+phase5-integration-tests:
+	$(INTEGRATION)/test_runs_postgres.py -m integration
+	$(INTEGRATION)/test_celery_ping.py -m integration
+
 # ---------------- Gate 0: Foundations ----------------
 gate-0: gate-0-backend gate-0-frontend gate-0-stack
 	@echo "GATE 0 PASSED"
@@ -203,3 +207,12 @@ gate-3: gate-2
 gate-4: gate-3
 	uv run python manage.py eval_phase4
 	@echo "GATE 4 PASSED"
+
+# ---------------- Gate 5: API, HITL, audit ----------------
+# Gate 2 (static checks, stack, all unit + integration tests), then the Phase 5 suites by name.
+# Builds on gate 2, not 4: Phase 5 changes no agent logic; the live evals stay on gates 3-4.
+gate-5: gate-2
+	uv run python manage.py migrate --noinput
+	uv run pytest tests/unit/test_runs_api.py tests/unit/test_audit_wrappers.py -q
+	@$(MAKE) --no-print-directory phase5-integration-tests
+	@echo "GATE 5 PASSED"

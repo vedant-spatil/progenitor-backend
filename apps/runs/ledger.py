@@ -26,3 +26,25 @@ class DjangoLedger:
             guard_outcome=entry.guard_outcome,
             guard_detail=entry.guard_detail[:255],
         )
+
+
+class RunLedger(DjangoLedger):
+    """Ledger for API runs: the Decision row, a decision audit event, and a live event for SSE."""
+
+    def record(self, entry: LedgerEntry) -> None:
+        from apps.audit.services import audit_decision
+        from apps.runs.events import publish
+
+        super().record(entry)
+        audit_decision(entry)
+        publish(
+            entry.run_id,
+            "decision",
+            {
+                "step": entry.step,
+                "attempt": entry.attempt,
+                "action": entry.action,
+                "guard_outcome": entry.guard_outcome,
+                "state_refs": entry.state_refs,
+            },
+        )
