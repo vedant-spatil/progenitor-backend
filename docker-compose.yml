@@ -1,4 +1,6 @@
 # Local development stack. Dev-only credentials; see .env.example.
+# Services in the `tracing` profile (Langfuse, ClickHouse, MinIO) start only with --profile tracing
+# (make up does this when TRACING_MODE=langfuse). EC2 uses TRACING_MODE=cloudwatch and skips them.
 # Infra ports bind to 127.0.0.1 only.
 # Lives in the backend repo; builds the frontend repo from a sibling checkout
 # (FRONTEND_DIR, default ../frontend).
@@ -70,6 +72,7 @@ services:
     # host: `make wait` and tests/integration/test_compose_health.py.
 
   clickhouse:
+    profiles: ["tracing"]  # Langfuse stack: local dev only (TRACING_MODE=langfuse)
     image: clickhouse/clickhouse-server:26.3.62.3
     restart: unless-stopped
     user: "101:101"
@@ -87,6 +90,7 @@ services:
       retries: 20
 
   minio:
+    profiles: ["tracing"]  # Langfuse stack: local dev only (TRACING_MODE=langfuse)
     image: cgr.dev/chainguard/minio
     restart: unless-stopped
     entrypoint: sh
@@ -106,6 +110,7 @@ services:
       retries: 20
 
   langfuse-worker:
+    profiles: ["tracing"]  # Langfuse stack: local dev only (TRACING_MODE=langfuse)
     image: langfuse/langfuse-worker:${LANGFUSE_IMAGE_TAG:-4.78.0}
     restart: unless-stopped
     depends_on: &langfuse-depends-on
@@ -145,6 +150,7 @@ services:
       LANGFUSE_S3_MEDIA_UPLOAD_PREFIX: media/
 
   langfuse-web:
+    profiles: ["tracing"]  # Langfuse stack: local dev only (TRACING_MODE=langfuse)
     image: langfuse/langfuse:${LANGFUSE_IMAGE_TAG:-4.78.0}
     restart: unless-stopped
     depends_on: *langfuse-depends-on

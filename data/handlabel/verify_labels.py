@@ -144,6 +144,10 @@ for p in doc["pairs"]:
             + ("; ".join(sorted({disp(m["medicationCodeableConcept"])[:60] for m in hits}))[:140])
         )
     else:
-        verdict, note = "unknown", "criterion not representable in Synthea FHIR (no such resource type)"
+        gender = get(f"Patient/{pid}")["gender"]
+        if "pregnancy" in text.lower() and gender == "male":
+            verdict, note = "not_applicable", "pregnancy rule; patient is male"
+        else:
+            verdict, note = "unknown", "criterion not representable in Synthea FHIR (no such resource type)"
     flag = "OK " if verdict == exp else "MISMATCH"
     print(f"{flag}|{p['id']}|{exp}|{verdict}|{text[:60]}|{note}")

@@ -240,3 +240,67 @@ def test_profile_context_fits_budget_dropping_old_facts_first() -> None:
     assert "older facts omitted" in small
     assert "P | age 50" in small
     assert aliases["P"] == "Patient/p1"
+
+
+class TestRelevanceGuard:
+    def _profile(self) -> PatientProfile:
+        from agents.schemas import ConditionFact
+
+        return PatientProfile(
+            patient_ref="Patient/p1",
+            conditions=[
+                ConditionFact(resource_id="Condition/sinus", code="1", display="Acute sinusitis"),
+                ConditionFact(
+                    resource_id="Condition/asthma-old", code="2", display="Asthma", clinical_status="resolved"
+                ),
+            ],
+        )
+
+    def test_not_met_citing_unrelated_condition_becomes_unknown(self) -> None:
+        from agents.guards import enforce_relevance
+
+        crit = [Criterion(index=0, kind=CriterionKind.INCLUSION, source_text="Active diagnosis of asthma")]
+        v = [Verdict(criterion_index=0, status=VerdictStatus.NOT_MET, evidence_refs=["Condition/sinus"])]
+        out = enforce_relevance(v, crit, self._profile())
+        assert out[0].status == VerdictStatus.UNKNOWN
+        assert out[0].downgraded
+
+    def test_not_met_citing_the_condition_itself_is_kept(self) -> None:
+        from agents.guards import enforce_relevance
+
+        crit = [Criterion(index=0, kind=CriterionKind.INCLUSION, source_text="Active diagnosis of asthma")]
+        v = [Verdict(criterion_index=0, status=VerdictStatus.NOT_MET, evidence_refs=["Condition/asthma-old"])]
+        assert enforce_relevance(v, crit, self._profile())[0].status == VerdictStatus.NOT_MET
+
+    def test_not_applicable_needs_evidence(self) -> None:
+        out = enforce_citations([Verdict(criterion_index=0, status=VerdictStatus.NOT_APPLICABLE)], {"Patient/p1"})
+        assert out[0].status == VerdictStatus.UNKNOWN
+
+
+def test_focus_terms_keep_relevant_lab_when_trimming() -> None:
+    from agents.workers.common import focus_terms, profile_context
+
+    labs = [
+        LabFact(
+            resource_id=f"Observation/{i}",
+            code=f"c{i}",
+            display=f"filler lab {i}",
+            value=1.0,
+            effective=date(2026, 1, 1),
+        )
+        for i in range(30)
+    ]
+    labs.append(
+        LabFact(
+            resource_id="Observation/plt",
+            code="777-3",
+            display="Platelets [#/volume] in Blood",
+            value=331.0,
+            effective=date(2015, 1, 1),
+        )
+    )
+    profile = PatientProfile(patient_ref="Patient/p1", labs=labs)
+    focus = focus_terms(["Platelet count of at least 100 x10^3/uL"])
+    text, _ = profile_context(profile, date(2026, 11, 1), max_chars=600, focus=focus)
+    assert "Platelets" in text  # oldest line, but relevant: kept
+    assert "older facts omitted" in text

@@ -21,6 +21,7 @@ SAMPLES: dict[IdentifierType, list[str]] = {
         "lives at 42 Maple Grove Avenue, asthma",
         "lung cancer near 02139",
         "ZIP code: 94110",
+        "Boston 02139-4307",
         "PO Box 1234",
     ],
     T.DATE: [
@@ -66,6 +67,8 @@ CLINICAL_TERMS = [
     "no insulin in the last 3 months",
     "blood pressure 140/90 mmHg",
     "LOINC 4548-4",
+    "LOINC 38483-4",
+    "33914-3",
     "ICD-10 E11.9",
     "NCT04280705",
     "age 18 to 75 years",

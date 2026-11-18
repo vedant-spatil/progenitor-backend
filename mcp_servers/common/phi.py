@@ -77,7 +77,8 @@ PATTERNS: dict[IdentifierType, list[re.Pattern[str]]] = {
             r"|terrace|circle|cir|highway|hwy|parkway|pkwy)\b\.?",
             _I,
         ),
-        re.compile(r"(?<![\d.-])\d{5}(?:-\d{4})?(?![\d.])"),  # US ZIP / ZIP+4
+        # US ZIP / ZIP+4. Not followed by "-<digit>": 5-digit LOINC codes (38483-4) are not ZIPs.
+        re.compile(r"(?<![\d.-])\d{5}(?:-\d{4})?(?![\d.]|-\d)"),
         re.compile(r"\b(?:zip(?:\s*code)?|postal\s*code|address)\s*[:=#]", _I),
         re.compile(r"\b(?:p\.?\s*o\.?\s*box)\s*\d+", _I),
     ],

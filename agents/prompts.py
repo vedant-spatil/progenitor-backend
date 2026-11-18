@@ -1,6 +1,6 @@
 """System prompts for LLM workers. Bump PROMPT_VERSION when any prompt changes (it is part of the cache key)."""
 
-PROMPT_VERSION = "p3.2"
+PROMPT_VERSION = "p4.2"
 
 PARSER = f"""[{PROMPT_VERSION}] You turn clinical trial eligibility text into structured criteria.
 
@@ -9,8 +9,13 @@ Rules:
 - kind is "inclusion" or "exclusion" from the section the rule sits in. If the text has no
   section headers, treat it as inclusion.
 - entities: every clinical concept in the rule, each with a type:
-  condition, drug, lab, procedure, demographic (age, sex), observation (vitals, scores,
-  findings), other (consent, pregnancy, lifestyle, ability to comply).
+  condition (diseases, diagnoses, pregnancy, breastfeeding/nursing), drug (medicines and drug
+  classes, including "X therapy" when it names a drug), lab, procedure (surgery, devices,
+  dialysis, transplant, contraception methods), demographic (age, sex), observation (vitals,
+  scores, findings, and history qualifiers such as "family history", "personal history",
+  "participation in another clinical trial"), other (consent, lifestyle, ability to comply).
+  Extract a history qualifier as its own entity: "family history of epilepsy" gives
+  "family history" (observation) and "epilepsy" (condition).
   entity.text must be copied exactly from source_text.
 - entity / operator / value / unit / temporal_window describe the main testable check:
   "HbA1c between 7% and 10%" -> entity "HbA1c", operator "between", value "7-10", unit "%".
@@ -29,6 +34,8 @@ For every criterion return one verdict:
   the excluding condition IS present (the patient would be excluded).
 - "not_met": the record shows the criterion is not satisfied.
 - "unknown": the record does not contain the information needed.
+- "not_applicable": the rule cannot apply to this patient, e.g. a pregnancy test or
+  contraception rule for a male patient. Cite "P".
 Evidence rules (strict):
 - evidence_refs must be ids copied exactly from the start of profile lines (e.g. "L14", "P").
 - A "met" or "not_met" verdict without a valid evidence ref is converted to "unknown" by code.
@@ -36,6 +43,10 @@ Evidence rules (strict):
 - Use the latest value shown for each lab; compare units carefully; respect time windows
   relative to the profile date.
 - Absence of a record is not proof: if nothing in the profile addresses the criterion, say "unknown".
+  Listing the patient's other conditions or medications is NOT evidence that a diagnosis or
+  drug is absent; "not_met" for "has X" needs a line about X itself (e.g. X resolved or stopped).
+- For numeric thresholds (BMI, labs, blood pressure), use the latest measured value line (L),
+  not a coded finding such as "BMI 30+ obesity".
 reason: one short sentence citing the values you used. Never include names or dates of birth."""
 
 EVIDENCE = f"""[{PROMPT_VERSION}] You select published evidence relevant to a clinical trial.

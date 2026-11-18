@@ -69,6 +69,8 @@ class Decision(models.Model):
 
     run = models.ForeignKey(Run, on_delete=models.CASCADE, related_name="decisions")
     step = models.PositiveIntegerField()
+    # 0 = first decision at this step; 1 = the re-ask after a guard rejection.
+    attempt = models.PositiveSmallIntegerField(default=0)
     action = models.CharField(max_length=32, choices=DecisionAction.choices, blank=True)
     args = models.JSONField(default=dict, blank=True)
     rationale = models.TextField(blank=True)
@@ -84,9 +86,9 @@ class Decision(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["run", "step"], name="decision_unique_run_step"),
+            models.UniqueConstraint(fields=["run", "step", "attempt"], name="decision_unique_run_step_attempt"),
         ]
-        ordering = ["run", "step"]
+        ordering = ["run", "step", "attempt"]
 
     def __str__(self) -> str:
         return f"{self.run_id} step {self.step}: {self.action}"

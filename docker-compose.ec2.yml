@@ -1,0 +1,36 @@
+# EC2 staging override (TRACING_MODE=cloudwatch). Use with:
+#   docker compose -f docker-compose.yml -f docker-compose.ec2.yml up -d
+# (make up does this when STACK=ec2). The Langfuse `tracing` profile stays off.
+# Container stdout (JSON telemetry, one line per supervisor decision) goes to CloudWatch Logs.
+# The instance role needs logs:CreateLogGroup, logs:CreateLogStream, logs:PutLogEvents.
+
+x-cloudwatch: &cloudwatch
+  logging:
+    driver: awslogs
+    options:
+      awslogs-region: ${AWS_REGION:-ap-south-1}
+      awslogs-group: ${CLOUDWATCH_LOG_GROUP:-/progenitor/staging}
+      awslogs-create-group: "true"
+      tag: "{{.Name}}"
+
+services:
+  backend:
+    <<: *cloudwatch
+    environment:
+      TRACING_MODE: cloudwatch
+  worker:
+    <<: *cloudwatch
+    environment:
+      TRACING_MODE: cloudwatch
+  mcp-clinicaltrials: *cloudwatch
+  mcp-terminology: *cloudwatch
+  mcp-pubmed: *cloudwatch
+  mcp-fhir: *cloudwatch
+  hapi-fhir:
+    <<: *cloudwatch
+    environment:
+      # 8 GiB box: 3 GB heap leaves room for Postgres, workers, and data loads.
+      JAVA_TOOL_OPTIONS: ${HAPI_JAVA_OPTS:--Xmx3g}
+  postgres: *cloudwatch
+  redis: *cloudwatch
+  frontend: *cloudwatch

@@ -179,7 +179,10 @@ def candidates_for(fhir: Fhir, pid: str) -> list[dict[str, Any]]:
                 "medication",
             )
     for text in UNKNOWN_ONLY:
-        add(text, "unknown", [], "not recorded in Synthea data", "unrecorded")
+        if "pregnancy" in text.lower() and patient.get("gender") == "male":
+            add(text, "not_applicable", [pref], "pregnancy rule; patient is male", "unrecorded")
+        else:
+            add(text, "unknown", [], "not recorded in Synthea data", "unrecorded")
     return out
 
 

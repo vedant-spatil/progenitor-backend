@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from datetime import date
 from enum import StrEnum
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -132,6 +132,9 @@ class VerdictStatus(StrEnum):
     MET = "met"
     NOT_MET = "not_met"
     UNKNOWN = "unknown"
+    # The rule does not apply to this patient (e.g. a pregnancy test for a male patient).
+    # Needs evidence like met/not_met; it neither satisfies nor excludes.
+    NOT_APPLICABLE = "not_applicable"
 
 
 class Verdict(Model):
@@ -182,3 +185,34 @@ class Ranking(Model):
 class ReferralNote(Model):
     nct_id: str
     body: str
+
+
+# ---------------- Supervisor (Phase 4) ----------------
+
+Action = Literal[
+    "fetch_patient_data",  # args: resource_types?, loinc_codes?
+    "search_trials",  # args: conditions, terms?, interventions?, phases?, location?, max_results?
+    "refine_search",  # args: mode (broaden|narrow), reason, conditions?, terms?, phases?, location?
+    "parse_criteria",  # args: trial_ids
+    "judge_trials",  # args: trial_ids (fan-out, one judge per trial)
+    "resolve_unknowns",  # args: trial_id, criterion_indexes, what_to_look_for, loinc_codes?
+    "drop_trials",  # args: trial_ids, reason
+    "gather_evidence",  # args: trial_ids
+    "rank",  # args: trial_ids?
+    "ask_clinician",  # args: question
+    "draft_referrals",  # args: trial_ids? (only after clinician approval)
+    "finish",  # args: summary
+]
+ACTIONS: tuple[str, ...] = Action.__args__  # type: ignore[attr-defined]
+
+
+class Decision(Model):
+    """One supervisor decision. The LLM picks the action; guards may only reject it or force finish."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    action: Action
+    args: dict[str, Any] = Field(default_factory=dict)
+    rationale: str = Field(description="Why, citing facts from the run state.")
+    state_refs: list[str] = Field(default_factory=list, description="Ids used: NCT ids, FHIR refs, criterion ids.")
+    confidence: float = Field(ge=0, le=1)

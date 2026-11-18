@@ -4,7 +4,7 @@
   "reviewed_by": "automated verification against raw HAPI records (not a human reviewer; see docs/decisions/0003-phase3-labels-and-thresholds.md)",
   "as_of": "2026-11-16",
   "generated_by": "data/handlabel/generate_drafts.py (computed from HAPI; needs human review)",
-  "label_policy": "(matches the system's citation rule):\n- met / not_met need a resource id that shows it (lab value, condition, prescription, Patient for age/sex).\n- When the record has nothing on the criterion, the label is \"unknown\": absence of a\n  record is not evidence.",
+  "label_policy": "(matches the system's citation rule):\n- met / not_met need a resource id that shows it (lab value, condition, prescription, Patient for age/sex).\n- When the record has nothing on the criterion, the label is \"unknown\": absence of a\n  record is not evidence. A rule that cannot apply to the patient (e.g. pregnancy test, male) is not_applicable, citing the Patient.",
   "pairs": [
     {
       "id": "hl-001",
@@ -451,13 +451,15 @@
         "kind": "inclusion",
         "text": "Negative serum pregnancy test within 14 days before enrollment"
       },
-      "expected_status": "unknown",
-      "expected_evidence": [],
-      "rationale": "not recorded in Synthea data",
+      "expected_status": "not_applicable",
+      "expected_evidence": [
+        "Patient/9728ef86-72ab-fded-4895-0bd3288f4dd7"
+      ],
+      "rationale": "pregnancy rule; patient is male",
       "family": "unrecorded",
       "review": {
-        "result": "ok",
-        "check": "criterion not representable in Synthea FHIR (no such resource type)"
+        "result": "fix: unknown -> not_applicable (verdict added 2026-11-18)",
+        "check": "patient gender male"
       }
     },
     {
@@ -467,13 +469,15 @@
         "kind": "inclusion",
         "text": "Negative serum pregnancy test within 14 days before enrollment"
       },
-      "expected_status": "unknown",
-      "expected_evidence": [],
-      "rationale": "not recorded in Synthea data",
+      "expected_status": "not_applicable",
+      "expected_evidence": [
+        "Patient/603b9282-ce88-1721-0f51-1bb6bf2919e2"
+      ],
+      "rationale": "pregnancy rule; patient is male",
       "family": "unrecorded",
       "review": {
-        "result": "ok",
-        "check": "criterion not representable in Synthea FHIR (no such resource type)"
+        "result": "fix: unknown -> not_applicable (verdict added 2026-11-18)",
+        "check": "patient gender male"
       }
     },
     {
@@ -888,5 +892,5 @@
     }
   ],
   "review_date": "2026-11-17",
-  "revision_note": "rev 2: hl-007, hl-018 corrected; creatinine is coded 2160-0 or 38483-4 in Synthea."
+  "revision_note": "rev 2: hl-007, hl-018 corrected; creatinine is coded 2160-0 or 38483-4 in Synthea. rev 3: hl-026, hl-027 -> not_applicable (new verdict for rules that cannot apply)."
 }
