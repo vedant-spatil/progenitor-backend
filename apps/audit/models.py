@@ -35,9 +35,7 @@ class AuditKind(models.TextChoices):
 class AuditEvent(models.Model):
     """Append-only audit log. `payload` holds ids and counts only, never record text."""
 
-    run = models.ForeignKey(
-        "runs.Run", null=True, blank=True, on_delete=models.PROTECT, related_name="audit_events"
-    )
+    run = models.ForeignKey("runs.Run", null=True, blank=True, on_delete=models.PROTECT, related_name="audit_events")
     actor = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.PROTECT, related_name="audit_events"
     )

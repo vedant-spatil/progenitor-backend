@@ -1,0 +1,892 @@
+{
+  "version": 1,
+  "status": "reviewed",
+  "reviewed_by": "automated verification against raw HAPI records (not a human reviewer; see docs/decisions/0003-phase3-labels-and-thresholds.md)",
+  "as_of": "2026-11-16",
+  "generated_by": "data/handlabel/generate_drafts.py (computed from HAPI; needs human review)",
+  "label_policy": "(matches the system's citation rule):\n- met / not_met need a resource id that shows it (lab value, condition, prescription, Patient for age/sex).\n- When the record has nothing on the criterion, the label is \"unknown\": absence of a\n  record is not evidence.",
+  "pairs": [
+    {
+      "id": "hl-001",
+      "patient_id": "cd06baae-5bb7-925c-7659-5264b0468183",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Platelet count of at least 100 x10^3/uL on the latest blood count"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Observation/cd06baae-5bb7-925c-c138-c847b68dfbf1"
+      ],
+      "rationale": "latest 777-3 = 331.12",
+      "family": "lab",
+      "review": {
+        "result": "ok",
+        "check": "latest 777-3 331.12 10*3/uL on 2024-11-15 (2 readings)"
+      }
+    },
+    {
+      "id": "hl-002",
+      "patient_id": "cd06baae-5bb7-925c-7659-5264b0468183",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Most recent serum creatinine above 1.5 mg/dL"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Observation/cd06baae-5bb7-925c-e6ed-a4aa20591d74"
+      ],
+      "rationale": "latest 2160-0 = 2.0069",
+      "family": "lab",
+      "review": {
+        "result": "fix: evidence -> latest reading (status unchanged)",
+        "check": "latest 2160-0 2.0069 mg/dL on 2026-11-13 (52 readings); evidence Observation/cd06baae-5bb7-925c-2f20-8d0631dd5bde is NOT the latest"
+      }
+    },
+    {
+      "id": "hl-003",
+      "patient_id": "5a868fb2-e8ee-4a2a-6bd0-791b834c43e7",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Age 65 years or older"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Patient/5a868fb2-e8ee-4a2a-6bd0-791b834c43e7"
+      ],
+      "rationale": "age 71",
+      "family": "age",
+      "review": {
+        "result": "ok",
+        "check": "age 71 as of 2026-11-16"
+      }
+    },
+    {
+      "id": "hl-004",
+      "patient_id": "5a868fb2-e8ee-4a2a-6bd0-791b834c43e7",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Most recent LDL cholesterol of 100 mg/dL or higher"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Observation/5a868fb2-e8ee-4a2a-2247-63cdd1be297c"
+      ],
+      "rationale": "latest 18262-6 = 100.83",
+      "family": "lab",
+      "review": {
+        "result": "ok",
+        "check": "latest 18262-6 100.83 mg/dL on 2026-01-26 (5 readings)"
+      }
+    },
+    {
+      "id": "hl-005",
+      "patient_id": "16683a1f-9ee2-987b-ac4c-89177209f7ea",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Active diagnosis of chronic kidney disease (any stage)"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Condition/16683a1f-9ee2-987b-e9c3-4cc675e610f5"
+      ],
+      "rationale": "active condition",
+      "family": "condition",
+      "review": {
+        "result": "ok",
+        "check": "5 active / 5 total; Chronic kidney disease stage 1 (disorder); Chronic kidney disease stage 2 (disorder); Chronic kidney disease stage 3 (di"
+      }
+    },
+    {
+      "id": "hl-006",
+      "patient_id": "16683a1f-9ee2-987b-ac4c-89177209f7ea",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Body mass index of 30 kg/m2 or higher"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Observation/16683a1f-9ee2-987b-4d48-cc16e87e5bc2"
+      ],
+      "rationale": "latest 39156-5 = 28.17",
+      "family": "lab",
+      "review": {
+        "result": "ok",
+        "check": "latest 39156-5 28.17 kg/m2 on 2026-07-29 (31 readings)"
+      }
+    },
+    {
+      "id": "hl-007",
+      "patient_id": "628098e3-e9ae-c49e-e765-7896baf6a718",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Most recent serum creatinine above 1.5 mg/dL"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Observation/628098e3-e9ae-c49e-d1ba-979c27d08669"
+      ],
+      "rationale": "latest creatinine (38483-4, blood) = 0.66",
+      "family": "lab",
+      "review": {
+        "result": "fix: unknown -> not_met (creatinine coded 38483-4, missed by 2160-0-only check)",
+        "check": "latest creatinine 0.66 mg/dL (38483-4)"
+      }
+    },
+    {
+      "id": "hl-008",
+      "patient_id": "628098e3-e9ae-c49e-e765-7896baf6a718",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "HbA1c of 7.0% or higher on the most recent measurement"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Observation/628098e3-e9ae-c49e-08cd-51ece79198b7"
+      ],
+      "rationale": "latest 4548-4 = 2.91",
+      "family": "lab",
+      "review": {
+        "result": "ok",
+        "check": "latest 4548-4 2.91 % on 2025-12-01 (17 readings)"
+      }
+    },
+    {
+      "id": "hl-009",
+      "patient_id": "3f8a5fc2-533b-9ccb-a71c-47aa6a5fe818",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Most recent eGFR below 60 mL/min/1.73 m2"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Observation/3f8a5fc2-533b-9ccb-ed06-5d8a721ba0c6"
+      ],
+      "rationale": "latest 33914-3 = 75.98",
+      "family": "lab",
+      "review": {
+        "result": "ok",
+        "check": "latest 33914-3 75.98 mL/min/{1.73_m2} on 2026-04-26 (3 readings)"
+      }
+    },
+    {
+      "id": "hl-010",
+      "patient_id": "3f8a5fc2-533b-9ccb-a71c-47aa6a5fe818",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Systolic blood pressure of 140 mmHg or higher at the most recent visit"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Observation/3f8a5fc2-533b-9ccb-bc8c-9ec340b7b4da"
+      ],
+      "rationale": "latest 8480-6 = 116",
+      "family": "lab",
+      "review": {
+        "result": "ok",
+        "check": "latest 8480-6 116 mm[Hg] on 2026-04-26 (15 readings)"
+      }
+    },
+    {
+      "id": "hl-011",
+      "patient_id": "ac374341-2ee9-9ca0-fe84-c2164601a38d",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Active diagnosis of chronic kidney disease (any stage)"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Condition/ac374341-2ee9-9ca0-2fee-2d4c6fc88e73"
+      ],
+      "rationale": "active condition",
+      "family": "condition",
+      "review": {
+        "result": "ok",
+        "check": "1 active / 5 total; Chronic kidney disease stage 1 (disorder); Chronic kidney disease stage 2 (disorder); Chronic kidney disease stage 3 (di"
+      }
+    },
+    {
+      "id": "hl-012",
+      "patient_id": "ac374341-2ee9-9ca0-fe84-c2164601a38d",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Active diagnosis of asthma"
+      },
+      "expected_status": "unknown",
+      "expected_evidence": [],
+      "rationale": "no matching condition on record",
+      "family": "condition",
+      "review": {
+        "result": "ok",
+        "check": "no matching Condition among 165"
+      }
+    },
+    {
+      "id": "hl-013",
+      "patient_id": "8b95e9fa-cb23-8e83-45cc-6b0833b63fe7",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Active diagnosis of asthma"
+      },
+      "expected_status": "unknown",
+      "expected_evidence": [],
+      "rationale": "no matching condition on record",
+      "family": "condition",
+      "review": {
+        "result": "ok",
+        "check": "no matching Condition among 21"
+      }
+    },
+    {
+      "id": "hl-014",
+      "patient_id": "8b95e9fa-cb23-8e83-45cc-6b0833b63fe7",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Active diagnosis of chronic kidney disease (any stage)"
+      },
+      "expected_status": "unknown",
+      "expected_evidence": [],
+      "rationale": "no matching condition on record",
+      "family": "condition",
+      "review": {
+        "result": "ok",
+        "check": "no matching Condition among 21"
+      }
+    },
+    {
+      "id": "hl-015",
+      "patient_id": "078d1693-e195-1a0f-c10e-d6162ac172bb",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Most recent eGFR below 60 mL/min/1.73 m2"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Observation/078d1693-e195-1a0f-201e-0e5df6039b33"
+      ],
+      "rationale": "latest 33914-3 = 144.13",
+      "family": "lab",
+      "review": {
+        "result": "fix: met -> not_met (draft missed newer readings)",
+        "check": "latest 33914-3 144.13 mL/min/{1.73_m2} on 2026-04-20 (105 readings); evidence Observation/078d1693-e195-1a0f-b663-6174dcbaa852 is NOT the latest"
+      }
+    },
+    {
+      "id": "hl-016",
+      "patient_id": "078d1693-e195-1a0f-c10e-d6162ac172bb",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Female participants only"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Patient/078d1693-e195-1a0f-c10e-d6162ac172bb"
+      ],
+      "rationale": "sex female",
+      "family": "sex",
+      "review": {
+        "result": "ok",
+        "check": "gender female"
+      }
+    },
+    {
+      "id": "hl-017",
+      "patient_id": "93faaa30-a3f0-7272-a82e-a946c73ee37c",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Most recent eGFR below 60 mL/min/1.73 m2"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Observation/93faaa30-a3f0-7272-b9af-1cfc1fa7a944"
+      ],
+      "rationale": "latest 33914-3 = 78.05",
+      "family": "lab",
+      "review": {
+        "result": "ok",
+        "check": "latest 33914-3 78.05 mL/min/{1.73_m2} on 2026-06-29 (13 readings)"
+      }
+    },
+    {
+      "id": "hl-018",
+      "patient_id": "93faaa30-a3f0-7272-a82e-a946c73ee37c",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Most recent serum creatinine above 1.5 mg/dL"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Observation/93faaa30-a3f0-7272-e553-aa30ebd022e6"
+      ],
+      "rationale": "latest creatinine (38483-4, blood) = 1.07",
+      "family": "lab",
+      "review": {
+        "result": "fix: unknown -> not_met (creatinine coded 38483-4, missed by 2160-0-only check)",
+        "check": "latest creatinine 1.07 mg/dL (38483-4)"
+      }
+    },
+    {
+      "id": "hl-019",
+      "patient_id": "76a17403-9042-3da8-3c4d-ab92c951d702",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "ECOG performance status 0 or 1"
+      },
+      "expected_status": "unknown",
+      "expected_evidence": [],
+      "rationale": "not recorded in Synthea data",
+      "family": "unrecorded",
+      "review": {
+        "result": "ok",
+        "check": "criterion not representable in Synthea FHIR (no such resource type)"
+      }
+    },
+    {
+      "id": "hl-020",
+      "patient_id": "76a17403-9042-3da8-3c4d-ab92c951d702",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Active diagnosis of asthma"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Condition/76a17403-9042-3da8-0b59-559ee47a7953"
+      ],
+      "rationale": "active condition",
+      "family": "condition",
+      "review": {
+        "result": "ok",
+        "check": "1 active / 1 total; Asthma (disorder)"
+      }
+    },
+    {
+      "id": "hl-021",
+      "patient_id": "a02af8a1-a948-d4c0-74a0-d4ffeaecc755",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Active diagnosis of asthma"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Condition/a02af8a1-a948-d4c0-b440-94c8c566075f"
+      ],
+      "rationale": "active condition",
+      "family": "condition",
+      "review": {
+        "result": "ok",
+        "check": "1 active / 1 total; Asthma (disorder)"
+      }
+    },
+    {
+      "id": "hl-022",
+      "patient_id": "a02af8a1-a948-d4c0-74a0-d4ffeaecc755",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Most recent eGFR below 60 mL/min/1.73 m2"
+      },
+      "expected_status": "unknown",
+      "expected_evidence": [],
+      "rationale": "no 33914-3 on record",
+      "family": "lab",
+      "review": {
+        "result": "ok",
+        "check": "no 33914-3 records"
+      }
+    },
+    {
+      "id": "hl-023",
+      "patient_id": "847f64d4-b907-8f32-f7a5-9ee2fcc38857",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Female participants only"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Patient/847f64d4-b907-8f32-f7a5-9ee2fcc38857"
+      ],
+      "rationale": "sex male",
+      "family": "sex",
+      "review": {
+        "result": "ok",
+        "check": "gender male"
+      }
+    },
+    {
+      "id": "hl-024",
+      "patient_id": "847f64d4-b907-8f32-f7a5-9ee2fcc38857",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Active diagnosis of type 2 diabetes mellitus"
+      },
+      "expected_status": "unknown",
+      "expected_evidence": [],
+      "rationale": "no matching condition on record",
+      "family": "condition",
+      "review": {
+        "result": "ok",
+        "check": "no matching Condition among 37"
+      }
+    },
+    {
+      "id": "hl-025",
+      "patient_id": "9728ef86-72ab-fded-4895-0bd3288f4dd7",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Currently prescribed insulin"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "MedicationRequest/9728ef86-72ab-fded-12ce-d9b7b3edfb39"
+      ],
+      "rationale": "active prescription",
+      "family": "medication",
+      "review": {
+        "result": "ok",
+        "check": "1 active / 10 total; insulin isophane, human 70 UNT/ML / insulin, regular, human "
+      }
+    },
+    {
+      "id": "hl-026",
+      "patient_id": "9728ef86-72ab-fded-4895-0bd3288f4dd7",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Negative serum pregnancy test within 14 days before enrollment"
+      },
+      "expected_status": "unknown",
+      "expected_evidence": [],
+      "rationale": "not recorded in Synthea data",
+      "family": "unrecorded",
+      "review": {
+        "result": "ok",
+        "check": "criterion not representable in Synthea FHIR (no such resource type)"
+      }
+    },
+    {
+      "id": "hl-027",
+      "patient_id": "603b9282-ce88-1721-0f51-1bb6bf2919e2",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Negative serum pregnancy test within 14 days before enrollment"
+      },
+      "expected_status": "unknown",
+      "expected_evidence": [],
+      "rationale": "not recorded in Synthea data",
+      "family": "unrecorded",
+      "review": {
+        "result": "ok",
+        "check": "criterion not representable in Synthea FHIR (no such resource type)"
+      }
+    },
+    {
+      "id": "hl-028",
+      "patient_id": "603b9282-ce88-1721-0f51-1bb6bf2919e2",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Active diagnosis of essential hypertension"
+      },
+      "expected_status": "unknown",
+      "expected_evidence": [],
+      "rationale": "no matching condition on record",
+      "family": "condition",
+      "review": {
+        "result": "ok",
+        "check": "no matching Condition among 44"
+      }
+    },
+    {
+      "id": "hl-029",
+      "patient_id": "6be78eb3-c975-b56a-02aa-ff1a13ce5339",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "HbA1c of 7.0% or higher on the most recent measurement"
+      },
+      "expected_status": "unknown",
+      "expected_evidence": [],
+      "rationale": "no 4548-4 on record",
+      "family": "lab",
+      "review": {
+        "result": "ok",
+        "check": "no 4548-4 records"
+      }
+    },
+    {
+      "id": "hl-030",
+      "patient_id": "6be78eb3-c975-b56a-02aa-ff1a13ce5339",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Female participants only"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Patient/6be78eb3-c975-b56a-02aa-ff1a13ce5339"
+      ],
+      "rationale": "sex male",
+      "family": "sex",
+      "review": {
+        "result": "ok",
+        "check": "gender male"
+      }
+    },
+    {
+      "id": "hl-031",
+      "patient_id": "4e94eee1-9c4f-d698-a26a-30170d59307e",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Age 65 years or older"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Patient/4e94eee1-9c4f-d698-a26a-30170d59307e"
+      ],
+      "rationale": "age 32",
+      "family": "age",
+      "review": {
+        "result": "ok",
+        "check": "age 32 as of 2026-11-16"
+      }
+    },
+    {
+      "id": "hl-032",
+      "patient_id": "4e94eee1-9c4f-d698-a26a-30170d59307e",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Most recent serum creatinine above 1.5 mg/dL"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Observation/4e94eee1-9c4f-d698-6611-c91c1604aa63"
+      ],
+      "rationale": "latest 2160-0 = 2.0928",
+      "family": "lab",
+      "review": {
+        "result": "ok",
+        "check": "latest 2160-0 2.0928 mg/dL on 2026-07-12 (10 readings)"
+      }
+    },
+    {
+      "id": "hl-033",
+      "patient_id": "b914fceb-9c9f-d4c5-df14-bf1fd70fafd8",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Age 65 years or older"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Patient/b914fceb-9c9f-d4c5-df14-bf1fd70fafd8"
+      ],
+      "rationale": "age 48",
+      "family": "age",
+      "review": {
+        "result": "ok",
+        "check": "age 48 as of 2026-11-16"
+      }
+    },
+    {
+      "id": "hl-034",
+      "patient_id": "b914fceb-9c9f-d4c5-df14-bf1fd70fafd8",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Active diagnosis of chronic kidney disease (any stage)"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Condition/b914fceb-9c9f-d4c5-ca29-9f4f4c331eb0"
+      ],
+      "rationale": "active condition",
+      "family": "condition",
+      "review": {
+        "result": "ok",
+        "check": "4 active / 4 total; Chronic kidney disease stage 1 (disorder); Chronic kidney disease stage 2 (disorder); Chronic kidney disease stage 3 (di"
+      }
+    },
+    {
+      "id": "hl-035",
+      "patient_id": "ff56b758-738d-8acc-122c-db0732cbdd03",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Age 65 years or older"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Patient/ff56b758-738d-8acc-122c-db0732cbdd03"
+      ],
+      "rationale": "age 58",
+      "family": "age",
+      "review": {
+        "result": "ok",
+        "check": "age 58 as of 2026-11-16"
+      }
+    },
+    {
+      "id": "hl-036",
+      "patient_id": "ff56b758-738d-8acc-122c-db0732cbdd03",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Age between 18 and 75 years"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Patient/ff56b758-738d-8acc-122c-db0732cbdd03"
+      ],
+      "rationale": "age 58",
+      "family": "age",
+      "review": {
+        "result": "ok",
+        "check": "age 58 as of 2026-11-16"
+      }
+    },
+    {
+      "id": "hl-037",
+      "patient_id": "2f1f9c2b-8a76-564a-5249-1d93dd8e7b26",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Age between 18 and 75 years"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Patient/2f1f9c2b-8a76-564a-5249-1d93dd8e7b26"
+      ],
+      "rationale": "age 76",
+      "family": "age",
+      "review": {
+        "result": "ok",
+        "check": "age 76 as of 2026-11-16"
+      }
+    },
+    {
+      "id": "hl-038",
+      "patient_id": "2f1f9c2b-8a76-564a-5249-1d93dd8e7b26",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Female participants only"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Patient/2f1f9c2b-8a76-564a-5249-1d93dd8e7b26"
+      ],
+      "rationale": "sex male",
+      "family": "sex",
+      "review": {
+        "result": "ok",
+        "check": "gender male"
+      }
+    },
+    {
+      "id": "hl-039",
+      "patient_id": "12c55c91-598e-7073-1611-c058d1ecf449",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Female participants only"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Patient/12c55c91-598e-7073-1611-c058d1ecf449"
+      ],
+      "rationale": "sex female",
+      "family": "sex",
+      "review": {
+        "result": "ok",
+        "check": "gender female"
+      }
+    },
+    {
+      "id": "hl-040",
+      "patient_id": "12c55c91-598e-7073-1611-c058d1ecf449",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Age between 18 and 75 years"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Patient/12c55c91-598e-7073-1611-c058d1ecf449"
+      ],
+      "rationale": "age 82",
+      "family": "age",
+      "review": {
+        "result": "ok",
+        "check": "age 82 as of 2026-11-16"
+      }
+    },
+    {
+      "id": "hl-041",
+      "patient_id": "fc57e9f5-5c0d-4b6f-5690-bd1fa49e3c16",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Age between 18 and 75 years"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Patient/fc57e9f5-5c0d-4b6f-5690-bd1fa49e3c16"
+      ],
+      "rationale": "age 65",
+      "family": "age",
+      "review": {
+        "result": "ok",
+        "check": "age 65 as of 2026-11-16"
+      }
+    },
+    {
+      "id": "hl-042",
+      "patient_id": "fc57e9f5-5c0d-4b6f-5690-bd1fa49e3c16",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Age 65 years or older"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Patient/fc57e9f5-5c0d-4b6f-5690-bd1fa49e3c16"
+      ],
+      "rationale": "age 65",
+      "family": "age",
+      "review": {
+        "result": "ok",
+        "check": "age 65 as of 2026-11-16"
+      }
+    },
+    {
+      "id": "hl-043",
+      "patient_id": "fe045abf-eeef-7fa2-300a-a4e1b50894d3",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Currently prescribed metformin"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "MedicationRequest/fe045abf-eeef-7fa2-a808-82bc020abc5e"
+      ],
+      "rationale": "active prescription",
+      "family": "medication",
+      "review": {
+        "result": "ok",
+        "check": "1 active / 64 total; 24 HR Metformin hydrochloride 500 MG Extended Release Oral T"
+      }
+    },
+    {
+      "id": "hl-044",
+      "patient_id": "fe045abf-eeef-7fa2-300a-a4e1b50894d3",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Currently prescribed insulin"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "MedicationRequest/fe045abf-eeef-7fa2-eff3-a2fb2d6a19e5"
+      ],
+      "rationale": "active prescription",
+      "family": "medication",
+      "review": {
+        "result": "ok",
+        "check": "1 active / 64 total; Insulin Lispro 100 UNT/ML Injectable Solution [Humalog]"
+      }
+    },
+    {
+      "id": "hl-045",
+      "patient_id": "2722e4fd-bf38-dc2e-b124-8aa156d61980",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Age between 18 and 75 years"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "Patient/2722e4fd-bf38-dc2e-b124-8aa156d61980"
+      ],
+      "rationale": "age 64",
+      "family": "age",
+      "review": {
+        "result": "ok",
+        "check": "age 64 as of 2026-11-16"
+      }
+    },
+    {
+      "id": "hl-046",
+      "patient_id": "2722e4fd-bf38-dc2e-b124-8aa156d61980",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Female participants only"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Patient/2722e4fd-bf38-dc2e-b124-8aa156d61980"
+      ],
+      "rationale": "sex male",
+      "family": "sex",
+      "review": {
+        "result": "ok",
+        "check": "gender male"
+      }
+    },
+    {
+      "id": "hl-047",
+      "patient_id": "e2d0352d-f591-b0fc-e45a-05bc7c8c5aee",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Female participants only"
+      },
+      "expected_status": "not_met",
+      "expected_evidence": [
+        "Patient/e2d0352d-f591-b0fc-e45a-05bc7c8c5aee"
+      ],
+      "rationale": "sex male",
+      "family": "sex",
+      "review": {
+        "result": "ok",
+        "check": "gender male"
+      }
+    },
+    {
+      "id": "hl-048",
+      "patient_id": "a9ffdff1-60d3-e708-3fd0-9e88a9dd8b2c",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Currently prescribed insulin"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "MedicationRequest/a9ffdff1-60d3-e708-ffb9-6e19edab36f1"
+      ],
+      "rationale": "active prescription",
+      "family": "medication",
+      "review": {
+        "result": "fix: not_met -> met (active prescription beyond first 1000 records)",
+        "check": "1 active / 83 total; insulin isophane, human 70 UNT/ML / insulin, regular, human "
+      }
+    },
+    {
+      "id": "hl-049",
+      "patient_id": "a9ffdff1-60d3-e708-3fd0-9e88a9dd8b2c",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Currently prescribed metformin"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "MedicationRequest/a9ffdff1-60d3-e708-c82b-48b618fa5834"
+      ],
+      "rationale": "active prescription",
+      "family": "medication",
+      "review": {
+        "result": "fix: not_met -> met (active prescription beyond first 1000 records)",
+        "check": "1 active / 83 total; 24 HR Metformin hydrochloride 500 MG Extended Release Oral T"
+      }
+    },
+    {
+      "id": "hl-050",
+      "patient_id": "8d6edc00-5f24-56bc-882e-928dde40d6ae",
+      "criterion": {
+        "kind": "inclusion",
+        "text": "Currently prescribed insulin"
+      },
+      "expected_status": "met",
+      "expected_evidence": [
+        "MedicationRequest/8d6edc00-5f24-56bc-2cb7-bc82625903e1"
+      ],
+      "rationale": "active prescription",
+      "family": "medication",
+      "review": {
+        "result": "fix: not_met -> met (active prescription beyond first 1000 records)",
+        "check": "1 active / 257 total; insulin isophane, human 70 UNT/ML / insulin, regular, human "
+      }
+    }
+  ],
+  "review_date": "2026-11-17",
+  "revision_note": "rev 2: hl-007, hl-018 corrected; creatinine is coded 2160-0 or 38483-4 in Synthea."
+}

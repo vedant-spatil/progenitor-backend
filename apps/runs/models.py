@@ -19,15 +19,9 @@ class Run(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     patient = models.ForeignKey("patients.Patient", on_delete=models.PROTECT, related_name="runs")
-    created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT, related_name="runs"
-    )
-    status = models.CharField(
-        max_length=24, choices=RunStatus.choices, default=RunStatus.QUEUED, db_index=True
-    )
-    config = models.JSONField(
-        default=dict, blank=True, help_text="Budgets, provider, model, search defaults."
-    )
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.PROTECT, related_name="runs")
+    status = models.CharField(max_length=24, choices=RunStatus.choices, default=RunStatus.QUEUED, db_index=True)
+    config = models.JSONField(default=dict, blank=True, help_text="Budgets, provider, model, search defaults.")
     summary = models.TextField(blank=True)
     error = models.CharField(max_length=255, blank=True, help_text="Error class and short code only.")
     steps_used = models.PositiveIntegerField(default=0)
@@ -84,9 +78,7 @@ class Decision(models.Model):
     tokens_in = models.PositiveIntegerField(default=0)
     tokens_out = models.PositiveIntegerField(default=0)
     latency_ms = models.PositiveIntegerField(default=0)
-    guard_outcome = models.CharField(
-        max_length=24, choices=GuardOutcome.choices, default=GuardOutcome.ACCEPTED
-    )
+    guard_outcome = models.CharField(max_length=24, choices=GuardOutcome.choices, default=GuardOutcome.ACCEPTED)
     guard_detail = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -117,9 +109,7 @@ class Verdict(models.Model):
     trial = models.ForeignKey("trials.Trial", on_delete=models.PROTECT, related_name="verdicts")
     criterion = models.ForeignKey("trials.Criterion", on_delete=models.PROTECT, related_name="verdicts")
     status = models.CharField(max_length=8, choices=VerdictStatus.choices)
-    evidence_refs = models.JSONField(
-        default=list, blank=True, help_text="FHIR resource ids, e.g. 'Observation/123'."
-    )
+    evidence_refs = models.JSONField(default=list, blank=True, help_text="FHIR resource ids, e.g. 'Observation/123'.")
     reason = models.TextField(blank=True)
     downgraded = models.BooleanField(default=False, help_text="Set when the citation guard forced 'unknown'.")
     model = models.CharField(max_length=128, blank=True)
@@ -164,3 +154,15 @@ class ShortlistItem(models.Model):
 
     def __str__(self) -> str:
         return f"{self.run_id} #{self.rank} {self.trial_id}"
+
+
+class LlmCache(models.Model):
+    """Cached structured LLM replies keyed by sha256(provider, model, prompt, schema). Reruns cost no tokens."""
+
+    key = models.CharField(max_length=64, primary_key=True)
+    task = models.CharField(max_length=64, blank=True)
+    response = models.JSONField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"{self.task} {self.key[:12]}"

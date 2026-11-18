@@ -26,5 +26,8 @@ data/external/
 # Project docs stay local (not published)
 docs/
 
-# Claude Code instructions stay local
+# Local agent instructions stay local
 CLAUDE.md
+
+# Local notes
+technologies.md

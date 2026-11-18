@@ -55,18 +55,14 @@ def _synthea_section() -> list[str]:
         "|---|---:|---:|",
     ]
     for cond in cohort["conditions"]:
-        lines.append(
-            f"| {cond['name']} | {cond['patients']} | {len(patient_bundles(OUTPUT_DIR / cond['name']))} |"
-        )
+        lines.append(f"| {cond['name']} | {cond['patients']} | {len(patient_bundles(OUTPUT_DIR / cond['name']))} |")
     return lines
 
 
 def _app_section() -> list[str]:
     lines = ["## App tables", "", "| Table | Rows |", "|---|---:|"]
     for source in (synthea.SOURCE, mimic.SOURCE):
-        lines.append(
-            f"| patients_patient (source={source}) | {Patient.objects.filter(source=source).count():,} |"
-        )
+        lines.append(f"| patients_patient (source={source}) | {Patient.objects.filter(source=source).count():,} |")
     lines.append(f"| trials_trial | {Trial.objects.count():,} |")
     return lines
 
@@ -76,8 +72,7 @@ def _eval_section() -> list[str]:
     lines = [
         "## Eval datasets",
         "",
-        f"TrialGPT commit `{manifest['trialgpt']['commit']}`; files verified by SHA256 "
-        "(`data/eval_manifest.json`).",
+        f"TrialGPT commit `{manifest['trialgpt']['commit']}`; files verified by SHA256 (`data/eval_manifest.json`).",
         "",
         "| Cohort | Patients | Expected | Patients with qrels | Qrels rows | Trials | Labels (0/1/2) |",
         "|---|---:|---:|---:|---:|---:|---|",

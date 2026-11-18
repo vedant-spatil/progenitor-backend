@@ -34,9 +34,7 @@ def test_health_degraded_when_redis_down() -> None:
 def test_api_requires_auth_by_default() -> None:
     from django.conf import settings
 
-    assert settings.REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"] == [
-        "rest_framework.permissions.IsAuthenticated"
-    ]
+    assert settings.REST_FRAMEWORK["DEFAULT_PERMISSION_CLASSES"] == ["rest_framework.permissions.IsAuthenticated"]
 
 
 @pytest.mark.django_db

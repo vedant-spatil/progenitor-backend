@@ -157,11 +157,7 @@ class OutboundClient:
                 if resp.status_code == 404:
                     raise UpstreamError(UpstreamErrorKind.NOT_FOUND, self.destination)
                 if resp.status_code in RETRY_STATUSES:
-                    kind = (
-                        UpstreamErrorKind.RATE_LIMITED
-                        if resp.status_code == 429
-                        else UpstreamErrorKind.HTTP_ERROR
-                    )
+                    kind = UpstreamErrorKind.RATE_LIMITED if resp.status_code == 429 else UpstreamErrorKind.HTTP_ERROR
                     last = UpstreamError(kind, self.destination, str(resp.status_code))
                     retry_after = resp.headers.get("Retry-After", "")
                     if attempt < self.max_attempts:
@@ -173,9 +169,7 @@ class OutboundClient:
                 try:
                     body: Any = resp.json() if parse == "json" else resp.text
                 except ValueError as exc:
-                    raise UpstreamError(
-                        UpstreamErrorKind.MALFORMED, self.destination, "invalid JSON"
-                    ) from exc
+                    raise UpstreamError(UpstreamErrorKind.MALFORMED, self.destination, "invalid JSON") from exc
                 await self._cache_set(key, body)
                 return body
             if attempt < self.max_attempts:

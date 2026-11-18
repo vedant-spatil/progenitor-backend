@@ -77,16 +77,12 @@ def test_full_chain_run_to_referral() -> None:
     user = get_user_model().objects.create_user(username="clin", password="a-long-test-password")
     run = _run()
     trial = _trial()
-    crit = Criterion.objects.create(
-        trial=trial, position=1, kind=CriterionKind.INCLUSION, source_text="HbA1c > 7.5%"
-    )
+    crit = Criterion.objects.create(trial=trial, position=1, kind=CriterionKind.INCLUSION, source_text="HbA1c > 7.5%")
     Verdict.objects.create(
         run=run, trial=trial, criterion=crit, status=VerdictStatus.MET, evidence_refs=["Observation/1"]
     )
     item = ShortlistItem.objects.create(run=run, trial=trial, rank=1)
-    review = Review.objects.create(
-        run=run, shortlist_item=item, reviewer=user, decision=ReviewDecision.APPROVE
-    )
+    review = Review.objects.create(run=run, shortlist_item=item, reviewer=user, decision=ReviewDecision.APPROVE)
     draft = ReferralDraft.objects.create(shortlist_item=item, review=review, body="draft")
     assert draft.status == "draft"
     assert item.status == "draft"

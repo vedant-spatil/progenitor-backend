@@ -44,15 +44,11 @@ def _tables_rows(data: Any) -> list[tuple[str, str]]:
 
 def build_server(rxnav: OutboundClient | None = None, tables: OutboundClient | None = None) -> FastMCP:
     rate = float(os.environ.get("NLM_RATE_PER_MIN", "120"))
-    rxnav = rxnav or OutboundClient(
-        "rxnav.nlm.nih.gov", RXNAV_URL, rate_per_min=rate, cache=redis_cache_from_env()
-    )
+    rxnav = rxnav or OutboundClient("rxnav.nlm.nih.gov", RXNAV_URL, rate_per_min=rate, cache=redis_cache_from_env())
     tables = tables or OutboundClient(
         "clinicaltables.nlm.nih.gov", TABLES_URL, rate_per_min=rate, cache=redis_cache_from_env()
     )
-    mcp = FastMCP(
-        "terminology", instructions="Normalize drugs (RxNorm), labs (LOINC), and conditions (ICD-10-CM)."
-    )
+    mcp = FastMCP("terminology", instructions="Normalize drugs (RxNorm), labs (LOINC), and conditions (ICD-10-CM).")
     add_health_route(mcp)
 
     @mcp.tool(annotations={"readOnlyHint": True, "openWorldHint": True})

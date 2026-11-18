@@ -56,9 +56,7 @@ async def test_interceptor_blocks_patient_name_on_outbound(server: str) -> None:
 
 async def test_interceptor_passes_clean_outbound() -> None:
     handler = Handler()
-    req = MCPToolCallRequest(
-        name="search_trials", args={"conditions": "breast cancer"}, server_name="clinicaltrials"
-    )
+    req = MCPToolCallRequest(name="search_trials", args={"conditions": "breast cancer"}, server_name="clinicaltrials")
     assert await EgressInterceptor(KNOWN)(req, handler) == "ok"
 
 

@@ -65,9 +65,7 @@ class PostgresAact:
                     "minimumAge": min_age,
                     "maximumAge": max_age,
                     "sex": (sex or "").upper(),
-                    "healthyVolunteers": None
-                    if healthy is None
-                    else str(healthy).lower().startswith("accepts"),
+                    "healthyVolunteers": None if healthy is None else str(healthy).lower().startswith("accepts"),
                 },
             }
         }
@@ -76,10 +74,7 @@ class PostgresAact:
         rows = await asyncio.to_thread(
             self._query, SEARCH_SQL, (f"%{conditions.lower()}%", [s.upper() for s in status], limit)
         )
-        return [
-            {"nct_id": r[0], "title": r[1], "status": (r[2] or "").upper(), "phases": _phases(r[3])}
-            for r in rows
-        ]
+        return [{"nct_id": r[0], "title": r[1], "status": (r[2] or "").upper(), "phases": _phases(r[3])} for r in rows]
 
 
 def aact_from_env() -> AactBackend | None:

@@ -128,9 +128,7 @@ def load(client: FhirClient | None = None, workers: int = 1) -> SyntheaLoadRepor
             report.bundles += 1
 
         jobs: list[tuple[str, Path]] = [
-            (c["name"], p)
-            for c, d in zip(cohort["conditions"], cond_dirs, strict=True)
-            for p in patient_bundles(d)
+            (c["name"], p) for c, d in zip(cohort["conditions"], cond_dirs, strict=True) for p in patient_bundles(d)
         ]
 
         def upload(job: tuple[str, Path]) -> tuple[str, str, TransactionResult]:

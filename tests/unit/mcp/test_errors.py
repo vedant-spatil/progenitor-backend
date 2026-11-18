@@ -26,9 +26,7 @@ class Recorder:
         return self.handler(request)
 
 
-def client_with(
-    handler: Handler, destination: str = "test", max_attempts: int = 3
-) -> tuple[OutboundClient, Recorder]:
+def client_with(handler: Handler, destination: str = "test", max_attempts: int = 3) -> tuple[OutboundClient, Recorder]:
     rec = Recorder(handler)
     http = httpx.AsyncClient(transport=httpx.MockTransport(rec))
     return (
@@ -57,9 +55,7 @@ class TestOutboundClient:
         assert len(rec.requests) == 3
 
     async def test_429_retries_then_succeeds(self) -> None:
-        responses = iter(
-            [httpx.Response(429, headers={"Retry-After": "0"}), httpx.Response(200, json={"ok": 1})]
-        )
+        responses = iter([httpx.Response(429, headers={"Retry-After": "0"}), httpx.Response(200, json={"ok": 1})])
         client, rec = client_with(lambda r: next(responses))
         assert await client.get("/x") == {"ok": 1}
         assert len(rec.requests) == 2
@@ -173,9 +169,7 @@ class TestToolErrors:
         assert "malformed" in await tool_error(server, "lookup_icd10", {"text": "asthma"})
 
     async def test_pubmed_malformed_xml(self) -> None:
-        client, _ = client_with(
-            lambda r: httpx.Response(200, text="<PubmedArticleSet><broken"), pubmed.DESTINATION
-        )
+        client, _ = client_with(lambda r: httpx.Response(200, text="<PubmedArticleSet><broken"), pubmed.DESTINATION)
         msg = await tool_error(pubmed.build_server(client=client), "get_abstracts", {"pmids": ["32445440"]})
         assert "malformed" in msg
 

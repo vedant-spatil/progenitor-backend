@@ -10,9 +10,7 @@ class Command(BaseCommand):
     help = "Download (checksum-verified) and load the MIMIC-IV FHIR demo into HAPI; register Patient rows."
 
     def add_arguments(self, parser: CommandParser) -> None:
-        parser.add_argument(
-            "--full", action="store_true", help="Also load chart events, administrations, micro."
-        )
+        parser.add_argument("--full", action="store_true", help="Also load chart events, administrations, micro.")
 
     def handle(self, *args: Any, **opts: Any) -> None:
         report = mimic.load(full=opts["full"])

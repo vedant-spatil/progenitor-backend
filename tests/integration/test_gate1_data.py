@@ -48,18 +48,14 @@ def test_synthea_cohort_covers_all_six_conditions(fhir: FhirClient) -> None:
 @pytest.mark.django_db
 def test_loaders_are_idempotent(fhir: FhirClient) -> None:
     """A second full run of both loaders creates 0 FHIR resources and changes no counts."""
-    before = {
-        (t, s): fhir.count_by_source(t, s) for t in IDEMPOTENCE_TYPES for s in (synthea.SOURCE, mimic.SOURCE)
-    }
+    before = {(t, s): fhir.count_by_source(t, s) for t in IDEMPOTENCE_TYPES for s in (synthea.SOURCE, mimic.SOURCE)}
 
     synthea_report = synthea.load(client=fhir)
     mimic_report = mimic.load(client=fhir)
 
     assert synthea_report.result.created == 0, synthea_report.result.statuses
     assert mimic_report.result.created == 0, mimic_report.result.statuses
-    after = {
-        (t, s): fhir.count_by_source(t, s) for t in IDEMPOTENCE_TYPES for s in (synthea.SOURCE, mimic.SOURCE)
-    }
+    after = {(t, s): fhir.count_by_source(t, s) for t in IDEMPOTENCE_TYPES for s in (synthea.SOURCE, mimic.SOURCE)}
     assert after == before
 
 

@@ -36,9 +36,7 @@ def fhir_base() -> str:
 @pytest.fixture(scope="module")
 def seeded_patient() -> dict[str, Any]:
     """A Synthea patient with at least one HbA1c observation, read straight from HAPI."""
-    with httpx.Client(
-        base_url=fhir_base(), timeout=60, headers={"Accept": "application/fhir+json"}
-    ) as client:
+    with httpx.Client(base_url=fhir_base(), timeout=60, headers={"Accept": "application/fhir+json"}) as client:
         obs = client.get(
             "/Observation",
             params={"code": HBA1C, "_tag": "https://progenitor.dev/fhir/source|synthea", "_count": "1"},
@@ -65,9 +63,7 @@ def _bundle(result: Any) -> dict[str, Any]:
     return bundle
 
 
-async def test_fhir_mcp_returns_observation_by_loinc(
-    tools: dict[str, Any], seeded_patient: dict[str, Any]
-) -> None:
+async def test_fhir_mcp_returns_observation_by_loinc(tools: dict[str, Any], seeded_patient: dict[str, Any]) -> None:
     pid = seeded_patient["id"]
     out = await tools["fhir_search"].ainvoke(
         {"type": "Observation", "searchParam": {"patient": pid, "code": HBA1C, "_count": "50"}}

@@ -23,9 +23,7 @@ class Trial(models.Model):
     sex = models.CharField(max_length=16, blank=True)
     healthy_volunteers = models.BooleanField(null=True)
     raw = models.JSONField(default=dict, blank=True)
-    source_last_updated = models.DateField(
-        null=True, blank=True, help_text="Registry 'last update posted' date."
-    )
+    source_last_updated = models.DateField(null=True, blank=True, help_text="Registry 'last update posted' date.")
     fetched_at = models.DateTimeField(help_text="When this copy was fetched from the source.")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -50,9 +48,7 @@ class Criterion(models.Model):
     kind = models.CharField(max_length=16, choices=CriterionKind.choices)
     source_text = models.TextField()
     entity = models.CharField(max_length=255, blank=True)
-    entity_codes = models.JSONField(
-        default=list, blank=True, help_text="e.g. [{'system': 'loinc', 'code': '4548-4'}]"
-    )
+    entity_codes = models.JSONField(default=list, blank=True, help_text="e.g. [{'system': 'loinc', 'code': '4548-4'}]")
     operator = models.CharField(max_length=16, blank=True)
     value = models.CharField(max_length=128, blank=True)
     unit = models.CharField(max_length=32, blank=True)

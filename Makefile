@@ -18,7 +18,7 @@ INTEGRATION := DATABASE_URL=$(GATE_DATABASE_URL) uv run pytest tests/integration
 export FRONTEND_DIR
 
 .PHONY: help env up down logs ps wait test test-backend test-frontend lint gate eval check-frontend-dir \
-        migrate data live gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2
+        migrate data live eval-phase3 gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2 gate-3
 
 help: ## List targets
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-16s %s\n", $$1, $$2}'
@@ -74,8 +74,10 @@ data: migrate ## Generate + load dev data (idempotent): Synthea, MIMIC demo, eva
 live: ## Live smoke tests against real external APIs (not part of any gate)
 	MCP_CACHE_DISABLED=1 uv run pytest tests/live -m live -v
 
-eval: ## Run the eval harness (live LLM; Phase 6)
-	@echo "eval harness arrives in Phase 6"; exit 1
+eval: eval-phase3 ## Run the eval harness (live LLM; not in CI)
+
+eval-phase3: ## Phase 3 live eval: Parser F1 (Chia), Judge accuracy (hand labels), citation validity
+	uv run python manage.py eval_phase3
 
 gate: ## Run the gate suite: make gate PHASE=<n>
 	@test -n "$(PHASE)" || { echo "usage: make gate PHASE=<n>"; exit 2; }
@@ -121,3 +123,12 @@ gate-1: gate-0
 gate-2: gate-0
 	uv run pytest tests/unit --record-mode=none
 	@echo "GATE 2 PASSED"
+
+# ---------------- Gate 3: worker agents ----------------
+# Gate 2, then the Profiler exact-match test (needs `make data`), then the live LLM eval
+# against the thresholds in data/eval_thresholds.json (set after baseline, ADR 0003).
+# Needs GROQ_API_KEY and reviewed hand labels (data/handlabel/handlabel_v1.json status "reviewed").
+gate-3: gate-2
+	$(INTEGRATION)/test_profiler_exact.py -m data
+	uv run python manage.py eval_phase3
+	@echo "GATE 3 PASSED"

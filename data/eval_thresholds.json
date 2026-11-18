@@ -1,0 +1,18 @@
+{
+  "comment": "Gate thresholds fixed after baseline; change only with an ADR and owner approval (docs/decisions/).",
+  "phase3": {
+    "parser_entity_f1": 0.75,
+    "judge_accuracy": 0.75,
+    "citation_validity": 1.0,
+    "baseline": {
+      "date": "2026-11-17",
+      "model": "groq qwen/qwen3.8-27b",
+      "parser_entity_f1": 0.82,
+      "judge_accuracy": 0.8,
+      "citation_validity": 1.0,
+      "report": "docs/eval-reports/phase3-20261117-1914.md",
+      "labels": "rev 2"
+    },
+    "adr": "docs/decisions/0003-phase3-labels-and-thresholds.md"
+  }
+}

@@ -45,9 +45,7 @@ def patient_bundles(condition_dir: Path) -> list[Path]:
     if not fhir_dir.is_dir():
         return []
     return sorted(
-        p
-        for p in fhir_dir.glob("*.json")
-        if not p.name.startswith(("hospitalInformation", "practitionerInformation"))
+        p for p in fhir_dir.glob("*.json") if not p.name.startswith(("hospitalInformation", "practitionerInformation"))
     )
 
 
@@ -83,9 +81,7 @@ def keep_module(codes: list[dict[str, str]]) -> dict[str, Any]:
     }
 
 
-def synthea_command(
-    jar: Path, cohort: dict[str, Any], cond: dict[str, Any], out: Path, keep: Path
-) -> list[str]:
+def synthea_command(jar: Path, cohort: dict[str, Any], cond: dict[str, Any], out: Path, keep: Path) -> list[str]:
     cmd = [
         "java",
         "-jar",

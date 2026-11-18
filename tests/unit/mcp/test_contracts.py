@@ -44,9 +44,7 @@ async def call(server: FastMCP, tool: str, args: dict[str, Any]) -> Any:
         return (await c.call_tool(tool, args)).structured_content
 
 
-async def test_tools_listed_and_read_only(
-    ct_server: FastMCP, term_server: FastMCP, pubmed_server: FastMCP
-) -> None:
+async def test_tools_listed_and_read_only(ct_server: FastMCP, term_server: FastMCP, pubmed_server: FastMCP) -> None:
     expected = {
         "clinicaltrials": {"search_trials", "get_trial", "get_eligibility"},
         "terminology": {"normalize_drug", "drug_classes", "lookup_loinc", "lookup_icd10"},
@@ -122,9 +120,7 @@ class TestTerminology:
 
 class TestPubmed:
     async def test_search_pubmed(self, pubmed_server: FastMCP) -> None:
-        out = await call(
-            pubmed_server, "search_pubmed", {"query": "metformin type 2 diabetes", "max_results": 3}
-        )
+        out = await call(pubmed_server, "search_pubmed", {"query": "metformin type 2 diabetes", "max_results": 3})
         assert out["count"] > 1000
         assert len(out["articles"]) == 3
         assert all(a["pmid"].isdigit() and a["title"] for a in out["articles"])

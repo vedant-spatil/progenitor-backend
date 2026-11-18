@@ -35,9 +35,7 @@ class ReferralStatus(models.TextChoices):
 class ReferralDraft(models.Model):
     """Draft referral note for an approved shortlist item. Never sent anywhere."""
 
-    shortlist_item = models.ForeignKey(
-        "runs.ShortlistItem", on_delete=models.CASCADE, related_name="referrals"
-    )
+    shortlist_item = models.ForeignKey("runs.ShortlistItem", on_delete=models.CASCADE, related_name="referrals")
     review = models.ForeignKey(Review, on_delete=models.PROTECT, related_name="referrals")
     body = models.TextField()
     status = models.CharField(max_length=16, choices=ReferralStatus.choices, default=ReferralStatus.DRAFT)

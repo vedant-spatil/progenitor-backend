@@ -42,9 +42,7 @@ def download(url: str, dest: Path, timeout: float = 300.0) -> Path:
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(dest.suffix + ".part")
     log.info("download %s -> %s", url, dest)
-    with httpx.stream(
-        "GET", url, follow_redirects=True, timeout=timeout, headers={"User-Agent": USER_AGENT}
-    ) as resp:
+    with httpx.stream("GET", url, follow_redirects=True, timeout=timeout, headers={"User-Agent": USER_AGENT}) as resp:
         resp.raise_for_status()
         with tmp.open("wb") as fh:
             for chunk in resp.iter_bytes(1 << 20):

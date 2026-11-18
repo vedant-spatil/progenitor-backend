@@ -93,9 +93,7 @@ PATTERNS: dict[IdentifierType, list[re.Pattern[str]]] = {
     ],
     IdentifierType.PHONE: [
         re.compile(r"(?<![\w.])(?:\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}(?![\w.])"),
-        re.compile(
-            r"\b(?:phone|tel|telephone|mobile|cell)\s*(?:no\.?|number|#)?\s*[:=]?\s*\+?\d[\d\s().-]{6,}", _I
-        ),
+        re.compile(r"\b(?:phone|tel|telephone|mobile|cell)\s*(?:no\.?|number|#)?\s*[:=]?\s*\+?\d[\d\s().-]{6,}", _I),
     ],
     IdentifierType.FAX: [
         re.compile(r"\bfax\s*(?:no\.?|number|#)?\s*[:=]?\s*\+?[\d(][\d\s().-]{6,}", _I),
@@ -105,9 +103,7 @@ PATTERNS: dict[IdentifierType, list[re.Pattern[str]]] = {
     ],
     IdentifierType.SSN: [
         re.compile(r"\b\d{3}-\d{2}-\d{4}\b"),
-        re.compile(
-            r"\b(?:ssn|social\s+security(?:\s+(?:no\.?|number|#))?)\s*[:=#]?\s*\d{3}\s?\d{2}\s?\d{4}\b", _I
-        ),
+        re.compile(r"\b(?:ssn|social\s+security(?:\s+(?:no\.?|number|#))?)\s*[:=#]?\s*\d{3}\s?\d{2}\s?\d{4}\b", _I),
     ],
     IdentifierType.MRN: [
         re.compile(
@@ -171,9 +167,7 @@ PATTERNS: dict[IdentifierType, list[re.Pattern[str]]] = {
         re.compile(r"\b(?:photo(?:graph)?s?|selfies?|headshots?|face\s+images?)\b", _I),
     ],
     IdentifierType.OTHER_UNIQUE: [
-        re.compile(
-            r"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b", _I
-        ),  # UUID (FHIR ids)
+        re.compile(r"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b", _I),  # UUID (FHIR ids)
         re.compile(r"(?<![\w.])\d{9,}(?![\w.])"),  # long bare digit runs
         re.compile(r"\b(?:patient|person|record|unique)\s*(?:id|identifier)\s*[:=#]?\s*[A-Z0-9-]{3,}", _I),
     ],
