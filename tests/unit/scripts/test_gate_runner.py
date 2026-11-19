@@ -26,6 +26,7 @@ def test_gate_chain_matches_makefile() -> None:
     seven = gate.steps_for("7a")
     assert len(seven) == len(gate.GATES["0"]) + len(gate.GATES["7a"])
     assert seven[-1].name == "Lighthouse CI (mobile)"
+    assert len(gate.steps_for("7b")) == len(seven) + len(gate.GATES["7b"])
 
 
 def test_main_accepts_lettered_phase(monkeypatch: pytest.MonkeyPatch) -> None:

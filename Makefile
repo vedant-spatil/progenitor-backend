@@ -27,9 +27,9 @@ INTEGRATION := DATABASE_URL=$(GATE_DATABASE_URL) uv run pytest tests/integration
 export FRONTEND_DIR
 
 
-.PHONY: phase5-integration-tests db-dump db-restore gate-status gate-report stack-up integration-tests data-tests profiler-exact-test
+.PHONY: users phase5-integration-tests db-dump db-restore gate-status gate-report stack-up integration-tests data-tests profiler-exact-test
 .PHONY: help env up down logs ps wait test test-backend test-frontend lint gate eval check-frontend-dir \
-        up-tracing migrate data live eval-phase3 eval-phase4 gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2 gate-3 gate-4 gate-5 gate-6 gate-7a eval-phase6 eval-phase6-snapshot
+        up-tracing migrate data live eval-phase3 eval-phase4 gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2 gate-3 gate-4 gate-5 gate-6 gate-7a gate-7b eval-phase6 eval-phase6-snapshot
 
 help: ## List targets
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-16s %s\n", $$1, $$2}'
@@ -78,6 +78,9 @@ test-frontend: check-frontend-dir
 
 migrate: ## Apply migrations to the dev database
 	uv run python manage.py migrate --noinput
+
+users: migrate ## Create demo sign-in users coordinator + clinician (DEMO_USER_PASSWORD in .env)
+	uv run python manage.py seed_demo_users
 
 data: migrate ## Generate + load dev data (idempotent): Synthea, MIMIC demo, eval sets, inventory
 	uv run python manage.py generate_synthea
@@ -241,3 +244,11 @@ gate-7a: gate-0
 	$(FRONTEND) npm run build && CI=1 npx playwright test
 	$(FRONTEND) npm run lighthouse
 	@echo "GATE 7a PASSED"
+
+# ---------------- Gate 7b: app frontend ----------------
+# Gate 7a (its Playwright run includes the app flow: sign in, start run, decisions stream, answer, review,
+# referral edit, axe on app pages), then the run API tests incl. the app endpoints. ADR 0006 (amended).
+gate-7b: gate-7a
+	uv run python manage.py migrate --noinput
+	uv run pytest tests/unit/test_runs_api.py -q
+	@echo "GATE 7b PASSED"

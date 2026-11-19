@@ -14,17 +14,21 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from apps.accounts.roles import CLINICIAN, COORDINATOR, CanReadRuns, IsClinician, IsCoordinator, has_role
+from apps.accounts.roles import CLINICIAN, COORDINATOR, ROLES, CanReadRuns, IsClinician, IsCoordinator, has_role
 from apps.audit.models import AuditKind
 from apps.audit.services import audit
-from apps.reviews.models import ReferralDraft
+from apps.patients.models import Patient
+from apps.reviews.models import ReferralDraft, ReferralStatus
 from apps.runs import events, services
 from apps.runs.models import Run
 from apps.runs.serializers import (
     AnswerSerializer,
+    PatientSerializer,
     ReferralSerializer,
+    ReferralUpdateSerializer,
     ReviewSerializer,
     RunCreateSerializer,
+    RunListSerializer,
     RunSerializer,
     ShortlistItemSerializer,
 )
@@ -34,8 +38,33 @@ def _conflict(exc: Exception) -> Response:
     return Response({"detail": str(exc)}, status=status.HTTP_409_CONFLICT)
 
 
+class MeView(APIView):
+    """The signed-in user and their roles (the app shows actions by role)."""
+
+    def get(self, request: Request) -> Response:
+        roles = sorted(request.user.groups.filter(name__in=ROLES).values_list("name", flat=True))
+        return Response({"id": request.user.id, "username": request.user.get_username(), "roles": roles})
+
+
+class PatientListView(APIView):
+    permission_classes = [CanReadRuns]
+
+    def get(self, request: Request) -> Response:
+        return Response({"items": PatientSerializer(Patient.objects.all(), many=True).data})
+
+
+RUN_LIST_LIMIT = 50
+
+
 class RunCreateView(APIView):
-    permission_classes = [IsCoordinator]
+    """GET: the most recent runs (coordinator or clinician). POST: start a run (coordinator)."""
+
+    def get_permissions(self) -> list[Any]:
+        return [CanReadRuns()] if self.request.method == "GET" else [IsCoordinator()]
+
+    def get(self, request: Request) -> Response:
+        runs = Run.objects.select_related("patient").order_by("-created_at")[:RUN_LIST_LIMIT]
+        return Response({"items": RunListSerializer(runs, many=True).data})
 
     def post(self, request: Request) -> Response:
         ser = RunCreateSerializer(data=request.data)
@@ -102,6 +131,37 @@ class ReferralsView(APIView):
         rows = ReferralDraft.objects.filter(shortlist_item__run=run).select_related("shortlist_item__trial", "review")
         audit(AuditKind.PHI_READ, run_id=str(run.id), actor_id=request.user.id, node="api_referrals")
         return Response({"status": run.status, "items": ReferralSerializer(rows, many=True).data})
+
+
+class ReferralDetailView(APIView):
+    """PATCH: a clinician edits a referral draft's text, or discards it. Drafts are never sent anywhere."""
+
+    permission_classes = [IsClinician]
+
+    def patch(self, request: Request, referral_id: int) -> Response:
+        draft = get_object_or_404(
+            ReferralDraft.objects.select_related("shortlist_item__trial", "review"), pk=referral_id
+        )
+        if draft.status == ReferralStatus.DISCARDED:
+            return _conflict(ValueError("this draft was discarded"))
+        ser = ReferralUpdateSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        if ser.validated_data["discard"]:
+            draft.status = ReferralStatus.DISCARDED
+        else:
+            draft.body = ser.validated_data["body"]
+            draft.status = ReferralStatus.EDITED
+        draft.edited_by_id = request.user.id
+        draft.save(update_fields=["body", "status", "edited_by", "updated_at"])
+        audit(
+            AuditKind.REFERRAL_EDITED,
+            run_id=str(draft.shortlist_item.run_id),
+            actor_id=request.user.id,
+            node="api_referral",
+            referral_id=draft.pk,
+            status=draft.status,
+        )
+        return Response(ReferralSerializer(draft).data)
 
 
 # ---------------- SSE ----------------

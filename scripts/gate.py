@@ -88,14 +88,31 @@ GATES: dict[str, list[Step]] = {
         ),
         Step("Lighthouse CI (mobile)", f"cd {FRONTEND} && npm run lighthouse"),
     ],
+    # Gate 7b reruns the frontend suites above (they include the app e2e flow, axe on app pages)
+    # and adds the backend API the app uses (me, patients, run list, referral edits).
+    "7b": [
+        Step("migrations applied", "uv run python manage.py migrate --noinput"),
+        Step("run API incl. app endpoints (unit)", "uv run pytest tests/unit/test_runs_api.py -q"),
+    ],
 }
 
 
 # Gate 5 builds on gate 2, not 4: the live LLM evals (gates 3-4, ~1 h of Bedrock calls) gate the agent
 # changes; Phase 5 adds no prompt or agent logic, and its tests use the scripted LLM.
 # Gate 6 replays the frozen baseline from the cache (no LLM spend), on top of gate 5.
-# Gate 7a (landing page, frontend only) builds on gate 0. ADR 0006: it counts as passed only after gate 6.
-PARENT: dict[str, str | None] = {"0": None, "1": "0", "2": "0", "3": "2", "4": "3", "5": "2", "6": "5", "7a": "0"}
+# Gate 7a (landing page, frontend only) builds on gate 0; 7b on 7a. ADR 0006: both count as passed only after
+# gate 6, and the eval dashboard (7b) waits for the Phase 6 baseline.
+PARENT: dict[str, str | None] = {
+    "0": None,
+    "1": "0",
+    "2": "0",
+    "3": "2",
+    "4": "3",
+    "5": "2",
+    "6": "5",
+    "7a": "0",
+    "7b": "7a",
+}
 
 
 @dataclass
