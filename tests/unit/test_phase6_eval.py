@@ -308,3 +308,15 @@ def test_store_closes_worker_thread_connections(monkeypatch: pytest.MonkeyPatch)
     worker.start()
     worker.join()
     assert closed == ["worker"]
+
+
+def test_error_detail_shows_database_message() -> None:
+    from django.db import OperationalError
+
+    from evals.phase6.runner import error_detail
+
+    exc = OperationalError(
+        'connection failed: connection to server at "127.0.0.1" failed\nFATAL:  sorry, too many clients already'
+    )
+    assert error_detail(exc) == "OperationalError: FATAL:  sorry, too many clients already"
+    assert error_detail(RuntimeError("x")) == "RuntimeError"

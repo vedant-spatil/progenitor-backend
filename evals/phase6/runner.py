@@ -76,6 +76,12 @@ def error_detail(exc: Exception) -> str:
         return f"ValidationError in {exc.title}: {where}"[:300]
     if isinstance(exc, LlmError):
         return f"LlmError: {exc}"[:300]
+    from django.db import DatabaseError
+
+    if isinstance(exc, DatabaseError):
+        # Driver messages (e.g. "too many clients already") carry no record text.
+        lines = [ln.strip() for ln in str(exc).splitlines() if ln.strip()]
+        return f"{type(exc).__name__}: {lines[-1] if lines else ''}"[:300]
     return type(exc).__name__
 
 
