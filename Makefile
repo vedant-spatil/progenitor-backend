@@ -29,7 +29,7 @@ export FRONTEND_DIR
 
 .PHONY: phase5-integration-tests db-dump db-restore gate-status gate-report stack-up integration-tests data-tests profiler-exact-test
 .PHONY: help env up down logs ps wait test test-backend test-frontend lint gate eval check-frontend-dir \
-        up-tracing migrate data live eval-phase3 eval-phase4 gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2 gate-3 gate-4 gate-5 gate-6 eval-phase6 eval-phase6-snapshot
+        up-tracing migrate data live eval-phase3 eval-phase4 gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2 gate-3 gate-4 gate-5 gate-6 gate-7a eval-phase6 eval-phase6-snapshot
 
 help: ## List targets
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-16s %s\n", $$1, $$2}'
@@ -230,3 +230,14 @@ gate-6: gate-5
 	uv run pytest tests/unit/test_phase6_eval.py -q
 	uv run python manage.py eval_phase6 --replay --require-thresholds
 	@echo "GATE 6 PASSED"
+
+# ---------------- Gate 7a: landing page ----------------
+# Gate 0 (frontend lint, types, build), then the landing suites: Vitest, Playwright (anchors, CTA routes,
+# preview tabs, no horizontal scroll at 390 px, axe, visual baselines) and Lighthouse CI (mobile).
+# Frontend only; ADR 0006: it counts as passed only after gate 6 has passed.
+gate-7a: gate-0
+	$(FRONTEND) npm test
+	$(FRONTEND) npx playwright install chromium
+	$(FRONTEND) npm run build && CI=1 npx playwright test
+	$(FRONTEND) npm run lighthouse
+	@echo "GATE 7a PASSED"

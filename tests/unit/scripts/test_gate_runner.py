@@ -15,27 +15,45 @@ def tmp_gates(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
 
 def test_gate_chain_matches_makefile() -> None:
-    names = [s.name for s in gate.steps_for(2)]
+    names = [s.name for s in gate.steps_for("2")]
     assert names[0] == "install backend deps"
     assert names[-1] == "all unit tests (cassettes only)"
-    assert len(names) == len(gate.GATES[0]) + len(gate.GATES[2])  # gate-2 depends on gate-0, not gate-1
-    four = gate.steps_for(4)
-    assert len(four) == sum(len(gate.GATES[p]) for p in (0, 2, 3, 4))
+    assert len(names) == len(gate.GATES["0"]) + len(gate.GATES["2"])  # gate-2 depends on gate-0, not gate-1
+    four = gate.steps_for("4")
+    assert len(four) == sum(len(gate.GATES[p]) for p in ("0", "2", "3", "4"))
     assert four[-1].name == "phase 4 supervisor scenarios"
+    # Gate 7a (landing, frontend only) builds on gate 0 (ADR 0006).
+    seven = gate.steps_for("7a")
+    assert len(seven) == len(gate.GATES["0"]) + len(gate.GATES["7a"])
+    assert seven[-1].name == "Lighthouse CI (mobile)"
+
+
+def test_main_accepts_lettered_phase(monkeypatch: pytest.MonkeyPatch) -> None:
+    ran: list[str] = []
+
+    def fake_run(phase: str) -> int:
+        ran.append(phase)
+        return 0
+
+    monkeypatch.setattr(gate, "run", fake_run)
+    assert gate.main(["gate.py", "7A"]) == 0
+    assert gate.main(["gate.py", "6"]) == 0
+    assert gate.main(["gate.py", "99"]) == 2
+    assert ran == ["7a", "6"]
 
 
 def test_unknown_phase_exits() -> None:
     with pytest.raises(SystemExit):
-        gate.steps_for(99)
+        gate.steps_for("99")
 
 
 def test_run_stops_at_first_failure_and_writes_json(tmp_gates: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         gate,
         "GATES",
-        {0: [gate.Step("ok", "true"), gate.Step("boom", "echo broken-output; false"), gate.Step("never", "true")]},
+        {"0": [gate.Step("ok", "true"), gate.Step("boom", "echo broken-output; false"), gate.Step("never", "true")]},
     )
-    assert gate.run(0) == 1
+    assert gate.run("0") == 1
     last = json.loads((tmp_gates / "last.json").read_text())
     assert last["status"] == "fail"
     assert [s["status"] for s in last["steps"]] == ["pass", "fail", "not_run"]
@@ -45,9 +63,9 @@ def test_run_stops_at_first_failure_and_writes_json(tmp_gates: Path, monkeypatch
 def test_status_and_report_after_pass(
     tmp_gates: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    monkeypatch.setattr(gate, "PARENT", {0: None})
-    monkeypatch.setattr(gate, "GATES", {0: [gate.Step("a", "true"), gate.Step("b", "true")]})
-    assert gate.run(0) == 0
+    monkeypatch.setattr(gate, "PARENT", {"0": None})
+    monkeypatch.setattr(gate, "GATES", {"0": [gate.Step("a", "true"), gate.Step("b", "true")]})
+    assert gate.run("0") == 0
     capsys.readouterr()
     assert gate.status() == 0
     out = capsys.readouterr().out
