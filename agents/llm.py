@@ -337,7 +337,14 @@ class ChatLLM:
             payload = self._post(self._body(messages, name, json_schema, budget))
             out_tokens = int((payload.get("usage") or {}).get("completion_tokens", 0))
             truncated = out_tokens >= budget
-            raw = self._tool_args(payload, name)
+            try:
+                raw = self._tool_args(payload, name)
+            except LlmError as exc:
+                # Plain-text reply instead of the tool call: ask once more for the tool.
+                error = str(exc)
+                if reask == 0:
+                    messages += [{"role": "user", "content": f"Reply by calling the {name} tool."}]
+                continue
             try:
                 result = schema.model_validate_json(_decode_string_fields(raw))
                 break

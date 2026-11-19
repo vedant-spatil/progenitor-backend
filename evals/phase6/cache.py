@@ -16,6 +16,7 @@ from __future__ import annotations
 import hashlib
 import json
 import threading
+from collections.abc import Callable
 from typing import Any, Protocol, TypeVar
 
 from pydantic import BaseModel
@@ -52,13 +53,40 @@ class DjangoStore:
     def get(self, key: str) -> dict[str, Any] | None:
         from apps.runs.models import LlmCache
 
-        row = LlmCache.objects.filter(key=key).only("response").first()
+        row = with_reconnect(lambda: LlmCache.objects.filter(key=key).only("response").first())
         return row.response if row else None
 
     def set(self, key: str, value: dict[str, Any], task: str) -> None:
         from apps.runs.models import LlmCache
 
-        LlmCache.objects.update_or_create(key=key, defaults={"response": value, "task": f"phase6:{task}"[:64]})
+        with_reconnect(
+            lambda: LlmCache.objects.update_or_create(
+                key=key, defaults={"response": value, "task": f"phase6:{task}"[:64]}
+            )
+        )
+
+
+def with_reconnect[R](fn: Callable[[], R]) -> R:
+    """Run a DB call; on a dropped connection, reconnect once and retry.
+
+    The eval calls the store from worker threads (asyncio.to_thread) for hours. Django only manages
+    connections around HTTP requests, so:
+    - a connection the server dropped stays broken in its thread until it is closed (hence the retry);
+    - each worker thread opens its own connection and never closes it. Every patient runs in a new event
+      loop with new threads, so the connections pile up until Postgres refuses more ("too many clients").
+      On a worker thread the connection is therefore closed after each call.
+    """
+    from django.db import OperationalError, connection
+
+    try:
+        try:
+            return fn()
+        except OperationalError:
+            connection.close()  # this thread's connection; the next query opens a new one
+            return fn()
+    finally:
+        if threading.current_thread() is not threading.main_thread():
+            connection.close()
 
 
 def eval_key(model: str, task: str, system: str, user: str, schema: type[BaseModel]) -> str:

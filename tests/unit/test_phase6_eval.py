@@ -266,3 +266,45 @@ def test_error_detail_has_field_paths_not_values() -> None:
         TrialSummary.model_validate({"nct_id": "N", "title": None})
     detail = runner.error_detail(info.value)
     assert detail.startswith("ValidationError in TrialSummary: title (string_type)")
+
+
+def test_store_reconnects_once_after_dropped_connection(monkeypatch: pytest.MonkeyPatch) -> None:
+    from django.db import OperationalError, connection
+
+    from evals.phase6.cache import with_reconnect
+
+    closed: list[bool] = []
+    monkeypatch.setattr(connection, "close", lambda: closed.append(True))
+    failures = [OperationalError("server closed the connection unexpectedly")]
+
+    def query() -> str:
+        if failures:
+            raise failures.pop()
+        return "row"
+
+    assert with_reconnect(query) == "row"
+    assert closed == [True]
+    with pytest.raises(OperationalError):
+        with_reconnect(lambda: (_ for _ in ()).throw(OperationalError("down")))
+
+
+def test_store_closes_worker_thread_connections(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Each patient runs in a new event loop with new threads; their connections must not pile up."""
+    import threading
+
+    from django.db import connections
+
+    from evals.phase6.cache import with_reconnect
+
+    closed: list[str] = []
+    # Patch the class: each thread has its own connection object.
+    wrapper = type(connections["default"])
+    monkeypatch.setattr(wrapper, "close", lambda self: closed.append(threading.current_thread().name))
+
+    assert with_reconnect(lambda: "main") == "main"
+    assert closed == []  # the main thread keeps its connection
+
+    worker = threading.Thread(target=lambda: with_reconnect(lambda: "row"), name="worker")
+    worker.start()
+    worker.join()
+    assert closed == ["worker"]

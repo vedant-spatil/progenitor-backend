@@ -101,6 +101,13 @@ def test_schema_error_names_fields() -> None:
         complete(llm)
 
 
+def test_missing_tool_call_reasked_once() -> None:
+    no_tool = httpx.Response(200, json={"choices": [{"message": {"content": "plain text"}}], "usage": {}})
+    llm, sent = make_llm([no_tool, reply({"label": "a", "score": 4})])
+    assert complete(llm).score == 4
+    assert "calling the Answer tool" in sent[1]["messages"][-1]["content"]
+
+
 def test_429_retried_then_ok() -> None:
     llm, sent = make_llm([httpx.Response(429), reply({"label": "a", "score": 1})])
     assert complete(llm).label == "a"
@@ -129,10 +136,12 @@ def test_client_error_not_retried() -> None:
     assert len(sent) == 1
 
 
-def test_missing_tool_call_raises() -> None:
-    llm, _ = make_llm([httpx.Response(200, json={"choices": [{"message": {"content": "hi"}}]})])
+def test_missing_tool_call_twice_raises() -> None:
+    no_tool = {"choices": [{"message": {"content": "hi"}}]}
+    llm, sent = make_llm([httpx.Response(200, json=no_tool), httpx.Response(200, json=no_tool)])
     with pytest.raises(LlmError, match="no tool call"):
         complete(llm)
+    assert len(sent) == 2
 
 
 def test_cache_hit_skips_provider() -> None:
