@@ -8,10 +8,11 @@ Providers (LLM_PROVIDER):
   Auth: AWS_BEARER_TOKEN_BEDROCK (Bedrock API key) or the AWS credential chain.
 - bedrock-openai: non-Claude Bedrock models (gpt-oss, Kimi, GLM, Mistral) via Bedrock's
   OpenAI-compatible endpoint with the Bedrock API key; LLM_MODEL is required.
-- groq, ollama: OpenAI-compatible chat API. Structured output by forcing one tool whose
-  parameters are the Pydantic JSON schema. Temperature 0.
+- groq, ollama: OpenAI-compatible chat API. Groq accepts several keys (GROQ_API_KEY_1, _2, ...);
+  a KeyRouter sends each call to the key with quota left and fails over on 429.
+  Structured output by forcing one tool whose parameters are the Pydantic JSON schema. Temperature 0.
 
-At most 3 provider calls per request; a reply that fails schema validation is re-asked
+At most 3 provider calls per request (plus one per extra Groq key); a reply that fails schema validation is re-asked
 once (OpenAI-compatible path). Prompts and replies are never logged at INFO.
 """
 
@@ -21,6 +22,8 @@ import hashlib
 import json
 import logging
 import os
+import re
+import threading
 import time
 from collections import deque
 from dataclasses import dataclass, field
@@ -99,6 +102,106 @@ class TokenPacer:
             self.sleep(60 - (now - self.window[0][0]) + 0.5)
 
 
+_DURATION = re.compile(r"(?:(\d+(?:\.\d+)?)h)?(?:(\d+(?:\.\d+)?)m(?!s))?(?:(\d+(?:\.\d+)?)s)?(?:(\d+(?:\.\d+)?)ms)?$")
+_TRY_AGAIN = re.compile(r"try again in ((?:\d+(?:\.\d+)?(?:h|ms|m|s))+)", re.IGNORECASE)
+_DAILY = re.compile(r"per day|\(TPD\)|\(RPD\)", re.IGNORECASE)
+
+
+def parse_duration(text: str | None) -> float | None:
+    """Groq durations: '7.66s', '2m59.56s', '1h2m3s', '120ms'; also plain seconds ('20')."""
+    if not text:
+        return None
+    text = text.strip()
+    try:
+        return float(text)
+    except ValueError:
+        pass
+    m = _DURATION.match(text)
+    if not m or not any(m.groups()):
+        return None
+    h, mi, s, ms = (float(g) if g else 0.0 for g in m.groups())
+    return h * 3600 + mi * 60 + s + ms / 1000
+
+
+def groq_keys_from_env(environ: Any = None) -> list[str]:
+    """GROQ_API_KEY_1, GROQ_API_KEY_2, ... in numeric order, then GROQ_API_KEY; blanks and duplicates dropped."""
+    env = os.environ if environ is None else environ
+    numbered = sorted(
+        (int(k.rsplit("_", 1)[1]), v.strip())
+        for k, v in env.items()
+        if re.fullmatch(r"GROQ_API_KEY_\d+", k) and v and v.strip()
+    )
+    keys = [v for _, v in numbered] + [env.get("GROQ_API_KEY", "").strip()]
+    return list(dict.fromkeys(k for k in keys if k))
+
+
+@dataclass
+class _KeyState:
+    cooldown_until: float = 0.0  # per-minute limits (TPM/RPM)
+    exhausted_until: float = 0.0  # per-day limits (TPD/RPD)
+    remaining_tokens: float = float("inf")  # unknown until the first response: try unused keys first
+    last_used: float = 0.0
+
+
+class KeyRouter:
+    """Spreads calls over several Groq keys by remaining quota; fails over on 429 without waiting.
+
+    Keys are never logged: they appear as key#1, key#2, ... (order of GROQ_API_KEY_<n>).
+    """
+
+    def __init__(self, keys: list[str], clock: Any = time.monotonic, sleep: Any = time.sleep) -> None:
+        if not keys:
+            raise LlmError("no Groq API keys configured")
+        self.keys = keys
+        self.state = [_KeyState() for _ in keys]
+        self.clock = clock
+        self.sleep = sleep
+        self._lock = threading.Lock()
+
+    def label(self, i: int) -> str:
+        return f"key#{i + 1}"
+
+    def pick(self) -> int:
+        """Index of the best available key; waits for the earliest key if all are cooling down."""
+        while True:
+            with self._lock:
+                now = self.clock()
+                free = [i for i, s in enumerate(self.state) if s.cooldown_until <= now and s.exhausted_until <= now]
+                if free:
+                    best = max(free, key=lambda i: (self.state[i].remaining_tokens, -self.state[i].last_used))
+                    self.state[best].last_used = now
+                    return best
+                if all(s.exhausted_until > now for s in self.state):
+                    wait = min(s.exhausted_until for s in self.state) - now
+                    raise LlmError(f"all Groq keys hit their daily limit; next frees in {wait / 60:.0f} min")
+                wait = min(max(s.cooldown_until, s.exhausted_until) for s in self.state) - now
+            self.sleep(max(wait, 0.5))
+
+    def observe(self, i: int, resp: httpx.Response) -> None:
+        with self._lock:
+            s = self.state[i]
+            remaining = resp.headers.get("x-ratelimit-remaining-tokens")
+            if remaining is not None and remaining.replace(".", "", 1).isdigit():
+                s.remaining_tokens = float(remaining)
+            if resp.status_code != 429:
+                return
+            now = self.clock()
+            body = resp.text
+            retry = parse_duration(resp.headers.get("retry-after"))
+            hint = _TRY_AGAIN.search(body)
+            wait = parse_duration(hint.group(1)) if hint else None
+            if _DAILY.search(body):
+                reset = wait or parse_duration(resp.headers.get("x-ratelimit-reset-requests")) or 3600.0
+                s.exhausted_until = now + reset
+                reason = "daily_limit"
+            else:
+                reset = retry or wait or parse_duration(resp.headers.get("x-ratelimit-reset-tokens")) or 20.0
+                s.cooldown_until = now + reset
+                reason = "minute_limit"
+            s.remaining_tokens = 0.0
+        log.info("groq_key_limited key=%s reason=%s reset_s=%.0f", self.label(i), reason, reset)
+
+
 @dataclass
 class ChatLLM:
     """OpenAI-compatible chat completions with a forced tool call (Groq, Ollama)."""
@@ -114,6 +217,7 @@ class ChatLLM:
     sleep: Any = time.sleep
     usage: Usage = field(default_factory=Usage)
     pacer: TokenPacer | None = None
+    router: KeyRouter | None = None  # several Groq keys: picks one per attempt, fails over on 429
 
     def _body(
         self, messages: list[dict[str, str]], name: str, schema: dict[str, Any], max_tokens: int
@@ -144,8 +248,13 @@ class ChatLLM:
         client = self.http or httpx.Client(timeout=self.timeout)
         last: Exception | None = None
         estimate = len(json.dumps(body)) // 3 + int(body.get("max_tokens", 0))
+        attempts = 3 + (len(self.router.keys) if self.router else 0)  # room to fail over across every key
         try:
-            for attempt in range(3):
+            for attempt in range(attempts):
+                key_index = None
+                if self.router:
+                    key_index = self.router.pick()
+                    headers["Authorization"] = f"Bearer {self.router.keys[key_index]}"
                 if self.pacer:
                     self.pacer.acquire(estimate)
                 try:
@@ -154,6 +263,11 @@ class ChatLLM:
                     last = exc
                     self.sleep(2.0 * (attempt + 1))
                     continue
+                if self.router and key_index is not None:
+                    self.router.observe(key_index, resp)
+                    if resp.status_code == 429:
+                        last = LlmError("HTTP 429")
+                        continue  # the router skips this key now; no sleep while another key is free
                 self.usage.calls += 1
                 if resp.is_success:
                     payload: dict[str, Any] = resp.json()
@@ -177,7 +291,7 @@ class ChatLLM:
         finally:
             if self.http is None:
                 client.close()
-        raise LlmError(f"failed after 3 attempts: {last}")
+        raise LlmError(f"failed after {attempts} attempts: {last}")
 
     @staticmethod
     def _tool_args(payload: dict[str, Any], name: str) -> str:
@@ -343,9 +457,11 @@ def get_llm(cache: LlmCache | None = None) -> StructuredLLM:
         )
     if provider not in BASE_URLS:
         raise LlmError(f"unknown LLM_PROVIDER {provider!r}")
-    api_key = os.environ.get("GROQ_API_KEY", "") if provider == "groq" else ""
-    if provider == "groq" and not api_key:
-        raise LlmError("GROQ_API_KEY is not set")
+    keys = groq_keys_from_env() if provider == "groq" else []
+    if provider == "groq" and not keys:
+        raise LlmError("GROQ_API_KEY_1 (or GROQ_API_KEY) is not set")
+    api_key = keys[0] if keys else ""
+    router = KeyRouter(keys) if len(keys) > 1 else None
     base = os.environ.get("OLLAMA_BASE_URL", "").rstrip("/") + "/v1" if provider == "ollama" else BASE_URLS["groq"]
     return ChatLLM(
         provider=provider,
@@ -355,4 +471,5 @@ def get_llm(cache: LlmCache | None = None) -> StructuredLLM:
         max_tokens=int(os.environ.get("LLM_MAX_TOKENS", "2048")),
         cache=cache,
         pacer=TokenPacer(int(os.environ.get("LLM_TOKENS_PER_MIN", "0"))),
+        router=router,
     )

@@ -8,7 +8,7 @@ import httpx
 import pytest
 from pydantic import BaseModel
 
-from agents.llm import ChatLLM, LlmError, get_llm
+from agents.llm import ChatLLM, KeyRouter, LlmError, get_llm, groq_keys_from_env, parse_duration
 
 
 class Answer(BaseModel):
@@ -127,7 +127,15 @@ def test_cache_hit_skips_provider() -> None:
     assert llm.usage.cache_hits == 1
 
 
+def _clear_groq_keys(monkeypatch: pytest.MonkeyPatch) -> None:
+    import os
+
+    for k in [k for k in os.environ if k.startswith("GROQ_API_KEY")]:
+        monkeypatch.delenv(k)
+
+
 def test_get_llm_requires_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    _clear_groq_keys(monkeypatch)
     monkeypatch.setenv("LLM_PROVIDER", "groq")
     monkeypatch.setenv("GROQ_API_KEY", "")
     with pytest.raises(LlmError, match="GROQ_API_KEY"):
@@ -280,3 +288,127 @@ def test_get_llm_bedrock_openai(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("LLM_MODEL", "")
     with pytest.raises(LlmError, match="LLM_MODEL"):
         get_llm()
+
+
+# ---------------- Groq key router ----------------
+
+
+class Clock:
+    def __init__(self) -> None:
+        self.t = 1000.0
+        self.slept: list[float] = []
+
+    def __call__(self) -> float:
+        return self.t
+
+    def sleep(self, s: float) -> None:
+        self.slept.append(s)
+        self.t += s
+
+
+def limited(daily: bool = False, retry: str = "7.5") -> httpx.Response:
+    what = "tokens per day (TPD): Limit 500000, Used 499990" if daily else "tokens per minute (TPM): Limit 6000"
+    body = {"error": {"message": f"Rate limit reached on {what}. Please try again in 2m30s.", "code": "rate_limit"}}
+    return httpx.Response(429, headers={"retry-after": retry}, json=body)
+
+
+def router_llm(responses: list[httpx.Response], n_keys: int = 3) -> tuple[ChatLLM, list[str], Clock]:
+    used: list[str] = []
+    queue = iter(responses)
+    clock = Clock()
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        used.append(request.headers["authorization"].removeprefix("Bearer "))
+        return next(queue)
+
+    router = KeyRouter([f"secret-{i}" for i in range(1, n_keys + 1)], clock=clock, sleep=clock.sleep)
+    llm = ChatLLM(
+        provider="groq",
+        model="m",
+        base_url="https://llm.test",
+        http=httpx.Client(transport=httpx.MockTransport(handler)),
+        sleep=clock.sleep,
+        router=router,
+    )
+    return llm, used, clock
+
+
+def ok(remaining: int) -> httpx.Response:
+    r = reply({"label": "a", "score": 1})
+    r.headers["x-ratelimit-remaining-tokens"] = str(remaining)
+    return r
+
+
+def test_parse_duration() -> None:
+    assert parse_duration("7.66s") == pytest.approx(7.66)
+    assert parse_duration("2m59.56s") == pytest.approx(179.56)
+    assert parse_duration("1h2m3s") == pytest.approx(3723)
+    assert parse_duration("120ms") == pytest.approx(0.12)
+    assert parse_duration("20") == 20.0
+    assert parse_duration("") is None
+    assert parse_duration("soon") is None
+
+
+def test_keys_from_env_numbered_order_then_plain() -> None:
+    env = {"GROQ_API_KEY_10": "c", "GROQ_API_KEY_2": "b", "GROQ_API_KEY_1": " a ", "GROQ_API_KEY": "a", "X": "y"}
+    assert groq_keys_from_env(env) == ["a", "b", "c"]
+    assert groq_keys_from_env({"GROQ_API_KEY_1": ""}) == []
+
+
+def test_picks_key_with_most_remaining_tokens() -> None:
+    llm, used, _ = router_llm([ok(100), ok(5000), ok(9000), ok(9000)])
+    for _ in range(4):
+        complete(llm)
+    # First round tries each unused key once; then the one with the most tokens left (key 3, then 2 after 3 drops).
+    assert used[:3] == ["secret-1", "secret-2", "secret-3"]
+    assert used[3] == "secret-3"
+
+
+def test_minute_429_fails_over_without_sleeping() -> None:
+    llm, used, clock = router_llm([limited(), reply({"label": "b", "score": 2})])
+    assert complete(llm).label == "b"
+    assert used == ["secret-1", "secret-2"]
+    assert clock.slept == []
+    assert llm.router is not None
+    assert llm.router.state[0].cooldown_until == pytest.approx(clock.t + 7.5)
+
+
+def test_daily_429_skips_key_and_raises_when_all_exhausted() -> None:
+    llm, used, _ = router_llm([limited(daily=True), limited(daily=True)], n_keys=2)
+    with pytest.raises(LlmError, match="daily limit"):
+        complete(llm)
+    assert used == ["secret-1", "secret-2"]
+    assert llm.router is not None
+    assert all(s.exhausted_until > 0 for s in llm.router.state)
+
+
+def test_waits_for_earliest_key_when_all_cooling() -> None:
+    llm, used, clock = router_llm([limited(retry="10"), limited(retry="30"), reply({"label": "c", "score": 3})], 2)
+    assert complete(llm).label == "c"
+    assert used == ["secret-1", "secret-2", "secret-1"]
+    assert sum(clock.slept) == pytest.approx(10)
+
+
+def test_router_logs_never_contain_keys(caplog: pytest.LogCaptureFixture) -> None:
+    import logging
+
+    caplog.set_level(logging.INFO)
+    llm, _, _ = router_llm([limited(), limited(daily=True), reply({"label": "d", "score": 4})])
+    complete(llm)
+    assert "key#1" in caplog.text
+    assert "secret" not in caplog.text
+
+
+def test_get_llm_builds_router_for_several_keys(monkeypatch: pytest.MonkeyPatch) -> None:
+    _clear_groq_keys(monkeypatch)
+    monkeypatch.setenv("LLM_PROVIDER", "groq")
+    monkeypatch.setenv("GROQ_API_KEY_1", "k1")
+    llm = get_llm()
+    assert isinstance(llm, ChatLLM)
+    assert llm.router is None
+    assert llm.api_key == "k1"
+    monkeypatch.setenv("GROQ_API_KEY_2", "k2")
+    llm = get_llm()
+    assert isinstance(llm, ChatLLM)
+    assert llm.router is not None
+    assert llm.router.keys == ["k1", "k2"]
