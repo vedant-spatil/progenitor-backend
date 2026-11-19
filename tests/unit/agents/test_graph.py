@@ -303,3 +303,31 @@ class TestTracingModes:
         assert '"event":"supervisor_decision"' in caplog.text
         assert '"action":"search_trials"' in caplog.text
         assert "8.2" not in caplog.text  # rationale and record values are not logged
+
+
+def test_search_spec_accepts_lists() -> None:
+    from agents.schemas import SearchSpec
+
+    spec = SearchSpec.model_validate(
+        {"conditions": ["type 2 diabetes", "CKD"], "terms": ["metformin"], "phases": "PHASE3", "location": ["India"]}
+    )
+    assert spec.conditions == "type 2 diabetes OR CKD"
+    assert spec.terms == "metformin"
+    assert spec.phases == ["PHASE3"]
+    assert spec.location == "India"
+
+
+async def test_bad_search_args_do_not_crash_the_run() -> None:
+    graph, ledger, _ = make(
+        {
+            "supervisor": [
+                dec("fetch_patient_data"),
+                dec("search_trials", conditions="asthma", max_results="many"),
+                dec("finish", summary="done"),
+            ]
+        }
+    )
+    out = await graph.ainvoke(initial_state("r-bad", "p1"), cfg("t-bad"))
+    assert out["status"] == "finished"
+    assert out["searches"][0]["error"].startswith("invalid args")
+    assert [e.action for e in ledger.entries] == ["fetch_patient_data", "search_trials", "finish"]

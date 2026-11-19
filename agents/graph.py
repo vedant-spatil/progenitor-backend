@@ -15,6 +15,7 @@ from typing import Any
 
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command, Send, interrupt
+from pydantic import ValidationError
 
 from agents import guards
 from agents.fhir_reader import FhirReader
@@ -203,7 +204,12 @@ def build_graph(deps: Deps, checkpointer: Any = None) -> Any:
                 spec_args["max_results"] = max(int(spec_args.get("max_results", 20)), 30)
         else:
             spec_args = {k: v for k, v in args.items() if k in SearchSpec.model_fields}
-        spec = SearchSpec.model_validate({"max_results": 20, **spec_args})
+        try:
+            spec = SearchSpec.model_validate({"max_results": 20, **spec_args})
+        except ValidationError as exc:
+            # Bad search arguments must not crash the run: record the failure; the supervisor sees it next step.
+            fields = sorted({".".join(map(str, e["loc"])) for e in exc.errors()})
+            return {"searches": [{"spec": spec_args, "total": 0, "added": 0, "error": f"invalid args: {fields}"}]}
         found, total = await search_trials(spec, deps.call_tool)
         existing = s.get("trials") or {}
         new = {t.nct_id: {"summary": t.model_dump()} for t in found if t.nct_id not in existing}

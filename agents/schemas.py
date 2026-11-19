@@ -10,7 +10,7 @@ from datetime import date
 from enum import StrEnum
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class Model(BaseModel):
@@ -80,6 +80,26 @@ class SearchSpec(Model):
     phases: list[str] = Field(default_factory=list)
     location: str = ""
     max_results: int = 20
+
+    @field_validator("conditions", "terms", "interventions", mode="before")
+    @classmethod
+    def _join_lists(cls, v: Any) -> Any:
+        """The supervisor often sends lists; ClinicalTrials.gov takes one query string, so join with OR."""
+        if isinstance(v, list | tuple):
+            return " OR ".join(str(x).strip() for x in v if str(x).strip())
+        return v
+
+    @field_validator("location", mode="before")
+    @classmethod
+    def _join_location(cls, v: Any) -> Any:
+        if isinstance(v, list | tuple):
+            return ", ".join(str(x).strip() for x in v if str(x).strip())
+        return v
+
+    @field_validator("phases", mode="before")
+    @classmethod
+    def _phase_list(cls, v: Any) -> Any:
+        return [v] if isinstance(v, str) else v
 
 
 class TrialSummary(Model):
