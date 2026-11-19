@@ -75,6 +75,32 @@ def test_schema_error_twice_raises() -> None:
         complete(llm)
 
 
+def test_list_field_sent_as_json_string_is_decoded() -> None:
+    class Items(BaseModel):
+        items: list[Answer]
+
+    llm, sent = make_llm([reply({"items": json.dumps([{"label": "a", "score": 1}])}, name="Items")])
+    out = llm.complete(task="t", system="sys", user="u", schema=Items)
+    assert out.items == [Answer(label="a", score=1)]
+    assert len(sent) == 1
+
+
+def test_reply_cut_off_at_max_tokens_retried_with_bigger_budget() -> None:
+    cut = reply('{"label": "a", "sco')
+    cut_body = json.loads(cut.content)
+    cut_body["usage"]["completion_tokens"] = 2048
+    llm, sent = make_llm([httpx.Response(200, json=cut_body), reply({"label": "a", "score": 3})])
+    assert complete(llm).score == 3
+    assert [b["max_tokens"] for b in sent] == [2048, 4096]
+    assert len(sent[1]["messages"]) == 2  # not a re-ask: same prompt, bigger budget
+
+
+def test_schema_error_names_fields() -> None:
+    llm, _ = make_llm([reply({"label": "a"}), reply({"label": "a"})])
+    with pytest.raises(LlmError, match=r"at score \(missing\)"):
+        complete(llm)
+
+
 def test_429_retried_then_ok() -> None:
     llm, sent = make_llm([httpx.Response(429), reply({"label": "a", "score": 1})])
     assert complete(llm).label == "a"
@@ -285,6 +311,10 @@ def test_get_llm_bedrock_openai(monkeypatch: pytest.MonkeyPatch) -> None:
     assert isinstance(llm, ChatLLM)
     assert llm.base_url == "https://bedrock-runtime.ap-south-1.amazonaws.com/openai/v1"
     assert (llm.model, llm.api_key) == ("zai.glm-5", "tok")
+    monkeypatch.delenv("LLM_MAX_TOKENS", raising=False)
+    llm = get_llm()
+    assert isinstance(llm, ChatLLM)
+    assert llm.max_tokens == 16000
     monkeypatch.setenv("LLM_MODEL", "")
     with pytest.raises(LlmError, match="LLM_MODEL"):
         get_llm()

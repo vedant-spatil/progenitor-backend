@@ -332,14 +332,24 @@ class ChatLLM:
         messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
         result: T | None = None
         error = ""
+        budget = self.max_tokens
         for reask in range(2):
-            raw = self._tool_args(self._post(self._body(messages, name, json_schema, self.max_tokens)), name)
+            payload = self._post(self._body(messages, name, json_schema, budget))
+            out_tokens = int((payload.get("usage") or {}).get("completion_tokens", 0))
+            truncated = out_tokens >= budget
+            raw = self._tool_args(payload, name)
             try:
-                result = schema.model_validate_json(raw)
+                result = schema.model_validate_json(_decode_string_fields(raw))
                 break
             except ValidationError as exc:
-                error = exc.__class__.__name__
-                if reask == 0:
+                fields = "; ".join(f"{'.'.join(map(str, e['loc']))} ({e['type']})" for e in exc.errors()[:3])
+                error = f"ValidationError at {fields}"
+                if truncated:
+                    error += f"; reply cut off at max_tokens {budget}"
+                if truncated:
+                    # Reasoning models spend part of max_tokens thinking: retry with a bigger budget, not a re-ask.
+                    budget = min(budget * 2, 32768)
+                elif reask == 0:
                     # Re-ask once with the validation errors (field paths and messages only).
                     detail = "; ".join(f"{'.'.join(map(str, e['loc']))}: {e['msg']}" for e in exc.errors()[:10])
                     messages += [
@@ -362,6 +372,25 @@ class ChatLLM:
         if self.cache:
             self.cache.set(key, result.model_dump(mode="json"))
         return result
+
+
+def _decode_string_fields(raw: str) -> str:
+    """Some models send a list or object field as a JSON string ("criteria": "[{...}]"): decode those."""
+    try:
+        data = json.loads(raw)
+    except ValueError:
+        return raw
+    if not isinstance(data, dict):
+        return raw
+    changed = False
+    for k, v in data.items():
+        if isinstance(v, str) and v.lstrip()[:1] in ("[", "{"):
+            try:
+                data[k] = json.loads(v)
+                changed = True
+            except ValueError:
+                pass
+    return json.dumps(data) if changed else raw
 
 
 @dataclass
@@ -469,7 +498,8 @@ def get_llm(cache: LlmCache | None = None) -> StructuredLLM:
             model=model,
             base_url=f"https://bedrock-runtime.{region}.amazonaws.com/openai/v1",
             api_key=token,
-            max_tokens=int(os.environ.get("LLM_MAX_TOKENS", "4096")),
+            # Reasoning models (e.g. Kimi) count thinking tokens in max_tokens; billing is per token used.
+            max_tokens=int(os.environ.get("LLM_MAX_TOKENS", "16000")),
             cache=cache,
         )
     if provider not in BASE_URLS:
