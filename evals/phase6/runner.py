@@ -65,6 +65,20 @@ class PatientResult:
     systems: dict[str, SystemResult] = field(default_factory=dict)
 
 
+def error_detail(exc: Exception) -> str:
+    """Error class plus a short, record-free detail: field paths for validation errors, the message for LLM errors."""
+    from pydantic import ValidationError
+
+    from agents.llm import LlmError
+
+    if isinstance(exc, ValidationError):
+        where = "; ".join(f"{'.'.join(map(str, e['loc']))} ({e['type']})" for e in exc.errors()[:3])
+        return f"ValidationError in {exc.title}: {where}"[:300]
+    if isinstance(exc, LlmError):
+        return f"LlmError: {exc}"[:300]
+    return type(exc).__name__
+
+
 def complete_ranking(ranked: list[str], pool: list[str]) -> list[str]:
     seen = [n for n in dict.fromkeys(ranked) if n in pool]
     return seen + [n for n in pool if n not in seen]
@@ -141,7 +155,7 @@ async def run_patient(
 
             if isinstance(exc, ReplayMiss):
                 raise
-            res = SystemResult(system, list(pool), error=type(exc).__name__)
+            res = SystemResult(system, list(pool), error=error_detail(exc))
         res.seconds = round(time.perf_counter() - started, 2)
         res.tokens_in = llm.usage.tokens_in - before[0]
         res.tokens_out = llm.usage.tokens_out - before[1]
@@ -169,7 +183,8 @@ def score(results: list[PatientResult], price: dict[str, Any] | None) -> dict[st
     table: dict[str, dict[str, dict[str, Any]]] = {}
     cohorts = sorted({r.cohort for r in results})
     for cohort in [*cohorts, "all"]:
-        rows = [r for r in results if cohort in ("all", r.cohort)]
+        # Paired comparison: only patients where every system ran without error.
+        rows = [r for r in results if cohort in ("all", r.cohort) and not any(sr.error for sr in r.systems.values())]
         table[cohort] = {}
         for system in SYSTEMS:
             # Re-ranking eval: relevance (and the ideal order for NDCG) comes from the patient's pool only.

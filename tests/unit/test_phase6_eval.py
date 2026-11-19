@@ -244,3 +244,25 @@ def test_ndcg_ideal_comes_from_the_pool() -> None:
     res = runner.PatientResult("sigir", "t", [A, B], {A: 2, B: 0, "NCT09999999": 2}, [])
     res.systems["bm25"] = runner.SystemResult("bm25", [A, B])
     assert runner.score([res], None)["sigir"]["bm25"]["ndcg@10"] == 1.0
+
+
+def test_errored_patients_are_left_out_of_scoring() -> None:
+    good = runner.PatientResult("sigir", "t1", [A, B], {A: 2, B: 0}, [])
+    good.systems["bm25"] = runner.SystemResult("bm25", [A, B])
+    bad = runner.PatientResult("sigir", "t2", [A, B], {A: 0, B: 2}, [])
+    bad.systems["bm25"] = runner.SystemResult("bm25", [A, B])
+    bad.systems["fixed"] = runner.SystemResult("fixed", [A, B], error="LlmError: boom")
+    table = runner.score([good, bad], None)
+    assert table["sigir"]["bm25"]["patients"] == 1
+    assert table["sigir"]["bm25"]["ndcg@10"] == 1.0
+
+
+def test_error_detail_has_field_paths_not_values() -> None:
+    from pydantic import ValidationError
+
+    from agents.schemas import TrialSummary
+
+    with pytest.raises(ValidationError) as info:
+        TrialSummary.model_validate({"nct_id": "N", "title": None})
+    detail = runner.error_detail(info.value)
+    assert detail.startswith("ValidationError in TrialSummary: title (string_type)")

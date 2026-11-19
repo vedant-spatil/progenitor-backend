@@ -412,3 +412,17 @@ def test_get_llm_builds_router_for_several_keys(monkeypatch: pytest.MonkeyPatch)
     assert isinstance(llm, ChatLLM)
     assert llm.router is not None
     assert llm.router.keys == ["k1", "k2"]
+
+
+def test_request_too_large_fails_at_once() -> None:
+    body = {"error": {"message": "Request too large for model on output tokens per minute (OTPM): Limit 1000"}}
+    llm, used, _ = router_llm([httpx.Response(429, json=body)])
+    with pytest.raises(LlmError, match="too large"):
+        complete(llm)
+    assert len(used) == 1
+
+
+def test_many_minute_429s_do_not_use_up_attempts() -> None:
+    llm, used, _ = router_llm([limited(retry="5")] * 8 + [reply({"label": "e", "score": 5})], n_keys=2)
+    assert complete(llm).label == "e"
+    assert len(used) == 9

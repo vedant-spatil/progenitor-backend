@@ -12,7 +12,8 @@ Providers (LLM_PROVIDER):
   a KeyRouter sends each call to the key with quota left and fails over on 429.
   Structured output by forcing one tool whose parameters are the Pydantic JSON schema. Temperature 0.
 
-At most 3 provider calls per request (plus one per extra Groq key); a reply that fails schema validation is re-asked
+At most 3 failed provider calls per request (rate-limited calls on a multi-key Groq
+router wait instead); a reply that fails schema validation is re-asked
 once (OpenAI-compatible path). Prompts and replies are never logged at INFO.
 """
 
@@ -218,6 +219,7 @@ class ChatLLM:
     usage: Usage = field(default_factory=Usage)
     pacer: TokenPacer | None = None
     router: KeyRouter | None = None  # several Groq keys: picks one per attempt, fails over on 429
+    rate_limit_wait_s: float = 900.0  # with a router: longest wait for any key to free up, per call
 
     def _body(
         self, messages: list[dict[str, str]], name: str, schema: dict[str, Any], max_tokens: int
@@ -241,16 +243,21 @@ class ChatLLM:
         }
 
     def _post(self, body: dict[str, Any]) -> dict[str, Any]:
-        """One logical call: up to 3 provider attempts with backoff."""
+        """One logical call: up to 3 failed provider attempts with backoff.
+
+        With a key router, rate-limited (429) answers do not use up attempts: the router moves to a key with
+        quota left, or waits for the earliest one, for at most `rate_limit_wait_s`.
+        """
         headers = {"Content-Type": "application/json"}
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
         client = self.http or httpx.Client(timeout=self.timeout)
         last: Exception | None = None
         estimate = len(json.dumps(body)) // 3 + int(body.get("max_tokens", 0))
-        attempts = 3 + (len(self.router.keys) if self.router else 0)  # room to fail over across every key
+        failures = 0
+        deadline = time.monotonic() + self.rate_limit_wait_s
         try:
-            for attempt in range(attempts):
+            while failures < 3:
                 key_index = None
                 if self.router:
                     key_index = self.router.pick()
@@ -261,12 +268,21 @@ class ChatLLM:
                     resp = client.post(f"{self.base_url}/chat/completions", headers=headers, json=body)
                 except httpx.TransportError as exc:
                     last = exc
-                    self.sleep(2.0 * (attempt + 1))
+                    failures += 1
+                    self.sleep(2.0 * failures)
                     continue
+                if resp.status_code == 413 or (resp.status_code == 429 and "request too large" in resp.text.lower()):
+                    # A per-request cap of this tier (e.g. Groq free OTPM < max_tokens): retrying cannot help.
+                    raise LlmError(
+                        "request too large for this model's per-minute limit on this tier: "
+                        "lower LLM_MAX_TOKENS or the prompt, or use another model or tier"
+                    )
                 if self.router and key_index is not None:
                     self.router.observe(key_index, resp)
                     if resp.status_code == 429:
                         last = LlmError("HTTP 429")
+                        if time.monotonic() > deadline:
+                            raise LlmError(f"rate limited on every key for over {self.rate_limit_wait_s:.0f}s")
                         continue  # the router skips this key now; no sleep while another key is free
                 self.usage.calls += 1
                 if resp.is_success:
@@ -275,12 +291,13 @@ class ChatLLM:
                     self.usage.tokens_in += int(usage.get("prompt_tokens", 0))
                     self.usage.tokens_out += int(usage.get("completion_tokens", 0))
                     return payload
+                failures += 1
                 if resp.status_code in (429, 500, 502, 503, 504):
                     last = LlmError(f"HTTP {resp.status_code}")
                     retry_after = resp.headers.get("retry-after", "")
                     wait = float(retry_after) if retry_after.replace(".", "", 1).isdigit() else 0.0
                     # Groq free tier (~tokens/min per model) clears within about a minute.
-                    self.sleep(max(wait, 20.0 * (attempt + 1) if resp.status_code == 429 else 2.0 * (attempt + 1)))
+                    self.sleep(max(wait, 20.0 * failures if resp.status_code == 429 else 2.0 * failures))
                     continue
                 if resp.status_code == 400 and "tool_use_failed" in resp.text:
                     # Usually a reply cut off at the token limit: retry with 1.5x budget.
@@ -291,7 +308,7 @@ class ChatLLM:
         finally:
             if self.http is None:
                 client.close()
-        raise LlmError(f"failed after {attempts} attempts: {last}")
+        raise LlmError(f"failed after 3 attempts: {last}")
 
     @staticmethod
     def _tool_args(payload: dict[str, Any], name: str) -> str:

@@ -52,12 +52,23 @@ def write(
         "",
         "All systems rank the same fixed pool (stratified sample of each patient's TrialGPT judged trials). "
         "Relevance: 2 eligible, 1 excluded, 0 not relevant; P@5 and MRR count eligible trials only.",
+        "",
+        f"Scored: {config.get('scored', '?')} of {config['patients']} patients (those where every system ran "
+        "without error; the others are listed below).",
     ]
     for cohort, systems in table.items():
         lines += ["", f"## {cohort}", "", "| System | " + " | ".join(h for _, h in COLUMNS) + " |"]
         lines.append("|---|" + "---:|" * len(COLUMNS))
         for name, row in systems.items():
             lines.append(f"| {name} | " + " | ".join(_cell(row.get(k)) for k, _ in COLUMNS) + " |")
+    failed = [
+        f"- {p['cohort']} {p['topic_id']} {name}: {sr['error']}"
+        for p in patients
+        for name, sr in p["systems"].items()
+        if sr["error"]
+    ]
+    if failed:
+        lines += ["", "## Errors (not scored)", "", *failed]
     lines += ["", "## Threshold check", ""]
     lines += [f"- FAIL: {f}" for f in fails] if fails else ["All thresholds met."]
     md.write_text("\n".join(lines) + "\n")

@@ -70,6 +70,7 @@ class Command(BaseCommand):
         config = {
             "model": llm.model,
             "patients": len(chosen),
+            "scored": sum(not any(sr.error for sr in r.systems.values()) for r in results),
             "per_cohort": opts["per_cohort"],
             "pool_size": opts["pool"],
             "seed": opts["seed"],
