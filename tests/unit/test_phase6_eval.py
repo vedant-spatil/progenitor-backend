@@ -402,3 +402,41 @@ def test_system_rerun_after_transient_error(monkeypatch: pytest.MonkeyPatch) -> 
     result = asyncio.run(runner.run_patient(llm, p, {}, ("fixed", "supervisor"), Limits()))
     assert calls == ["fixed", "supervisor", "supervisor"]
     assert result.systems["supervisor"].error == ""  # the clean second attempt counts
+
+
+def test_eval_cache_single_flight_for_concurrent_duplicates() -> None:
+    """Two parallel calls with the same prompt: one live call, both callers get the stored reply."""
+    import threading
+    import time
+
+    class Slow:
+        model = ScriptedLLM({}).model
+
+        def __init__(self) -> None:
+            self.usage = ScriptedLLM({}).usage
+            self.calls = 0
+
+        def complete(self, **_: Any) -> Any:
+            self.calls += 1
+            time.sleep(0.05)
+            return (
+                Ranking(ranked=[])
+                if self.calls == 1
+                else Ranking.model_validate({"ranked": [{"nct_id": "X", "rank": 1, "explanation": "second"}]})
+            )
+
+    inner = Slow()
+    llm = EvalLLM(inner, DictStore())
+    out: list[Any] = []
+    threads = [
+        threading.Thread(
+            target=lambda: out.append(llm.complete(task="rank_trials", system="s", user="u", schema=Ranking))
+        )
+        for _ in range(2)
+    ]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    assert inner.calls == 1
+    assert out[0] == out[1] == Ranking(ranked=[])

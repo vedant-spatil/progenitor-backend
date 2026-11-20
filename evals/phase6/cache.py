@@ -123,51 +123,58 @@ class EvalLLM:
         # Transient failures (rate limits, HTTP errors) seen by live calls. The runner re-runs a system when
         # this grows, so the cached path is always the error-free one, which is what a replay reproduces.
         self.transient_errors = 0
+        self._memo: dict[str, dict[str, Any]] = {}  # entries computed by this process (single flight)
 
     def complete(self, *, task: str, system: str, user: str, schema: type[T]) -> T:
         key = eval_key(self.model, task, system, user, schema)
         _trace(key, task, user)
-        hit = self.store.get(key)
-        if hit is not None and "error" in hit and not self.replay:
-            hit = None  # a recorded failure: live runs try again (a fix may have landed since)
+        hit = self._memo.get(key)
+        if hit is None:
+            hit = self.store.get(key)
+            if hit is not None and "error" in hit and not self.replay:
+                hit = None  # a recorded failure: live runs try again (a fix may have landed since)
         if hit is None:
             if self.replay:
                 raise ReplayMiss(f"no cached reply for {task} (key {key[:12]})")
             with self._lock:
-                before = (self.inner.usage.tokens_in, self.inner.usage.tokens_out)
-                failure: ReplyError | None = None
-                try:
-                    result = self.inner.complete(task=task, system=system, user=user, schema=schema)
-                except ReplyError as exc:
-                    failure = exc
-                except LlmError:
-                    self.transient_errors += 1
-                    raise
-                t_in = self.inner.usage.tokens_in - before[0]
-                t_out = self.inner.usage.tokens_out - before[1]
-                entry: dict[str, Any] = {"tokens_in": t_in, "tokens_out": t_out}
-                if failure is None:
-                    entry["reply"] = result.model_dump(mode="json")
+                # Single flight: parallel nodes (e.g. two judge sends for the same trial) can ask for the same
+                # prompt at once. Compute it once; a second live call would overwrite the stored reply with a
+                # different one and the replay would no longer follow the path this run took.
+                hit = self._memo.get(key)
+                if hit is None:
+                    hit = self._call(key, task, system, user, schema)
                 else:
-                    entry["error"] = str(failure)  # replay reproduces it; a live run tries again
-                self.store.set(key, entry, task)
-                self.spent.calls += 1
-                self.spent.tokens_in += t_in
-                self.spent.tokens_out += t_out
-            hit = entry
-            if failure is not None:
-                self._count(hit)
-                raise failure
-            reply: BaseModel = result
+                    self.usage.cache_hits += 1
         else:
             with self._lock:
                 self.usage.cache_hits += 1
-            if "error" in hit:
-                self._count(hit)
-                raise ReplyError(str(hit["error"]))
-            reply = schema.model_validate(hit["reply"])
         self._count(hit)
-        return reply  # type: ignore[return-value]  # validated against `schema` above
+        if "error" in hit:
+            raise ReplyError(str(hit["error"]))
+        # Use the reply as stored (JSON round trip), exactly as a replay will read it.
+        return schema.model_validate(hit["reply"])
+
+    def _call(self, key: str, task: str, system: str, user: str, schema: type[BaseModel]) -> dict[str, Any]:
+        """One live call (caller holds the lock). Stores the reply, or a deterministic reply failure."""
+        before = (self.inner.usage.tokens_in, self.inner.usage.tokens_out)
+        entry: dict[str, Any] = {}
+        try:
+            entry["reply"] = self.inner.complete(task=task, system=system, user=user, schema=schema).model_dump(
+                mode="json"
+            )
+        except ReplyError as exc:
+            entry["error"] = str(exc)  # replay reproduces it; a live run tries again
+        except LlmError:
+            self.transient_errors += 1
+            raise
+        entry["tokens_in"] = self.inner.usage.tokens_in - before[0]
+        entry["tokens_out"] = self.inner.usage.tokens_out - before[1]
+        self.store.set(key, entry, task)
+        self._memo[key] = entry
+        self.spent.calls += 1
+        self.spent.tokens_in += entry["tokens_in"]
+        self.spent.tokens_out += entry["tokens_out"]
+        return entry
 
     def _count(self, hit: dict[str, Any]) -> None:
         """Virtual usage: every call counts, cached or not, failed or not (failed calls cost tokens too)."""
