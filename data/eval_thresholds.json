@@ -14,5 +14,39 @@
       "labels": "rev 2"
     },
     "adr": "docs/decisions/0003-phase3-labels-and-thresholds.md"
+  },
+  "phase6": {
+    "supervisor_minus_bm25_ndcg10": 0.05,
+    "supervisor_minus_fixed_ndcg10": -0.05,
+    "citation_validity": 1.0,
+    "replay": {
+      "per_cohort": 10,
+      "pool": 10,
+      "seed": 7
+    },
+    "baseline": {
+      "date": "2026-11-20",
+      "model": "bedrock global.moonshotai.kimi-k3.1",
+      "patients": 30,
+      "scored": 29,
+      "snapshot": "034e628c7f936659",
+      "report": "docs/eval-reports/phase6-20261120-0929.md",
+      "ndcg10_all": {
+        "bm25": 0.7458,
+        "fixed": 0.8878,
+        "supervisor": 0.867
+      },
+      "supervisor_minus_bm25_ndcg10": {
+        "sigir": 0.138,
+        "trec_2021": 0.0834,
+        "trec_2022": 0.1445
+      },
+      "supervisor_minus_fixed_ndcg10": {
+        "sigir": -0.025,
+        "trec_2021": -0.0053,
+        "trec_2022": -0.0334
+      }
+    },
+    "adr": "docs/decisions/0005-phase6-eval-design.md"
   }
 }

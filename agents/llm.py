@@ -50,6 +50,14 @@ class LlmError(RuntimeError):
     pass
 
 
+class ReplyError(LlmError):
+    """The model answered, but the reply stayed unusable after every retry (schema, no tool call, cut off).
+
+    Unlike rate limits or HTTP errors this is a property of the prompt and model, so the eval cache can
+    record it and a replay reproduces it.
+    """
+
+
 class LlmCache(Protocol):
     def get(self, key: str) -> dict[str, Any] | None: ...
     def set(self, key: str, value: dict[str, Any]) -> None: ...
@@ -380,7 +388,7 @@ class ChatLLM:
             duration_ms=round((time.perf_counter() - started) * 1000),
         )
         if result is None:
-            raise LlmError(f"{task}: reply failed schema validation twice ({error})")
+            raise ReplyError(f"{task}: reply failed schema validation twice ({error})")
         if self.cache:
             self.cache.set(key, result.model_dump(mode="json"))
         return result

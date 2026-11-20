@@ -169,6 +169,40 @@ def test_eval_cache_counts_virtual_and_real_tokens() -> None:
         replay.complete(task="rank_trials", system="s", user="other", schema=Ranking)
 
 
+def test_reply_failures_are_recorded_and_replayed() -> None:
+    """A deterministic bad reply is cached as a failure: replay reproduces it, a live run tries again."""
+    from agents.llm import ReplyError
+
+    class Failing:
+        model = ScriptedLLM({}).model  # same cache key space as the replay LLM below
+
+        def __init__(self) -> None:
+            self.usage = ScriptedLLM({}).usage
+            self.calls = 0
+
+        def complete(self, **_: Any) -> Any:
+            self.calls += 1
+            self.usage.tokens_out += 32768
+            raise ReplyError("parse_criteria: reply failed schema validation twice (cut off)")
+
+    store = DictStore()
+    inner = Failing()
+    live = EvalLLM(inner, store)
+    with pytest.raises(ReplyError):
+        live.complete(task="parse_criteria", system="s", user="u", schema=Ranking)
+    assert (live.spent.calls, live.spent.tokens_out) == (1, 32768)  # failed calls cost tokens too
+
+    replay = EvalLLM(ScriptedLLM({}), store, replay=True)
+    with pytest.raises(ReplyError, match="cut off"):  # not ReplayMiss
+        replay.complete(task="parse_criteria", system="s", user="u", schema=Ranking)
+    assert replay.usage.tokens_out == 32768
+
+    again = EvalLLM(inner, store)
+    with pytest.raises(ReplyError):
+        again.complete(task="parse_criteria", system="s", user="u", schema=Ranking)
+    assert inner.calls == 2  # live runs retry recorded failures
+
+
 # ---------------- end to end: three systems, then a free replay ----------------
 
 A, B = "NCT00000001", "NCT00000002"
@@ -320,3 +354,26 @@ def test_error_detail_shows_database_message() -> None:
     )
     assert error_detail(exc) == "OperationalError: FATAL:  sorry, too many clients already"
     assert error_detail(RuntimeError("x")) == "RuntimeError"
+
+
+def test_recorded_thresholds_pass_on_the_baseline_numbers() -> None:
+    """The phase6 thresholds (ADR 0005) applied to the pilot baseline table (2026-11-20, 29 scored)."""
+    from data.loaders.common import DATA_DIR
+    from evals.phase6.runner import check_thresholds
+
+    thresholds = json.loads((DATA_DIR / "eval_thresholds.json").read_text())["phase6"]
+
+    def row(ndcg: float) -> dict[str, Any]:
+        return {"ndcg@10": ndcg, "citation_validity": 1.0, "cost_per_patient_usd": None}
+
+    table = {
+        "sigir": {"bm25": row(0.7097), "fixed": row(0.8727), "supervisor": row(0.8477)},
+        "trec_2021": {"bm25": row(0.8008), "fixed": row(0.8895), "supervisor": row(0.8842)},
+        "trec_2022": {"bm25": row(0.7248), "fixed": row(0.9027), "supervisor": row(0.8693)},
+    }
+    assert check_thresholds(table, thresholds) == []
+    # A supervisor that drops 0.06 below the fixed pipeline, or no longer beats BM25 by 0.05, fails.
+    table["sigir"]["supervisor"] = row(0.8127)
+    assert any("below fixed pipeline" in f for f in check_thresholds(table, thresholds))
+    table["trec_2021"]["supervisor"] = row(0.84)
+    assert any("does not beat BM25" in f for f in check_thresholds(table, thresholds))

@@ -228,10 +228,11 @@ gate-5: gate-2
 
 # ---------------- Gate 6: evaluation ----------------
 # Gate 5, then the Phase 6 unit tests and a cache-only replay of the baseline against the thresholds
-# in data/eval_thresholds.json ("phase6", set after baseline). Replay makes no LLM calls; a cache miss fails.
+# in data/eval_thresholds.json ("phase6"; ADR 0005). Baseline = the 10-per-cohort pilot (owner, 2026-11-20).
+# Replay makes no LLM calls; a cache miss fails, a recorded reply failure is reproduced.
 gate-6: gate-5
 	uv run pytest tests/unit/test_phase6_eval.py -q
-	uv run python manage.py eval_phase6 --replay --require-thresholds
+	uv run python manage.py eval_phase6 --replay --require-thresholds --per-cohort 10
 	@echo "GATE 6 PASSED"
 
 # ---------------- Gate 7a: landing page ----------------

@@ -76,7 +76,7 @@ GATES: dict[str, list[Step]] = {
         Step("phase 6 metrics, cache, reproducibility (unit)", "uv run pytest tests/unit/test_phase6_eval.py -q"),
         Step(
             "phase 6 eval replay vs thresholds ($0)",
-            "uv run python manage.py eval_phase6 --replay --require-thresholds",
+            "uv run python manage.py eval_phase6 --replay --require-thresholds --per-cohort 10",
         ),
     ],
     "7a": [

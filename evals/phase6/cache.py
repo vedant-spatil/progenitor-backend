@@ -21,7 +21,7 @@ from typing import Any, Protocol, TypeVar
 
 from pydantic import BaseModel
 
-from agents.llm import StructuredLLM, Usage
+from agents.llm import ReplyError, StructuredLLM, Usage
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -107,28 +107,47 @@ class EvalLLM:
     def complete(self, *, task: str, system: str, user: str, schema: type[T]) -> T:
         key = eval_key(self.model, task, system, user, schema)
         hit = self.store.get(key)
+        if hit is not None and "error" in hit and not self.replay:
+            hit = None  # a recorded failure: live runs try again (a fix may have landed since)
         if hit is None:
             if self.replay:
                 raise ReplayMiss(f"no cached reply for {task} (key {key[:12]})")
             with self._lock:
                 before = (self.inner.usage.tokens_in, self.inner.usage.tokens_out)
-                result = self.inner.complete(task=task, system=system, user=user, schema=schema)
+                failure: ReplyError | None = None
+                try:
+                    result = self.inner.complete(task=task, system=system, user=user, schema=schema)
+                except ReplyError as exc:
+                    failure = exc
                 t_in = self.inner.usage.tokens_in - before[0]
                 t_out = self.inner.usage.tokens_out - before[1]
-                self.store.set(
-                    key, {"reply": result.model_dump(mode="json"), "tokens_in": t_in, "tokens_out": t_out}, task
-                )
+                entry: dict[str, Any] = {"tokens_in": t_in, "tokens_out": t_out}
+                if failure is None:
+                    entry["reply"] = result.model_dump(mode="json")
+                else:
+                    entry["error"] = str(failure)  # replay reproduces it; a live run tries again
+                self.store.set(key, entry, task)
                 self.spent.calls += 1
                 self.spent.tokens_in += t_in
                 self.spent.tokens_out += t_out
-            hit = {"tokens_in": t_in, "tokens_out": t_out}
+            hit = entry
+            if failure is not None:
+                self._count(hit)
+                raise failure
             reply: BaseModel = result
         else:
-            reply = schema.model_validate(hit["reply"])
             with self._lock:
                 self.usage.cache_hits += 1
+            if "error" in hit:
+                self._count(hit)
+                raise ReplyError(str(hit["error"]))
+            reply = schema.model_validate(hit["reply"])
+        self._count(hit)
+        return reply  # type: ignore[return-value]  # validated against `schema` above
+
+    def _count(self, hit: dict[str, Any]) -> None:
+        """Virtual usage: every call counts, cached or not, failed or not (failed calls cost tokens too)."""
         with self._lock:
             self.usage.calls += 1
             self.usage.tokens_in += int(hit["tokens_in"])
             self.usage.tokens_out += int(hit["tokens_out"])
-        return reply  # type: ignore[return-value]  # validated against `schema` above
