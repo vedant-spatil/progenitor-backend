@@ -95,6 +95,25 @@ def test_reply_cut_off_at_max_tokens_retried_with_bigger_budget() -> None:
     assert len(sent[1]["messages"]) == 2  # not a re-ask: same prompt, bigger budget
 
 
+def test_cut_off_before_tool_call_retries_with_bigger_budget() -> None:
+    # Reasoning used the whole budget: no tool call at all. Must not re-ask at the same budget.
+    cut = httpx.Response(200, json={"choices": [{"message": {"content": ""}}], "usage": {"completion_tokens": 2048}})
+    llm, sent = make_llm([cut, reply({"label": "a", "score": 5})])
+    assert complete(llm).score == 5
+    assert [b["max_tokens"] for b in sent] == [2048, 4096]
+    assert len(sent[1]["messages"]) == 2
+
+
+def test_cut_off_three_times_gives_up_with_budget_in_error() -> None:
+    def cut(n: int) -> httpx.Response:
+        return httpx.Response(200, json={"choices": [{"message": {"content": ""}}], "usage": {"completion_tokens": n}})
+
+    llm, sent = make_llm([cut(2048), cut(4096), cut(8192)])
+    with pytest.raises(LlmError, match="cut off at max_tokens 8192"):
+        complete(llm)
+    assert [b["max_tokens"] for b in sent] == [2048, 4096, 8192]
+
+
 def test_schema_error_names_fields() -> None:
     llm, _ = make_llm([reply({"label": "a"}), reply({"label": "a"})])
     with pytest.raises(LlmError, match=r"at score \(missing\)"):

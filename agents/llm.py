@@ -203,6 +203,10 @@ class KeyRouter:
         log.info("groq_key_limited key=%s reason=%s reset_s=%.0f", self.label(i), reason, reset)
 
 
+# Largest max_tokens a retry may ask for after a reply was cut off.
+MAX_TOKENS_CAP = 32768
+
+
 @dataclass
 class ChatLLM:
     """OpenAI-compatible chat completions with a forced tool call (Groq, Ollama)."""
@@ -333,39 +337,40 @@ class ChatLLM:
         result: T | None = None
         error = ""
         budget = self.max_tokens
-        for reask in range(2):
+        reasked = False
+        # Up to 3 calls. A reply cut off at max_tokens (reasoning models spend part of it thinking, and may
+        # stop before the tool call starts) is retried with double the budget. Any other bad reply gets
+        # one re-ask with the problem stated.
+        for _ in range(3):
             payload = self._post(self._body(messages, name, json_schema, budget))
             out_tokens = int((payload.get("usage") or {}).get("completion_tokens", 0))
             truncated = out_tokens >= budget
+            hint = ""
             try:
                 raw = self._tool_args(payload, name)
-            except LlmError as exc:
-                # Plain-text reply instead of the tool call: ask once more for the tool.
-                error = str(exc)
-                if reask == 0:
-                    messages += [{"role": "user", "content": f"Reply by calling the {name} tool."}]
-                continue
-            try:
                 result = schema.model_validate_json(_decode_string_fields(raw))
                 break
+            except LlmError as exc:  # plain-text reply, or cut off before the tool call
+                error = str(exc)
+                hint = f"Reply by calling the {name} tool."
+                raw = ""
             except ValidationError as exc:
                 fields = "; ".join(f"{'.'.join(map(str, e['loc']))} ({e['type']})" for e in exc.errors()[:3])
                 error = f"ValidationError at {fields}"
-                if truncated:
-                    error += f"; reply cut off at max_tokens {budget}"
-                if truncated:
-                    # Reasoning models spend part of max_tokens thinking: retry with a bigger budget, not a re-ask.
-                    budget = min(budget * 2, 32768)
-                elif reask == 0:
-                    # Re-ask once with the validation errors (field paths and messages only).
-                    detail = "; ".join(f"{'.'.join(map(str, e['loc']))}: {e['msg']}" for e in exc.errors()[:10])
-                    messages += [
-                        {"role": "assistant", "content": raw[:4000]},
-                        {
-                            "role": "user",
-                            "content": f"That reply did not match the schema ({detail}). Return it again, fixed.",
-                        },
-                    ]
+                detail = "; ".join(f"{'.'.join(map(str, e['loc']))}: {e['msg']}" for e in exc.errors()[:10])
+                hint = f"That reply did not match the schema ({detail}). Return it again, fixed."
+            if truncated:
+                error += f"; reply cut off at max_tokens {budget}"
+                if budget >= MAX_TOKENS_CAP:
+                    break
+                budget = min(budget * 2, MAX_TOKENS_CAP)
+            elif not reasked:
+                reasked = True
+                if raw:
+                    messages += [{"role": "assistant", "content": raw[:4000]}]
+                messages += [{"role": "user", "content": hint}]
+            else:
+                break
         emit(
             "llm_call",
             task=task,
