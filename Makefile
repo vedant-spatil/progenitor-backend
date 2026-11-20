@@ -11,7 +11,9 @@ STACK := $(or $(STACK),local)
 TRACING_MODE ?= $(shell grep -s '^TRACING_MODE=' .env | tail -1 | cut -d= -f2)
 TRACING_MODE := $(or $(TRACING_MODE),langfuse)
 COMPOSE_FILES := -f docker-compose.yml $(if $(filter ec2,$(STACK)),-f docker-compose.ec2.yml)
-COMPOSE_PROFILE := $(if $(filter langfuse,$(TRACING_MODE)),--profile tracing)
+# PUBLIC=1 (in .env, EC2 only) adds Caddy (HTTPS on <DUCKDNS_DOMAIN>.duckdns.org) and the DuckDNS updater.
+PUBLIC ?= $(shell grep -s '^PUBLIC=' .env | tail -1 | cut -d= -f2)
+COMPOSE_PROFILE := $(if $(filter langfuse,$(TRACING_MODE)),--profile tracing) $(if $(filter 1,$(PUBLIC)),--profile public)
 COMPOSE := docker compose $(COMPOSE_FILES) $(COMPOSE_PROFILE)
 export TRACING_MODE
 FRONTEND := cd $(FRONTEND_DIR) &&

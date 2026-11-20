@@ -285,7 +285,57 @@ services:
     ports:
       - 127.0.0.1:${FRONTEND_HOST_PORT:-3000}:3000
 
+  # ---------------- Public demo entry (profile "public": PUBLIC=1 in .env, EC2 only) ----------------
+  # Only Caddy listens publicly (80 for the certificate challenge and redirect, 443 for the site).
+  caddy:
+    profiles: ["public"]
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    depends_on:
+      - frontend
+    environment:
+      DUCKDNS_DOMAIN: ${DUCKDNS_DOMAIN:-}
+    # Accepts "name" or "name.duckdns.org" in DUCKDNS_DOMAIN.
+    command:
+      - sh
+      - -c
+      - >-
+        d="$${DUCKDNS_DOMAIN%.duckdns.org}";
+        [ -n "$$d" ] || { echo "set DUCKDNS_DOMAIN in .env"; exit 1; };
+        export SITE="$$d.duckdns.org";
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+  # Keeps <DUCKDNS_DOMAIN>.duckdns.org pointed at this instance's public IP (it changes on every stop/start).
+  # An empty ip= makes DuckDNS use the request's source address. The token is never printed.
+  duckdns:
+    profiles: ["public"]
+    image: alpine:3.22
+    restart: unless-stopped
+    environment:
+      DUCKDNS_DOMAIN: ${DUCKDNS_DOMAIN:-}
+      DUCKDNS_TOKEN: ${DUCKDNS_TOKEN:-}
+    command:
+      - sh
+      - -c
+      - >-
+        d="$${DUCKDNS_DOMAIN%.duckdns.org}";
+        [ -n "$$d" ] && [ -n "$$DUCKDNS_TOKEN" ] || { echo "set DUCKDNS_DOMAIN and DUCKDNS_TOKEN in .env"; exit 1; };
+        while true; do
+        r=$$(wget -qO- "https://www.duckdns.org/update?domains=$$d&token=$$DUCKDNS_TOKEN&ip=" 2>/dev/null || echo ERR);
+        echo "$$(date -u +%FT%TZ) duckdns update for $$d: $$r";
+        sleep 300;
+        done
+
 volumes:
+  caddy_data:
+  caddy_config:
   postgres_data:
   redis_data:
   clickhouse_data:
