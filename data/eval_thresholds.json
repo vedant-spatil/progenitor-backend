@@ -28,23 +28,23 @@
       "date": "2026-11-20",
       "model": "bedrock global.moonshotai.kimi-k3.1",
       "patients": 30,
-      "scored": 29,
+      "scored": 30,
       "snapshot": "034e628c7f936659",
-      "report": "docs/eval-reports/phase6-20261120-0929.md",
+      "report": "docs/eval-reports/phase6-20261120-*.md (the 2026-11-20 run with 30 of 30 scored)",
       "ndcg10_all": {
-        "bm25": 0.7458,
-        "fixed": 0.8878,
-        "supervisor": 0.867
+        "bm25": 0.748,
+        "fixed": 0.8811,
+        "supervisor": 0.8707
       },
       "supervisor_minus_bm25_ndcg10": {
-        "sigir": 0.138,
-        "trec_2021": 0.0834,
-        "trec_2022": 0.1445
+        "sigir": 0.1464,
+        "trec_2021": 0.0977,
+        "trec_2022": 0.1239
       },
       "supervisor_minus_fixed_ndcg10": {
-        "sigir": -0.025,
-        "trec_2021": -0.0053,
-        "trec_2022": -0.0334
+        "sigir": -0.0166,
+        "trec_2021": 0.009,
+        "trec_2022": -0.0236
       }
     },
     "adr": "docs/decisions/0005-phase6-eval-design.md"

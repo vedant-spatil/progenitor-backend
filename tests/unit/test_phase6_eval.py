@@ -357,7 +357,7 @@ def test_error_detail_shows_database_message() -> None:
 
 
 def test_recorded_thresholds_pass_on_the_baseline_numbers() -> None:
-    """The phase6 thresholds (ADR 0005) applied to the pilot baseline table (2026-11-20, 29 scored)."""
+    """The phase6 thresholds (ADR 0005) applied to the pilot baseline table (2026-11-20, 30 of 30 scored)."""
     from data.loaders.common import DATA_DIR
     from evals.phase6.runner import check_thresholds
 
@@ -367,9 +367,9 @@ def test_recorded_thresholds_pass_on_the_baseline_numbers() -> None:
         return {"ndcg@10": ndcg, "citation_validity": 1.0, "cost_per_patient_usd": None}
 
     table = {
-        "sigir": {"bm25": row(0.7097), "fixed": row(0.8727), "supervisor": row(0.8477)},
-        "trec_2021": {"bm25": row(0.8008), "fixed": row(0.8895), "supervisor": row(0.8842)},
-        "trec_2022": {"bm25": row(0.7248), "fixed": row(0.9027), "supervisor": row(0.8693)},
+        "sigir": {"bm25": row(0.7097), "fixed": row(0.8727), "supervisor": row(0.8561)},
+        "trec_2021": {"bm25": row(0.8008), "fixed": row(0.8895), "supervisor": row(0.8985)},
+        "trec_2022": {"bm25": row(0.7334), "fixed": row(0.8809), "supervisor": row(0.8573)},
     }
     assert check_thresholds(table, thresholds) == []
     # A supervisor that drops 0.06 below the fixed pipeline, or no longer beats BM25 by 0.05, fails.

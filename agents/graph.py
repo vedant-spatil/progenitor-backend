@@ -62,6 +62,15 @@ ACTION_TO_NODE = {
 WORKERS = (*sorted(set(ACTION_TO_NODE.values())), "judge")
 
 
+def error_label(exc: Exception) -> str:
+    """Stable error name for the supervisor's state.
+
+    The supervisor sees this text in its prompt, so it must not change when an error gets a more specific
+    subclass: every LLM failure is "LlmError" (prompts stay byte-identical, cached decisions stay valid).
+    """
+    return "LlmError" if isinstance(exc, LlmError) else type(exc).__name__
+
+
 @dataclass
 class Deps:
     llm: StructuredLLM
@@ -229,7 +238,7 @@ def build_graph(deps: Deps, checkpointer: Any = None) -> Any:
                     elig = await deps.call_tool("clinicaltrials_get_eligibility", {"nct_id": nct})
                     crits = await parse_criteria(deps.llm, elig.get("criteria_text", ""))
                 except (ToolCallError, LlmError) as exc:
-                    return nct, {"parse_error": type(exc).__name__}
+                    return nct, {"parse_error": error_label(exc)}
                 return nct, {"criteria": [c.model_dump(mode="json") for c in crits], "eligibility": elig}
 
         results = await asyncio.gather(*(one(n) for n in ids))
@@ -241,7 +250,7 @@ def build_graph(deps: Deps, checkpointer: Any = None) -> Any:
         try:
             verdicts = await asyncio.to_thread(judge_trial, deps.llm, profile, criteria, as_of=_as_of(payload))
         except LlmError as exc:
-            return {"trials": {payload["trial_id"]: {"judge_error": type(exc).__name__}}}
+            return {"trials": {payload["trial_id"]: {"judge_error": error_label(exc)}}}
         return {"trials": {payload["trial_id"]: {"verdicts": [v.model_dump(mode="json") for v in verdicts]}}}
 
     async def resolver(state: RunState) -> dict[str, Any]:

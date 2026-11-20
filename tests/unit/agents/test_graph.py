@@ -331,3 +331,12 @@ async def test_bad_search_args_do_not_crash_the_run() -> None:
     assert out["status"] == "finished"
     assert out["searches"][0]["error"].startswith("invalid args")
     assert [e.action for e in ledger.entries] == ["fetch_patient_data", "search_trials", "finish"]
+
+
+def test_error_label_is_stable_for_llm_error_subclasses() -> None:
+    from agents.graph import error_label
+    from agents.llm import LlmError, ReplyError
+
+    assert error_label(ReplyError("cut off")) == "LlmError"
+    assert error_label(LlmError("x")) == "LlmError"
+    assert error_label(ValueError("x")) == "ValueError"
