@@ -147,26 +147,46 @@ async def run_patient(
     profile = profile_from_text(p.topic_id, p.text)
     result = PatientResult(p.cohort, p.topic_id, pool, p.qrels, sorted(profile.resource_ids()))
     for system in systems:  # fixed before supervisor: the supervisor then reuses its parse and judge replies
-        before = (llm.usage.tokens_in, llm.usage.tokens_out)
         started = time.perf_counter()
-        try:
-            if system == "bm25":
-                res = SystemResult("bm25", bm25.rank(patient_query(p.text), {n: trial_text(trials[n]) for n in pool}))
-            elif system == "fixed":
-                res = await run_fixed(llm, profile, trials, pool)
-            else:
-                res = await run_supervisor(llm, p.topic_id, profile, trials, pool, limits)
-        except Exception as exc:  # one failed patient/system is reported; the eval goes on
-            from evals.phase6.cache import ReplayMiss
-
-            if isinstance(exc, ReplayMiss):
-                raise
-            res = SystemResult(system, list(pool), error=error_detail(exc))
+        for _ in range(SYSTEM_TRIES):
+            # A transient LLM failure (rate limit, HTTP error) changes what the supervisor sees and does. Run the
+            # system again so the cached path is the error-free one; replay (cache only) always takes that path.
+            before = (llm.usage.tokens_in, llm.usage.tokens_out)
+            errors_before = llm.transient_errors
+            res = await _run_system(system, llm, p, profile, trials, pool, limits)
+            if llm.transient_errors == errors_before:
+                break
         res.seconds = round(time.perf_counter() - started, 2)
         res.tokens_in = llm.usage.tokens_in - before[0]
         res.tokens_out = llm.usage.tokens_out - before[1]
         result.systems[system] = res
     return result
+
+
+SYSTEM_TRIES = 3
+
+
+async def _run_system(
+    system: str,
+    llm: EvalLLM,
+    p: EvalPatient,
+    profile: PatientProfile,
+    trials: Snapshot,
+    pool: list[str],
+    limits: Limits,
+) -> SystemResult:
+    try:
+        if system == "bm25":
+            return SystemResult("bm25", bm25.rank(patient_query(p.text), {n: trial_text(trials[n]) for n in pool}))
+        if system == "fixed":
+            return await run_fixed(llm, profile, trials, pool)
+        return await run_supervisor(llm, p.topic_id, profile, trials, pool, limits)
+    except Exception as exc:  # one failed patient/system is reported; the eval goes on
+        from evals.phase6.cache import ReplayMiss
+
+        if isinstance(exc, ReplayMiss):
+            raise
+        return SystemResult(system, list(pool), error=error_detail(exc))
 
 
 # ---------------- scoring ----------------

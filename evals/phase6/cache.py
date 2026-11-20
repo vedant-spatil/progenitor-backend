@@ -22,7 +22,7 @@ from typing import Any, Protocol, TypeVar
 
 from pydantic import BaseModel
 
-from agents.llm import ReplyError, StructuredLLM, Usage
+from agents.llm import LlmError, ReplyError, StructuredLLM, Usage
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -120,6 +120,9 @@ class EvalLLM:
         self.usage = Usage()  # virtual: as if every call were made
         self.spent = Usage()  # real: calls made by this process
         self._lock = threading.Lock()  # one live call at a time: exact per-call token deltas, gentler on rate limits
+        # Transient failures (rate limits, HTTP errors) seen by live calls. The runner re-runs a system when
+        # this grows, so the cached path is always the error-free one, which is what a replay reproduces.
+        self.transient_errors = 0
 
     def complete(self, *, task: str, system: str, user: str, schema: type[T]) -> T:
         key = eval_key(self.model, task, system, user, schema)
@@ -137,6 +140,9 @@ class EvalLLM:
                     result = self.inner.complete(task=task, system=system, user=user, schema=schema)
                 except ReplyError as exc:
                     failure = exc
+                except LlmError:
+                    self.transient_errors += 1
+                    raise
                 t_in = self.inner.usage.tokens_in - before[0]
                 t_out = self.inner.usage.tokens_out - before[1]
                 entry: dict[str, Any] = {"tokens_in": t_in, "tokens_out": t_out}

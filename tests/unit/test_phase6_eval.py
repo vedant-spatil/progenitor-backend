@@ -377,3 +377,28 @@ def test_recorded_thresholds_pass_on_the_baseline_numbers() -> None:
     assert any("below fixed pipeline" in f for f in check_thresholds(table, thresholds))
     table["trec_2021"]["supervisor"] = row(0.84)
     assert any("does not beat BM25" in f for f in check_thresholds(table, thresholds))
+
+
+def test_system_rerun_after_transient_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A rate-limit failure mid-run changes the supervisor's path; the runner re-runs it so the cache holds
+    the error-free path (the one a replay takes)."""
+    import asyncio
+
+    from agents.guards import Limits
+
+    llm = EvalLLM(ScriptedLLM({}), DictStore())
+    calls: list[str] = []
+
+    async def fake(system: str, llm_: EvalLLM, *args: Any) -> runner.SystemResult:
+        calls.append(system)
+        if system == "supervisor" and calls.count("supervisor") == 1:
+            llm_.transient_errors += 1  # a 429 ran out of retries during this attempt
+            return runner.SystemResult("supervisor", ["NCT1"], error="LlmError: failed after 3 attempts: HTTP 429")
+        return runner.SystemResult(system, ["NCT1"])
+
+    monkeypatch.setattr(runner, "_run_system", fake)
+    monkeypatch.setattr(runner, "available", lambda trials, pool: ["NCT1"])
+    p = EvalPatient("sigir", "t1", "60 year old man with asthma.", {"NCT1": 2}, ["NCT1"])
+    result = asyncio.run(runner.run_patient(llm, p, {}, ("fixed", "supervisor"), Limits()))
+    assert calls == ["fixed", "supervisor", "supervisor"]
+    assert result.systems["supervisor"].error == ""  # the clean second attempt counts
