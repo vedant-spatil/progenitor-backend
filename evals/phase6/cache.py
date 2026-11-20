@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import threading
 from collections.abc import Callable
 from typing import Any, Protocol, TypeVar
@@ -94,6 +95,22 @@ def eval_key(model: str, task: str, system: str, user: str, schema: type[BaseMod
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
+def _trace(key: str, task: str, user: str) -> None:
+    """Debug aid: with PHASE6_TRACE=<file>, append every prompt (key, task, text) as JSON lines.
+
+    Eval prompts hold public TREC/SIGIR case text and trial text only. Use it to find why a replay misses
+    (diff a live trace against a replay trace).
+    """
+    path = os.environ.get("PHASE6_TRACE")
+    if not path:
+        return
+    with _TRACE_LOCK, open(path, "a", encoding="utf-8") as f:
+        f.write(json.dumps({"key": key, "task": task, "user": user}) + "\n")
+
+
+_TRACE_LOCK = threading.Lock()
+
+
 class EvalLLM:
     def __init__(self, inner: StructuredLLM, store: Store, *, replay: bool = False) -> None:
         self.inner = inner
@@ -106,6 +123,7 @@ class EvalLLM:
 
     def complete(self, *, task: str, system: str, user: str, schema: type[T]) -> T:
         key = eval_key(self.model, task, system, user, schema)
+        _trace(key, task, user)
         hit = self.store.get(key)
         if hit is not None and "error" in hit and not self.replay:
             hit = None  # a recorded failure: live runs try again (a fix may have landed since)
