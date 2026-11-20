@@ -369,7 +369,7 @@ def test_recorded_thresholds_pass_on_the_baseline_numbers() -> None:
     table = {
         "sigir": {"bm25": row(0.7097), "fixed": row(0.8727), "supervisor": row(0.8561)},
         "trec_2021": {"bm25": row(0.8008), "fixed": row(0.8895), "supervisor": row(0.8985)},
-        "trec_2022": {"bm25": row(0.7334), "fixed": row(0.8809), "supervisor": row(0.8573)},
+        "trec_2022": {"bm25": row(0.7334), "fixed": row(0.8809), "supervisor": row(0.8473)},
     }
     assert check_thresholds(table, thresholds) == []
     # A supervisor that drops 0.06 below the fixed pipeline, or no longer beats BM25 by 0.05, fails.

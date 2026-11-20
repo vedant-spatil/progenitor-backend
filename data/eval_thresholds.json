@@ -34,18 +34,19 @@
       "ndcg10_all": {
         "bm25": 0.748,
         "fixed": 0.8811,
-        "supervisor": 0.8707
+        "supervisor": 0.8673
       },
       "supervisor_minus_bm25_ndcg10": {
         "sigir": 0.1464,
         "trec_2021": 0.0977,
-        "trec_2022": 0.1239
+        "trec_2022": 0.1139
       },
       "supervisor_minus_fixed_ndcg10": {
         "sigir": -0.0166,
         "trec_2021": 0.009,
-        "trec_2022": -0.0236
-      }
+        "trec_2022": -0.0336
+      },
+      "gate": "GATE 6 PASS on EC2, 2026-11-20, staging @ 03bd541"
     },
     "adr": "docs/decisions/0005-phase6-eval-design.md"
   }
