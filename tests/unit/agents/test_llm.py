@@ -8,7 +8,7 @@ import httpx
 import pytest
 from pydantic import BaseModel
 
-from agents.llm import ChatLLM, LlmError, get_llm
+from agents.llm import ChatLLM, KeyRouter, LlmError, get_llm, groq_keys_from_env, parse_duration
 
 
 class Answer(BaseModel):
@@ -75,6 +75,58 @@ def test_schema_error_twice_raises() -> None:
         complete(llm)
 
 
+def test_list_field_sent_as_json_string_is_decoded() -> None:
+    class Items(BaseModel):
+        items: list[Answer]
+
+    llm, sent = make_llm([reply({"items": json.dumps([{"label": "a", "score": 1}])}, name="Items")])
+    out = llm.complete(task="t", system="sys", user="u", schema=Items)
+    assert out.items == [Answer(label="a", score=1)]
+    assert len(sent) == 1
+
+
+def test_reply_cut_off_at_max_tokens_retried_with_bigger_budget() -> None:
+    cut = reply('{"label": "a", "sco')
+    cut_body = json.loads(cut.content)
+    cut_body["usage"]["completion_tokens"] = 2048
+    llm, sent = make_llm([httpx.Response(200, json=cut_body), reply({"label": "a", "score": 3})])
+    assert complete(llm).score == 3
+    assert [b["max_tokens"] for b in sent] == [2048, 4096]
+    assert len(sent[1]["messages"]) == 2  # not a re-ask: same prompt, bigger budget
+
+
+def test_cut_off_before_tool_call_retries_with_bigger_budget() -> None:
+    # Reasoning used the whole budget: no tool call at all. Must not re-ask at the same budget.
+    cut = httpx.Response(200, json={"choices": [{"message": {"content": ""}}], "usage": {"completion_tokens": 2048}})
+    llm, sent = make_llm([cut, reply({"label": "a", "score": 5})])
+    assert complete(llm).score == 5
+    assert [b["max_tokens"] for b in sent] == [2048, 4096]
+    assert len(sent[1]["messages"]) == 2
+
+
+def test_cut_off_three_times_gives_up_with_budget_in_error() -> None:
+    def cut(n: int) -> httpx.Response:
+        return httpx.Response(200, json={"choices": [{"message": {"content": ""}}], "usage": {"completion_tokens": n}})
+
+    llm, sent = make_llm([cut(2048), cut(4096), cut(8192)])
+    with pytest.raises(LlmError, match="cut off at max_tokens 8192"):
+        complete(llm)
+    assert [b["max_tokens"] for b in sent] == [2048, 4096, 8192]
+
+
+def test_schema_error_names_fields() -> None:
+    llm, _ = make_llm([reply({"label": "a"}), reply({"label": "a"})])
+    with pytest.raises(LlmError, match=r"at score \(missing\)"):
+        complete(llm)
+
+
+def test_missing_tool_call_reasked_once() -> None:
+    no_tool = httpx.Response(200, json={"choices": [{"message": {"content": "plain text"}}], "usage": {}})
+    llm, sent = make_llm([no_tool, reply({"label": "a", "score": 4})])
+    assert complete(llm).score == 4
+    assert "calling the Answer tool" in sent[1]["messages"][-1]["content"]
+
+
 def test_429_retried_then_ok() -> None:
     llm, sent = make_llm([httpx.Response(429), reply({"label": "a", "score": 1})])
     assert complete(llm).label == "a"
@@ -103,10 +155,12 @@ def test_client_error_not_retried() -> None:
     assert len(sent) == 1
 
 
-def test_missing_tool_call_raises() -> None:
-    llm, _ = make_llm([httpx.Response(200, json={"choices": [{"message": {"content": "hi"}}]})])
+def test_missing_tool_call_twice_raises() -> None:
+    no_tool = {"choices": [{"message": {"content": "hi"}}]}
+    llm, sent = make_llm([httpx.Response(200, json=no_tool), httpx.Response(200, json=no_tool)])
     with pytest.raises(LlmError, match="no tool call"):
         complete(llm)
+    assert len(sent) == 2
 
 
 def test_cache_hit_skips_provider() -> None:
@@ -127,7 +181,15 @@ def test_cache_hit_skips_provider() -> None:
     assert llm.usage.cache_hits == 1
 
 
+def _clear_groq_keys(monkeypatch: pytest.MonkeyPatch) -> None:
+    import os
+
+    for k in [k for k in os.environ if k.startswith("GROQ_API_KEY")]:
+        monkeypatch.delenv(k)
+
+
 def test_get_llm_requires_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    _clear_groq_keys(monkeypatch)
     monkeypatch.setenv("LLM_PROVIDER", "groq")
     monkeypatch.setenv("GROQ_API_KEY", "")
     with pytest.raises(LlmError, match="GROQ_API_KEY"):
@@ -277,6 +339,148 @@ def test_get_llm_bedrock_openai(monkeypatch: pytest.MonkeyPatch) -> None:
     assert isinstance(llm, ChatLLM)
     assert llm.base_url == "https://bedrock-runtime.ap-south-1.amazonaws.com/openai/v1"
     assert (llm.model, llm.api_key) == ("zai.glm-5", "tok")
+    monkeypatch.delenv("LLM_MAX_TOKENS", raising=False)
+    llm = get_llm()
+    assert isinstance(llm, ChatLLM)
+    assert llm.max_tokens == 16000
     monkeypatch.setenv("LLM_MODEL", "")
     with pytest.raises(LlmError, match="LLM_MODEL"):
         get_llm()
+
+
+# ---------------- Groq key router ----------------
+
+
+class Clock:
+    def __init__(self) -> None:
+        self.t = 1000.0
+        self.slept: list[float] = []
+
+    def __call__(self) -> float:
+        return self.t
+
+    def sleep(self, s: float) -> None:
+        self.slept.append(s)
+        self.t += s
+
+
+def limited(daily: bool = False, retry: str = "7.5") -> httpx.Response:
+    what = "tokens per day (TPD): Limit 500000, Used 499990" if daily else "tokens per minute (TPM): Limit 6000"
+    body = {"error": {"message": f"Rate limit reached on {what}. Please try again in 2m30s.", "code": "rate_limit"}}
+    return httpx.Response(429, headers={"retry-after": retry}, json=body)
+
+
+def router_llm(responses: list[httpx.Response], n_keys: int = 3) -> tuple[ChatLLM, list[str], Clock]:
+    used: list[str] = []
+    queue = iter(responses)
+    clock = Clock()
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        used.append(request.headers["authorization"].removeprefix("Bearer "))
+        return next(queue)
+
+    router = KeyRouter([f"secret-{i}" for i in range(1, n_keys + 1)], clock=clock, sleep=clock.sleep)
+    llm = ChatLLM(
+        provider="groq",
+        model="m",
+        base_url="https://llm.test",
+        http=httpx.Client(transport=httpx.MockTransport(handler)),
+        sleep=clock.sleep,
+        router=router,
+    )
+    return llm, used, clock
+
+
+def ok(remaining: int) -> httpx.Response:
+    r = reply({"label": "a", "score": 1})
+    r.headers["x-ratelimit-remaining-tokens"] = str(remaining)
+    return r
+
+
+def test_parse_duration() -> None:
+    assert parse_duration("7.66s") == pytest.approx(7.66)
+    assert parse_duration("2m59.56s") == pytest.approx(179.56)
+    assert parse_duration("1h2m3s") == pytest.approx(3723)
+    assert parse_duration("120ms") == pytest.approx(0.12)
+    assert parse_duration("20") == 20.0
+    assert parse_duration("") is None
+    assert parse_duration("soon") is None
+
+
+def test_keys_from_env_numbered_order_then_plain() -> None:
+    env = {"GROQ_API_KEY_10": "c", "GROQ_API_KEY_2": "b", "GROQ_API_KEY_1": " a ", "GROQ_API_KEY": "a", "X": "y"}
+    assert groq_keys_from_env(env) == ["a", "b", "c"]
+    assert groq_keys_from_env({"GROQ_API_KEY_1": ""}) == []
+
+
+def test_picks_key_with_most_remaining_tokens() -> None:
+    llm, used, _ = router_llm([ok(100), ok(5000), ok(9000), ok(9000)])
+    for _ in range(4):
+        complete(llm)
+    # First round tries each unused key once; then the one with the most tokens left (key 3, then 2 after 3 drops).
+    assert used[:3] == ["secret-1", "secret-2", "secret-3"]
+    assert used[3] == "secret-3"
+
+
+def test_minute_429_fails_over_without_sleeping() -> None:
+    llm, used, clock = router_llm([limited(), reply({"label": "b", "score": 2})])
+    assert complete(llm).label == "b"
+    assert used == ["secret-1", "secret-2"]
+    assert clock.slept == []
+    assert llm.router is not None
+    assert llm.router.state[0].cooldown_until == pytest.approx(clock.t + 7.5)
+
+
+def test_daily_429_skips_key_and_raises_when_all_exhausted() -> None:
+    llm, used, _ = router_llm([limited(daily=True), limited(daily=True)], n_keys=2)
+    with pytest.raises(LlmError, match="daily limit"):
+        complete(llm)
+    assert used == ["secret-1", "secret-2"]
+    assert llm.router is not None
+    assert all(s.exhausted_until > 0 for s in llm.router.state)
+
+
+def test_waits_for_earliest_key_when_all_cooling() -> None:
+    llm, used, clock = router_llm([limited(retry="10"), limited(retry="30"), reply({"label": "c", "score": 3})], 2)
+    assert complete(llm).label == "c"
+    assert used == ["secret-1", "secret-2", "secret-1"]
+    assert sum(clock.slept) == pytest.approx(10)
+
+
+def test_router_logs_never_contain_keys(caplog: pytest.LogCaptureFixture) -> None:
+    import logging
+
+    caplog.set_level(logging.INFO)
+    llm, _, _ = router_llm([limited(), limited(daily=True), reply({"label": "d", "score": 4})])
+    complete(llm)
+    assert "key#1" in caplog.text
+    assert "secret" not in caplog.text
+
+
+def test_get_llm_builds_router_for_several_keys(monkeypatch: pytest.MonkeyPatch) -> None:
+    _clear_groq_keys(monkeypatch)
+    monkeypatch.setenv("LLM_PROVIDER", "groq")
+    monkeypatch.setenv("GROQ_API_KEY_1", "k1")
+    llm = get_llm()
+    assert isinstance(llm, ChatLLM)
+    assert llm.router is None
+    assert llm.api_key == "k1"
+    monkeypatch.setenv("GROQ_API_KEY_2", "k2")
+    llm = get_llm()
+    assert isinstance(llm, ChatLLM)
+    assert llm.router is not None
+    assert llm.router.keys == ["k1", "k2"]
+
+
+def test_request_too_large_fails_at_once() -> None:
+    body = {"error": {"message": "Request too large for model on output tokens per minute (OTPM): Limit 1000"}}
+    llm, used, _ = router_llm([httpx.Response(429, json=body)])
+    with pytest.raises(LlmError, match="too large"):
+        complete(llm)
+    assert len(used) == 1
+
+
+def test_many_minute_429s_do_not_use_up_attempts() -> None:
+    llm, used, _ = router_llm([limited(retry="5")] * 8 + [reply({"label": "e", "score": 5})], n_keys=2)
+    assert complete(llm).label == "e"
+    assert len(used) == 9

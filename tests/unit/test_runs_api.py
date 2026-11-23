@@ -312,3 +312,87 @@ async def test_sse_stream_ends_after_snapshot_for_paused_runs() -> None:
 
     chunks = [c async for c in stream("r1", {"status": "awaiting_review", "steps_used": 6})]
     assert chunks == ['event: snapshot\ndata: {"status": "awaiting_review", "steps_used": 6}\n\n']
+
+
+# ---------------- Phase 7b additions: me, patients, run list, referral edits ----------------
+
+
+def test_me_lists_roles(users: dict[str, User]) -> None:
+    body = client(users["clinician"]).get("/api/me").json()
+    assert body == {"id": users["clinician"].id, "username": "clin", "roles": ["clinician"]}
+    assert client(users["none"]).get("/api/me").json()["roles"] == []
+    assert client(None).get("/api/me").status_code == 401
+
+
+def test_patient_list_shows_labels_only(users: dict[str, User], patient: Patient) -> None:
+    body = client(users["coordinator"]).get("/api/patients").json()
+    assert body["items"] == [
+        {
+            "id": patient.pk,
+            "label": "Synthea 001",
+            "source": "synthea",
+            "profile_cached_at": None,
+            "run_count": 0,
+            "last_run_status": None,
+        }
+    ]
+    assert client(users["admin"]).get("/api/patients").status_code == 403
+    assert client(None).get("/api/patients").status_code == 401
+
+
+def test_run_list_newest_first(users: dict[str, User], patient: Patient, enqueued: list[Any]) -> None:
+    first = Run.objects.create(patient=patient, status=RunStatus.COMPLETED)
+    second = Run.objects.create(patient=patient, status=RunStatus.RUNNING)
+    items = client(users["clinician"]).get("/api/runs").json()["items"]
+    assert [i["id"] for i in items] == [str(second.id), str(first.id)]
+    assert set(items[0]) == {"id", "patient_id", "patient_label", "status", "created_at", "finished_at"}
+    assert client(users["admin"]).get("/api/runs").status_code == 403
+    # POST stays coordinator-only.
+    assert client(users["clinician"]).post("/api/runs", {"patient_id": patient.pk}, format="json").status_code == 403
+
+
+def _approved_draft(users: dict[str, User], patient: Patient) -> ReferralDraft:
+    run = awaiting_review(patient)
+    payload = {"items": [{"nct_id": A, "decision": "approve"}, {"nct_id": B, "decision": "reject"}]}
+    client(users["clinician"]).post(f"/api/runs/{run.id}/review", payload, format="json")
+    services.persist(str(run.id), graph_out(approved_trial_ids=[A], referrals=[{"nct_id": A, "body": "Draft"}]))
+    return ReferralDraft.objects.get(shortlist_item__run=run)
+
+
+def test_clinician_edits_referral(users: dict[str, User], patient: Patient, enqueued: list[Any]) -> None:
+    draft = _approved_draft(users, patient)
+    url = f"/api/referrals/{draft.pk}"
+    assert client(users["coordinator"]).patch(url, {"body": "x"}, format="json").status_code == 403
+    assert client(users["clinician"]).patch(url, {"body": "  "}, format="json").status_code == 400
+
+    resp = client(users["clinician"]).patch(url, {"body": "Edited text"}, format="json")
+    assert resp.status_code == 200
+    assert resp.json()["status"] == "edited"
+    draft.refresh_from_db()
+    assert (draft.body, draft.edited_by_id) == ("Edited text", users["clinician"].id)
+    event = AuditEvent.objects.get(kind=AuditKind.REFERRAL_EDITED)
+    assert event.actor_id == users["clinician"].id
+    assert event.payload == {"referral_id": draft.pk, "status": "edited"}  # ids only, no text
+
+
+def test_discarded_referral_cannot_change(users: dict[str, User], patient: Patient, enqueued: list[Any]) -> None:
+    draft = _approved_draft(users, patient)
+    url = f"/api/referrals/{draft.pk}"
+    assert client(users["clinician"]).patch(url, {"discard": True}, format="json").json()["status"] == "discarded"
+    assert client(users["clinician"]).patch(url, {"body": "again"}, format="json").status_code == 409
+    assert client(users["clinician"]).patch("/api/referrals/999999", {"body": "x"}, format="json").status_code == 404
+
+
+def test_seed_demo_users(monkeypatch: pytest.MonkeyPatch) -> None:
+    from django.core.management import CommandError, call_command
+
+    monkeypatch.setenv("DEMO_USER_PASSWORD", "short")
+    with pytest.raises(CommandError):
+        call_command("seed_demo_users")
+    monkeypatch.setenv("DEMO_USER_PASSWORD", "a-long-demo-password")
+    call_command("seed_demo_users")
+    call_command("seed_demo_users")  # idempotent
+    clin = User.objects.get(username="clinician")
+    assert clin.check_password("a-long-demo-password")
+    assert list(clin.groups.values_list("name", flat=True)) == ["clinician"]
+    assert list(User.objects.get(username="coordinator").groups.values_list("name", flat=True)) == ["coordinator"]

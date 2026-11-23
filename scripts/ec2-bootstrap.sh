@@ -19,6 +19,9 @@ if ! command -v node >/dev/null || [[ "$(node -v)" != v${NODE_MAJOR}.* ]]; then
   sudo apt-get install -y nodejs
 fi
 
+echo "== Chromium system libraries (gate 7a: Playwright and Lighthouse)"
+sudo npx --yes playwright@1.65.1 install-deps chromium
+
 echo "== uv"
 command -v uv >/dev/null || curl -LsSf https://astral.sh/uv/install.sh | sh
 

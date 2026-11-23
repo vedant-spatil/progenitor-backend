@@ -108,6 +108,39 @@ class ReviewSerializer(serializers.Serializer[Any]):
         return items
 
 
+class RunListSerializer(serializers.ModelSerializer[Run]):
+    patient_id = serializers.IntegerField(source="patient.pk", read_only=True)
+    patient_label = serializers.CharField(source="patient.label", read_only=True)
+
+    class Meta:
+        model = Run
+        fields = ["id", "patient_id", "patient_label", "status", "created_at", "finished_at"]
+
+
+class PatientSerializer(serializers.ModelSerializer[Patient]):
+    """Synthetic display label, source, and run stats only: no FHIR id, no profile.
+
+    run_count and last_run_status come from annotations (PatientListView).
+    """
+
+    run_count = serializers.IntegerField(read_only=True)
+    last_run_status = serializers.CharField(read_only=True, allow_null=True)
+
+    class Meta:
+        model = Patient
+        fields = ["id", "label", "source", "profile_cached_at", "run_count", "last_run_status"]
+
+
+class ReferralUpdateSerializer(serializers.Serializer[Any]):
+    body = serializers.CharField(required=False, max_length=20000, trim_whitespace=False)
+    discard = serializers.BooleanField(required=False, default=False)
+
+    def validate(self, attrs: dict[str, Any]) -> dict[str, Any]:
+        if not attrs.get("discard") and not attrs.get("body", "").strip():
+            raise serializers.ValidationError({"body": "required unless discarding"})
+        return attrs
+
+
 class ReferralSerializer(serializers.ModelSerializer[ReferralDraft]):
     nct_id = serializers.CharField(source="shortlist_item.trial.nct_id")
     approved_by = serializers.IntegerField(source="review.reviewer_id")

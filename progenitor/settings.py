@@ -92,10 +92,14 @@ TEMPLATES = [
 WSGI_APPLICATION = "progenitor.wsgi.application"
 ASGI_APPLICATION = "progenitor.asgi.application"
 
+# Persistent connections stay off (CONN_MAX_AGE=0). Under ASGI every sync view runs on a worker thread,
+# each thread keeps its own connection, and Django never closes them: concurrent requests leaked
+# connections until Postgres refused new clients ("too many clients already"). Django's docs advise
+# disabling persistent connections under ASGI.
 DATABASES = {
     "default": dj_database_url.parse(
         os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR / 'db.sqlite3'}"),
-        conn_max_age=int(os.environ.get("DATABASE_CONN_MAX_AGE", "60")),
+        conn_max_age=int(os.environ.get("DATABASE_CONN_MAX_AGE", "0")),
     )
 }
 
@@ -117,6 +121,10 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Phase 6 eval reports (JSON) shown on the app's eval dashboard. docs/ is not in the image: compose mounts it.
+EVAL_REPORTS_DIR = Path(os.environ.get("EVAL_REPORTS_DIR") or BASE_DIR / "docs" / "eval-reports")
+EVAL_THRESHOLDS_FILE = BASE_DIR / "data" / "eval_thresholds.json"
 
 # --- Security (strict whenever DEBUG is off) ---
 SECURE_SSL_REDIRECT = env_bool("DJANGO_SECURE_SSL_REDIRECT", default=not DEBUG)

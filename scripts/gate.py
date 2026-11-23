@@ -1,7 +1,7 @@
 """Gate runner with visible progress: `make gate PHASE=<n>` -> `python scripts/gate.py <n>`.
 
 Gate n runs its own steps after its parent gate's (same chain as the Makefile: 1 and 2 build on 0,
-3 on 2, 4 on 3, 5 on 2). For each step it prints
+3 on 2, 4 on 3, 5 on 2, 6 on 5). For each step it prints
 `[ 5/14 ] unit tests ............ PASS  31s`, keeps full output in a log file, and updates a
 status JSON after every step (read by `make gate-status`). Stops at the first failure and
 shows the tail of that step's output. `make gate-report` prints the last summary as markdown.
@@ -38,8 +38,8 @@ DEPLOY_CHECK = (
 )
 
 # Steps per gate; commands run in backend/. PARENT mirrors the Makefile gate dependencies.
-GATES: dict[int, list[Step]] = {
-    0: [
+GATES: dict[str, list[Step]] = {
+    "0": [
         Step("install backend deps", "uv sync --frozen"),
         Step("ruff lint + format", "uv run ruff check . && uv run ruff format --check ."),
         Step("mypy", "DJANGO_DEBUG=1 uv run mypy ."),
@@ -53,18 +53,18 @@ GATES: dict[int, list[Step]] = {
         Step("stack up (compose, healthy)", "make -s stack-up"),
         Step("integration tests", "make -s integration-tests"),
     ],
-    1: [
+    "1": [
         Step("migrate", "uv run python manage.py migrate --noinput"),
         Step("data inventory", "uv run python manage.py data_inventory"),
         Step("data tests (counts, idempotent loads)", "make -s data-tests"),
     ],
-    2: [Step("all unit tests (cassettes only)", "uv run pytest tests/unit -q --record-mode=none")],
-    3: [
+    "2": [Step("all unit tests (cassettes only)", "uv run pytest tests/unit -q --record-mode=none")],
+    "3": [
         Step("profiler exact match", "make -s profiler-exact-test"),
         Step("phase 3 eval (parser, judge, citations)", "uv run python manage.py eval_phase3"),
     ],
-    4: [Step("phase 4 supervisor scenarios", "uv run python manage.py eval_phase4")],
-    5: [
+    "4": [Step("phase 4 supervisor scenarios", "uv run python manage.py eval_phase4")],
+    "5": [
         Step("migrations applied", "uv run python manage.py migrate --noinput"),
         Step(
             "phase 5 API, approval, audit (unit)",
@@ -72,12 +72,54 @@ GATES: dict[int, list[Step]] = {
         ),
         Step("phase 5 runs on Postgres + Redis (integration)", "make -s phase5-integration-tests"),
     ],
+    "6": [
+        Step("phase 6 metrics, cache, reproducibility (unit)", "uv run pytest tests/unit/test_phase6_eval.py -q"),
+        Step(
+            "phase 6 eval replay vs thresholds ($0)",
+            "uv run python manage.py eval_phase6 --replay --require-thresholds --per-cohort 10",
+        ),
+    ],
+    "7a": [
+        Step("frontend unit tests (Vitest)", f"cd {FRONTEND} && npm test"),
+        Step("browser for e2e + Lighthouse", f"cd {FRONTEND} && npx playwright install chromium"),
+        Step(
+            "landing e2e, axe, visual baselines (Playwright)",
+            f"cd {FRONTEND} && npm run build && CI=1 npx playwright test",
+        ),
+        Step("Lighthouse CI (mobile)", f"cd {FRONTEND} && npm run lighthouse"),
+    ],
+    # Gate 7b reruns the frontend suites above (they include the app e2e flow, axe on app pages)
+    # and adds the backend API the app uses (me, patients, run list, referral edits).
+    "7b": [
+        Step("migrations applied", "uv run python manage.py migrate --noinput"),
+        Step("run API incl. app endpoints (unit)", "uv run pytest tests/unit/test_runs_api.py -q"),
+    ],
+    # Gate 7c (ADR 0007): read-only app views. Reruns gate 7b (frontend suites include the 7c pages) and adds
+    # the new endpoint tests.
+    "7c": [
+        Step("migrations applied", "uv run python manage.py migrate --noinput"),
+        Step("app view endpoints (unit)", "uv run pytest tests/unit/test_app_api.py -q"),
+    ],
 }
 
 
 # Gate 5 builds on gate 2, not 4: the live LLM evals (gates 3-4, ~1 h of Bedrock calls) gate the agent
 # changes; Phase 5 adds no prompt or agent logic, and its tests use the scripted LLM.
-PARENT: dict[int, int | None] = {0: None, 1: 0, 2: 0, 3: 2, 4: 3, 5: 2}
+# Gate 6 replays the frozen baseline from the cache (no LLM spend), on top of gate 5.
+# Gate 7a (landing page, frontend only) builds on gate 0; 7b on 7a. ADR 0006: both count as passed only after
+# gate 6, and the eval dashboard (7b) waits for the Phase 6 baseline.
+PARENT: dict[str, str | None] = {
+    "0": None,
+    "1": "0",
+    "2": "0",
+    "3": "2",
+    "4": "3",
+    "5": "2",
+    "6": "5",
+    "7a": "0",
+    "7b": "7a",
+    "7c": "7b",
+}
 
 
 @dataclass
@@ -90,7 +132,7 @@ class StepResult:
 
 @dataclass
 class GateRun:
-    phase: int
+    phase: str
     started: str
     branch: str
     commit: str
@@ -123,14 +165,14 @@ def fmt(seconds: float) -> str:
     return f"{m}m{s:02d}s" if m else f"{s}s"
 
 
-def steps_for(phase: int) -> list[Step]:
+def steps_for(phase: str) -> list[Step]:
     if phase not in GATES:
         raise SystemExit(f"no gate for phase {phase}; known: {sorted(GATES)}")
     parent = PARENT.get(phase)
     return (steps_for(parent) if parent is not None else []) + GATES[phase]
 
 
-def run(phase: int) -> int:
+def run(phase: str) -> int:
     GATES_DIR.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
     log_path = GATES_DIR / f"gate-{phase}-{stamp}.log"
@@ -244,8 +286,8 @@ def main(argv: list[str]) -> int:
         return status()
     if len(argv) >= 2 and argv[1] == "report":
         return report()
-    if len(argv) >= 2 and argv[1].isdigit():
-        return run(int(argv[1]))
+    if len(argv) >= 2 and argv[1].lower() in GATES:
+        return run(argv[1].lower())
     print("usage: gate.py <phase> | status | report")
     return 2
 

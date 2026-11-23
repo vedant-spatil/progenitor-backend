@@ -126,6 +126,8 @@ def profile_context(
         lines.append(
             f"{alias('L', lab.resource_id)} | {_short(lab.display)} [loinc {lab.code}] = {value} | {lab.effective}"
         )
+    for note in profile.notes:  # free-text patients: full sentences, never trimmed by _fit
+        lines.append(f"{alias('N', note.resource_id)} | {note.text}")
     return _fit(lines, max_chars, focus or set()), aliases
 
 

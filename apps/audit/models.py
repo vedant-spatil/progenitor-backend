@@ -31,6 +31,7 @@ class AuditKind(models.TextChoices):
     EGRESS_BLOCKED = "egress_blocked", "Outbound call blocked by PHI filter"
     DATA_LOAD = "data_load", "Data loader run"
     RUN_CREATED = "run_created", "Run started by a user"
+    REFERRAL_EDITED = "referral_edited", "Referral draft edited or discarded by a clinician"
 
 
 class AuditEvent(models.Model):

@@ -15,6 +15,7 @@ from typing import Any
 
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command, Send, interrupt
+from pydantic import ValidationError
 
 from agents import guards
 from agents.fhir_reader import FhirReader
@@ -59,6 +60,15 @@ ACTION_TO_NODE = {
     "draft_referrals": "drafter",
 }
 WORKERS = (*sorted(set(ACTION_TO_NODE.values())), "judge")
+
+
+def error_label(exc: Exception) -> str:
+    """Stable error name for the supervisor's state.
+
+    The supervisor sees this text in its prompt, so it must not change when an error gets a more specific
+    subclass: every LLM failure is "LlmError" (prompts stay byte-identical, cached decisions stay valid).
+    """
+    return "LlmError" if isinstance(exc, LlmError) else type(exc).__name__
 
 
 @dataclass
@@ -203,7 +213,12 @@ def build_graph(deps: Deps, checkpointer: Any = None) -> Any:
                 spec_args["max_results"] = max(int(spec_args.get("max_results", 20)), 30)
         else:
             spec_args = {k: v for k, v in args.items() if k in SearchSpec.model_fields}
-        spec = SearchSpec.model_validate({"max_results": 20, **spec_args})
+        try:
+            spec = SearchSpec.model_validate({"max_results": 20, **spec_args})
+        except ValidationError as exc:
+            # Bad search arguments must not crash the run: record the failure; the supervisor sees it next step.
+            fields = sorted({".".join(map(str, e["loc"])) for e in exc.errors()})
+            return {"searches": [{"spec": spec_args, "total": 0, "added": 0, "error": f"invalid args: {fields}"}]}
         found, total = await search_trials(spec, deps.call_tool)
         existing = s.get("trials") or {}
         new = {t.nct_id: {"summary": t.model_dump()} for t in found if t.nct_id not in existing}
@@ -223,7 +238,7 @@ def build_graph(deps: Deps, checkpointer: Any = None) -> Any:
                     elig = await deps.call_tool("clinicaltrials_get_eligibility", {"nct_id": nct})
                     crits = await parse_criteria(deps.llm, elig.get("criteria_text", ""))
                 except (ToolCallError, LlmError) as exc:
-                    return nct, {"parse_error": type(exc).__name__}
+                    return nct, {"parse_error": error_label(exc)}
                 return nct, {"criteria": [c.model_dump(mode="json") for c in crits], "eligibility": elig}
 
         results = await asyncio.gather(*(one(n) for n in ids))
@@ -235,7 +250,7 @@ def build_graph(deps: Deps, checkpointer: Any = None) -> Any:
         try:
             verdicts = await asyncio.to_thread(judge_trial, deps.llm, profile, criteria, as_of=_as_of(payload))
         except LlmError as exc:
-            return {"trials": {payload["trial_id"]: {"judge_error": type(exc).__name__}}}
+            return {"trials": {payload["trial_id"]: {"judge_error": error_label(exc)}}}
         return {"trials": {payload["trial_id"]: {"verdicts": [v.model_dump(mode="json") for v in verdicts]}}}
 
     async def resolver(state: RunState) -> dict[str, Any]:

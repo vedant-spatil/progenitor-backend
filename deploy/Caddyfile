@@ -1,0 +1,16 @@
+# Public HTTPS entry for the EC2 demo (compose profile "public", PUBLIC=1). Caddy gets a Let's Encrypt
+# certificate for $SITE (<DUCKDNS_DOMAIN>.duckdns.org) and proxies to the frontend only. The browser reaches the
+# backend through the frontend's /api/* rewrite; Django admin, HAPI, Postgres, Redis and Langfuse stay private.
+{$SITE} {
+	encode zstd gzip
+	reverse_proxy frontend:3000 {
+		flush_interval -1 # stream server-sent events (live run timeline) without buffering
+	}
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}

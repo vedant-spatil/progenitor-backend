@@ -11,7 +11,9 @@ STACK := $(or $(STACK),local)
 TRACING_MODE ?= $(shell grep -s '^TRACING_MODE=' .env | tail -1 | cut -d= -f2)
 TRACING_MODE := $(or $(TRACING_MODE),langfuse)
 COMPOSE_FILES := -f docker-compose.yml $(if $(filter ec2,$(STACK)),-f docker-compose.ec2.yml)
-COMPOSE_PROFILE := $(if $(filter langfuse,$(TRACING_MODE)),--profile tracing)
+# PUBLIC=1 (in .env, EC2 only) adds Caddy (HTTPS on <DUCKDNS_DOMAIN>.duckdns.org) and the DuckDNS updater.
+PUBLIC ?= $(shell grep -s '^PUBLIC=' .env | tail -1 | cut -d= -f2)
+COMPOSE_PROFILE := $(if $(filter langfuse,$(TRACING_MODE)),--profile tracing) $(if $(filter 1,$(PUBLIC)),--profile public)
 COMPOSE := docker compose $(COMPOSE_FILES) $(COMPOSE_PROFILE)
 export TRACING_MODE
 FRONTEND := cd $(FRONTEND_DIR) &&
@@ -27,9 +29,9 @@ INTEGRATION := DATABASE_URL=$(GATE_DATABASE_URL) uv run pytest tests/integration
 export FRONTEND_DIR
 
 
-.PHONY: phase5-integration-tests db-dump db-restore gate-status gate-report stack-up integration-tests data-tests profiler-exact-test
+.PHONY: users phase5-integration-tests db-dump db-restore gate-status gate-report stack-up integration-tests data-tests profiler-exact-test
 .PHONY: help env up down logs ps wait test test-backend test-frontend lint gate eval check-frontend-dir \
-        up-tracing migrate data live eval-phase3 eval-phase4 gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2 gate-3 gate-4 gate-5
+        up-tracing migrate data live eval-phase3 eval-phase4 gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2 gate-3 gate-4 gate-5 gate-6 gate-7a gate-7b gate-7c eval-phase6 eval-phase6-snapshot
 
 help: ## List targets
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-16s %s\n", $$1, $$2}'
@@ -79,6 +81,9 @@ test-frontend: check-frontend-dir
 migrate: ## Apply migrations to the dev database
 	uv run python manage.py migrate --noinput
 
+users: migrate ## Create demo sign-in users coordinator + clinician (DEMO_USER_PASSWORD in .env)
+	uv run python manage.py seed_demo_users
+
 data: migrate ## Generate + load dev data (idempotent): Synthea, MIMIC demo, eval sets, inventory
 	uv run python manage.py generate_synthea
 	uv run python manage.py load_synthea
@@ -93,6 +98,12 @@ eval: eval-phase3 ## Run the eval harness (live LLM; not in CI)
 
 eval-phase4: ## Phase 4 live scenarios: supervisor decisions, 3 runs each, majority counts
 	uv run python manage.py eval_phase4
+
+eval-phase6: ## Phase 6 eval (PER=20 POOL=10): live LLM for cache misses only; see apps/evals/.../eval_phase6.py
+	uv run python manage.py eval_phase6 --per-cohort $(or $(PER),20) --pool $(or $(POOL),10)
+
+eval-phase6-snapshot: ## Fetch the Phase 6 trial snapshot (ClinicalTrials.gov, no LLM)
+	uv run python manage.py eval_phase6 --build-snapshot --per-cohort $(or $(PER),20) --pool $(or $(POOL),10)
 
 eval-phase3: ## Phase 3 live eval: Parser F1 (Chia), Judge accuracy (hand labels), citation validity
 	uv run python manage.py eval_phase3
@@ -216,3 +227,39 @@ gate-5: gate-2
 	uv run pytest tests/unit/test_runs_api.py tests/unit/test_audit_wrappers.py -q
 	@$(MAKE) --no-print-directory phase5-integration-tests
 	@echo "GATE 5 PASSED"
+
+# ---------------- Gate 6: evaluation ----------------
+# Gate 5, then the Phase 6 unit tests and a cache-only replay of the baseline against the thresholds
+# in data/eval_thresholds.json ("phase6"; ADR 0005). Baseline = the 10-per-cohort pilot (owner, 2026-11-20).
+# Replay makes no LLM calls; a cache miss fails, a recorded reply failure is reproduced.
+gate-6: gate-5
+	uv run pytest tests/unit/test_phase6_eval.py -q
+	uv run python manage.py eval_phase6 --replay --require-thresholds --per-cohort 10
+	@echo "GATE 6 PASSED"
+
+# ---------------- Gate 7a: landing page ----------------
+# Gate 0 (frontend lint, types, build), then the landing suites: Vitest, Playwright (anchors, CTA routes,
+# preview tabs, no horizontal scroll at 390 px, axe, visual baselines) and Lighthouse CI (mobile).
+# Frontend only; ADR 0006: it counts as passed only after gate 6 has passed.
+gate-7a: gate-0
+	$(FRONTEND) npm test
+	$(FRONTEND) npx playwright install chromium
+	$(FRONTEND) npm run build && CI=1 npx playwright test
+	$(FRONTEND) npm run lighthouse
+	@echo "GATE 7a PASSED"
+
+# ---------------- Gate 7b: app frontend ----------------
+# Gate 7a (its Playwright run includes the app flow: sign in, start run, decisions stream, answer, review,
+# referral edit, axe on app pages), then the run API tests incl. the app endpoints. ADR 0006 (amended).
+gate-7b: gate-7a
+	uv run python manage.py migrate --noinput
+	uv run pytest tests/unit/test_runs_api.py -q
+	@echo "GATE 7b PASSED"
+
+# ---------------- Gate 7c: app extensions ----------------
+# Gate 7b (its Playwright run includes the 7c pages: home queue, patients, trials, referrals, audit, evals, axe),
+# then the read-only app endpoint tests. ADR 0007.
+gate-7c: gate-7b
+	uv run python manage.py migrate --noinput
+	uv run pytest tests/unit/test_app_api.py -q
+	@echo "GATE 7c PASSED"
