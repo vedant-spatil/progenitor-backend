@@ -34,8 +34,9 @@ async def postgres_checkpointer(url: str | None = None) -> AsyncIterator[AsyncPo
         yield saver
 
 
-def run_config(thread_id: str) -> dict[str, Any]:
-    return {"configurable": {"thread_id": thread_id}, "recursion_limit": RECURSION_LIMIT}
+def run_config(thread_id: str, extra: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Graph config. `extra` adds configurable keys a checkpointer needs (AgentCore Memory needs actor_id)."""
+    return {"configurable": {"thread_id": thread_id, **(extra or {})}, "recursion_limit": RECURSION_LIMIT}
 
 
 async def start_run(deps: Deps, saver: Any, run_id: str, patient_id: str, as_of: Any = None) -> dict[str, Any]:
@@ -61,6 +62,7 @@ async def advance(
     as_of: Any = None,
     answer: Any = None,
     approved_trial_ids: list[str] | None = None,
+    config_extra: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Move a run forward from whatever its checkpoint says. Safe to call again after a crash.
 
@@ -72,7 +74,7 @@ async def advance(
     - otherwise: return the final state unchanged.
     """
     graph = build_graph(deps, checkpointer=saver)
-    config = run_config(run_id)
+    config = run_config(run_id, config_extra)
     snap = await graph.aget_state(config)
     if not snap.values:
         out: dict[str, Any] = await graph.ainvoke(initial_state(run_id, patient_id, as_of), config)

@@ -29,10 +29,13 @@ Handler = Callable[[MCPToolCallRequest], Awaitable[MCPToolCallResult]]
 
 
 def connections_from_env() -> dict[str, Connection]:
+    """MCP servers from env. With AGENT_SERVICE_TOKEN set (AgentCore path, ADR 0008), every request carries it,
+    because the servers are then reached through CloudFront `/internal/mcp/*`."""
+
     def url(var: str, default: str) -> str:
         return os.environ.get(var, default)
 
-    return {
+    conns: dict[str, Connection] = {
         "clinicaltrials": {
             "transport": "streamable_http",
             "url": url("CT_MCP_URL", "http://localhost:8101/mcp"),
@@ -47,6 +50,11 @@ def connections_from_env() -> dict[str, Connection]:
             "url": url("FHIR_MCP_URL", "http://localhost:8104/mcp"),
         },
     }
+    token = os.environ.get("AGENT_SERVICE_TOKEN", "")
+    if token:
+        for conn in conns.values():
+            conn["headers"] = {"Authorization": f"Bearer {token}"}  # type: ignore[typeddict-unknown-key]
+    return conns
 
 
 @dataclass
