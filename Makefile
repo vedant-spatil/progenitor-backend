@@ -31,7 +31,7 @@ export FRONTEND_DIR
 
 .PHONY: users phase5-integration-tests db-dump db-restore gate-status gate-report stack-up integration-tests data-tests profiler-exact-test
 .PHONY: help env up down logs ps wait test test-backend test-frontend lint gate eval check-frontend-dir \
-        up-tracing migrate data live eval-phase3 eval-phase4 gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2 gate-3 gate-4 gate-5 gate-6 gate-7a gate-7b eval-phase6 eval-phase6-snapshot
+        up-tracing migrate data live eval-phase3 eval-phase4 gate-0 gate-0-backend gate-0-frontend gate-0-stack gate-1 gate-2 gate-3 gate-4 gate-5 gate-6 gate-7a gate-7b gate-7c eval-phase6 eval-phase6-snapshot
 
 help: ## List targets
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-16s %s\n", $$1, $$2}'
@@ -255,3 +255,11 @@ gate-7b: gate-7a
 	uv run python manage.py migrate --noinput
 	uv run pytest tests/unit/test_runs_api.py -q
 	@echo "GATE 7b PASSED"
+
+# ---------------- Gate 7c: app extensions ----------------
+# Gate 7b (its Playwright run includes the 7c pages: home queue, patients, trials, referrals, audit, evals, axe),
+# then the read-only app endpoint tests. ADR 0007.
+gate-7c: gate-7b
+	uv run python manage.py migrate --noinput
+	uv run pytest tests/unit/test_app_api.py -q
+	@echo "GATE 7c PASSED"

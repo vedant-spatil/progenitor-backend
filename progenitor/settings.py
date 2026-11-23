@@ -122,6 +122,10 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Phase 6 eval reports (JSON) shown on the app's eval dashboard. docs/ is not in the image: compose mounts it.
+EVAL_REPORTS_DIR = Path(os.environ.get("EVAL_REPORTS_DIR") or BASE_DIR / "docs" / "eval-reports")
+EVAL_THRESHOLDS_FILE = BASE_DIR / "data" / "eval_thresholds.json"
+
 # --- Security (strict whenever DEBUG is off) ---
 SECURE_SSL_REDIRECT = env_bool("DJANGO_SECURE_SSL_REDIRECT", default=not DEBUG)
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

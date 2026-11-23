@@ -118,11 +118,17 @@ class RunListSerializer(serializers.ModelSerializer[Run]):
 
 
 class PatientSerializer(serializers.ModelSerializer[Patient]):
-    """Synthetic display label and source only: no FHIR id, no profile."""
+    """Synthetic display label, source, and run stats only: no FHIR id, no profile.
+
+    run_count and last_run_status come from annotations (PatientListView).
+    """
+
+    run_count = serializers.IntegerField(read_only=True)
+    last_run_status = serializers.CharField(read_only=True, allow_null=True)
 
     class Meta:
         model = Patient
-        fields = ["id", "label", "source"]
+        fields = ["id", "label", "source", "profile_cached_at", "run_count", "last_run_status"]
 
 
 class ReferralUpdateSerializer(serializers.Serializer[Any]):

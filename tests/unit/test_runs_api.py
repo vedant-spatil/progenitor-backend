@@ -326,7 +326,16 @@ def test_me_lists_roles(users: dict[str, User]) -> None:
 
 def test_patient_list_shows_labels_only(users: dict[str, User], patient: Patient) -> None:
     body = client(users["coordinator"]).get("/api/patients").json()
-    assert body["items"] == [{"id": patient.pk, "label": "Synthea 001", "source": "synthea"}]
+    assert body["items"] == [
+        {
+            "id": patient.pk,
+            "label": "Synthea 001",
+            "source": "synthea",
+            "profile_cached_at": None,
+            "run_count": 0,
+            "last_run_status": None,
+        }
+    ]
     assert client(users["admin"]).get("/api/patients").status_code == 403
     assert client(None).get("/api/patients").status_code == 401
 

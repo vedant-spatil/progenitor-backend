@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from asgiref.sync import sync_to_async
+from django.db.models import Count, OuterRef, Subquery
 from django.http import HttpRequest, HttpResponseBase, JsonResponse, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -20,6 +21,7 @@ from apps.audit.services import audit
 from apps.patients.models import Patient
 from apps.reviews.models import ReferralDraft, ReferralStatus
 from apps.runs import events, services
+from apps.runs.browse import filter_runs
 from apps.runs.models import Run
 from apps.runs.serializers import (
     AnswerSerializer,
@@ -50,21 +52,20 @@ class PatientListView(APIView):
     permission_classes = [CanReadRuns]
 
     def get(self, request: Request) -> Response:
-        return Response({"items": PatientSerializer(Patient.objects.all(), many=True).data})
-
-
-RUN_LIST_LIMIT = 50
+        last = Run.objects.filter(patient=OuterRef("pk")).order_by("-created_at").values("status")[:1]
+        patients = Patient.objects.annotate(run_count=Count("runs"), last_run_status=Subquery(last))
+        return Response({"items": PatientSerializer(patients, many=True).data})
 
 
 class RunCreateView(APIView):
-    """GET: the most recent runs (coordinator or clinician). POST: start a run (coordinator)."""
+    """GET: runs, newest first, with optional filters (coordinator or clinician). POST: start a run (coordinator)."""
 
     def get_permissions(self) -> list[Any]:
         return [CanReadRuns()] if self.request.method == "GET" else [IsCoordinator()]
 
     def get(self, request: Request) -> Response:
-        runs = Run.objects.select_related("patient").order_by("-created_at")[:RUN_LIST_LIMIT]
-        return Response({"items": RunListSerializer(runs, many=True).data})
+        runs, nxt = filter_runs(request)
+        return Response({"items": RunListSerializer(runs, many=True).data, "next": nxt})
 
     def post(self, request: Request) -> Response:
         ser = RunCreateSerializer(data=request.data)

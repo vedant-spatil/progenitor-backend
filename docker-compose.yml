@@ -187,6 +187,9 @@ services:
       redis:
         condition: service_healthy
     environment: *backend-env
+    volumes:
+      # Phase 6 eval reports for the app's eval dashboard (docs/ is not in the image).
+      - ./docs/eval-reports:/app/docs/eval-reports:ro
     ports:
       - 127.0.0.1:${BACKEND_HOST_PORT:-8000}:8000
 

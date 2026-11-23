@@ -41,3 +41,7 @@ class IsClinician(_RolePermission):
 
 class CanReadRuns(_RolePermission):
     roles = (COORDINATOR, CLINICIAN)
+
+
+class IsAdmin(_RolePermission):
+    roles = (ADMIN,)

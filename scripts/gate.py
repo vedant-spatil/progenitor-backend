@@ -94,6 +94,12 @@ GATES: dict[str, list[Step]] = {
         Step("migrations applied", "uv run python manage.py migrate --noinput"),
         Step("run API incl. app endpoints (unit)", "uv run pytest tests/unit/test_runs_api.py -q"),
     ],
+    # Gate 7c (ADR 0007): read-only app views. Reruns gate 7b (frontend suites include the 7c pages) and adds
+    # the new endpoint tests.
+    "7c": [
+        Step("migrations applied", "uv run python manage.py migrate --noinput"),
+        Step("app view endpoints (unit)", "uv run pytest tests/unit/test_app_api.py -q"),
+    ],
 }
 
 
@@ -112,6 +118,7 @@ PARENT: dict[str, str | None] = {
     "6": "5",
     "7a": "0",
     "7b": "7a",
+    "7c": "7b",
 }
 
 
