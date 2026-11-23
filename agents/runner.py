@@ -97,4 +97,8 @@ async def advance(
 def paused_question(out: dict[str, Any]) -> dict[str, Any] | None:
     """The pending ask_clinician payload if the run is waiting for a clinician, else None."""
     interrupts = out.get("__interrupt__") or []
-    return dict(interrupts[0].value) if interrupts else None
+    if not interrupts:
+        return None
+    first = interrupts[0]
+    # Interrupt objects in-process; {"value": ...} after agents.events.serialize_result (AgentCore path).
+    return dict(first["value"] if isinstance(first, dict) else first.value)
