@@ -14,7 +14,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     AGENT_OBSERVABILITY_ENABLED=true \
     OTEL_PYTHON_DISTRO=aws_distro \
     OTEL_PYTHON_CONFIGURATOR=aws_configurator \
-    OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=false
+    OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=false \
+    # Decision traces as JSON log lines (no rationale text); Langfuse is not reachable from the runtime.
+    TRACING_MODE=cloudwatch
 
 COPY --from=ghcr.io/astral-sh/uv:0.11.25 /uv /usr/local/bin/uv
 
