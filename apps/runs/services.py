@@ -115,6 +115,23 @@ def review(run_id: Any, user: Any, items: list[dict[str, Any]]) -> Run:
     return run
 
 
+OPEN_STATUSES = (RunStatus.QUEUED, RunStatus.RUNNING, RunStatus.WAITING_CLINICIAN, RunStatus.AWAITING_REVIEW)
+
+
+def cancel(run_id: Any, user: Any, reason: str) -> bool:
+    """Cancel an open run. False if it already ended. A step already running finishes, but its outcome is dropped
+    (persist and _set_status leave cancelled runs alone)."""
+    with transaction.atomic():
+        run = Run.objects.select_for_update().get(pk=run_id)
+        if run.status not in OPEN_STATUSES:
+            return False
+        run.status, run.pending_question, run.finished_at = RunStatus.CANCELLED, "", timezone.now()
+        run.save(update_fields=["status", "pending_question", "finished_at"])
+        audit(AuditKind.RUN_CANCELLED, run_id=str(run.id), actor_id=user.id, node="api", reason=reason)
+    publish(str(run.id), "status", {"status": RunStatus.CANCELLED})
+    return True
+
+
 # ---------------- worker side ----------------
 
 
@@ -126,7 +143,9 @@ async def default_deps(run: Run) -> AsyncIterator[Deps]:
 
 
 def _set_status(run_id: str, status: str, **fields: Any) -> None:
-    Run.objects.filter(pk=run_id).update(status=status, **fields)
+    # Cancelled is final: a worker that finishes a step after a cancel must not revive the run.
+    if not Run.objects.filter(pk=run_id).exclude(status=RunStatus.CANCELLED).update(status=status, **fields):
+        return
     publish(run_id, "status", {"status": status, **{k: v for k, v in fields.items() if k == "error"}})
 
 
@@ -188,6 +207,10 @@ def persist(run_id: str, out: dict[str, Any], used: tuple[int, int] = (0, 0), mo
         run.tokens_in += used[0]
         run.tokens_out += used[1]
         question = paused_question(out)
+        if run.status == RunStatus.CANCELLED:
+            # Cancelled while the step ran: keep the usage, drop the outcome (no shortlist, question or referrals).
+            run.save(update_fields=["steps_used", "tokens_in", "tokens_out"])
+            return run.status
         if question:
             run.status, run.pending_question = RunStatus.WAITING_CLINICIAN, str(question["question"])
         else:

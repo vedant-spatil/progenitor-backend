@@ -32,6 +32,7 @@ class AuditKind(models.TextChoices):
     DATA_LOAD = "data_load", "Data loader run"
     RUN_CREATED = "run_created", "Run started by a user"
     REFERRAL_EDITED = "referral_edited", "Referral draft edited or discarded by a clinician"
+    RUN_CANCELLED = "run_cancelled", "Run cancelled by a user"
 
 
 class AuditEvent(models.Model):

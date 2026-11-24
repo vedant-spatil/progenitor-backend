@@ -126,6 +126,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 EVAL_REPORTS_DIR = Path(os.environ.get("EVAL_REPORTS_DIR") or BASE_DIR / "docs" / "eval-reports")
 EVAL_THRESHOLDS_FILE = BASE_DIR / "data" / "eval_thresholds.json"
 
+# Phase 9 demo cases (ADR 0009): Synthea FHIR ids shown on the home page "Demo cases" card, comma separated, at
+# most 5. Empty: the first 3 Synthea patients by label.
+DEMO_PATIENTS = [x.strip() for x in os.environ.get("DEMO_PATIENTS", "").split(",") if x.strip()][:5]
+
 # --- Security (strict whenever DEBUG is off) ---
 SECURE_SSL_REDIRECT = env_bool("DJANGO_SECURE_SSL_REDIRECT", default=not DEBUG)
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

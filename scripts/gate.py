@@ -100,6 +100,18 @@ GATES: dict[str, list[Step]] = {
         Step("migrations applied", "uv run python manage.py migrate --noinput"),
         Step("app view endpoints (unit)", "uv run pytest tests/unit/test_app_api.py -q"),
     ],
+    # Gate 9 (PLAN.md Phase 9, ADR 0009): demo cases. Reruns gate 7c (its Playwright run includes the demo card
+    # e2e) and adds the demo API tests and the e2e suites against the static export (what CloudFront serves).
+    # ADR 0009: built before gate 8 by owner decision; parent becomes "8" once gate 8 exists, and gate 9 counts
+    # as passed only after gate 8.
+    "9": [
+        Step("migrations applied", "uv run python manage.py migrate --noinput"),
+        Step("demo cases API (unit)", "uv run pytest tests/unit/test_demo_api.py -q"),
+        Step(
+            "e2e against the static export (Playwright)",
+            f"cd {FRONTEND} && NEXT_OUTPUT=export npm run build && CI=1 E2E_EXPORT=1 npx playwright test",
+        ),
+    ],
 }
 
 
@@ -119,6 +131,7 @@ PARENT: dict[str, str | None] = {
     "7a": "0",
     "7b": "7a",
     "7c": "7b",
+    "9": "7c",
 }
 
 
